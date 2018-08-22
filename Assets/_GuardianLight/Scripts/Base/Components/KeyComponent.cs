@@ -24,7 +24,7 @@ public class KeyComponent : BaseActionBehaviour
 
     private void CollectKey()
     {
-        var inventory = InventorySystem.Instance;
+        var inventory = _InventorySystem.Instance;
 
         switch (_keyType)
         {

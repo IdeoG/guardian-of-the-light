@@ -41,13 +41,20 @@ public class PadlockComponent : BaseActionBehaviour
 
     protected override void OnKeyPressedAction()
     {
-        var isContainsKey = InventorySystem.Instance.IsContainsKey(_keyType);
+        var isContainsKey = _InventorySystem.Instance.IsContainsKey(_keyType);
         if (isContainsKey)
         {
             PlayOnDestroyAnimation();
         }
         else
         {
+            /** TODO: OnKeyPressedAction
+             * 1. Блокируем все кнопки, кроме кнопки действия
+             * 2. Анимация плавного показа подсказки
+             * 3. Ждем пока нажмем кнопку действия
+             * 4. По нажатию на кнопку действия проигрываем анимацию плавного скрытия подсказки
+             * 5. Разблокировка всех кнопок
+             */
             GameManagerSystem.Instance.ShowHint(HintType.PadlockNoKeyFound);
         }
     }
