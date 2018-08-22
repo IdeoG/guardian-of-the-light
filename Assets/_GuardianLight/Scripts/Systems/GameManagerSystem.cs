@@ -10,6 +10,15 @@ using UnityEngine;
 public class GameManagerSystem : MonoBehaviour
 {
     [SerializeField] private GameObject _canvasPadlockNoKeyHint;
+    [SerializeField] private GameObject _canvasInventoryView;
+    [SerializeField] private GameObject _canvasInspectView;
+    
+    public static GameManagerSystem Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public void ShowHint(HintType hintType)
     {
@@ -22,24 +31,39 @@ public class GameManagerSystem : MonoBehaviour
                 throw new ArgumentOutOfRangeException("hintType", hintType, null);
         }
     }
+    
+    public void HideHint()
+    {
+        _canvasPadlockNoKeyHint.SetActive(false);
+    }
 
+    public void ShowInventoryView()
+    {
+        _canvasInventoryView.SetActive(true);
+    }
+
+    public void HideInventoryView()
+    {
+        _canvasInventoryView.SetActive(false);
+    }
+
+    public void ShowInspectView()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void HideInspectView()
+    {
+        throw new NotImplementedException();
+    }
+    
+    
     private void ShowPadlockNoKeyFound()
     {
         _canvasPadlockNoKeyHint.SetActive(true);
         Invoke("HideHint", 2f);
     }
 
-    public void HideHint()
-    {
-        _canvasPadlockNoKeyHint.SetActive(false);
-    }
-
-    public static GameManagerSystem Instance { get; private set; }
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 }
 
 public enum HintType
