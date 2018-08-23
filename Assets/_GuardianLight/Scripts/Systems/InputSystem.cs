@@ -9,10 +9,10 @@ public class InputSystem : MonoBehaviour
     public IObservable<Unit> KeyInspectPressedDown { get; private set; }
     public IObservable<Unit> KeyInventoryPressedDown { get; private set; }
 
-    public IObservable<Unit> KeyLeftArrowPressed { get; private set; }
-    public IObservable<Unit> KeyRightArrowPressed { get; private set; }
     public IObservable<Unit> KeyUpArrowPressed { get; private set; }
     public IObservable<Unit> KeyDownArrowPressed { get; private set; }
+    public IObservable<Unit> KeyLeftArrowPressed { get; private set; }
+    public IObservable<Unit> KeyRightArrowPressed { get; private set; }
     
     public IObservable<Unit> KeyLeftArrowPressedDown { get; private set; }
     public IObservable<Unit> KeyRightArrowPressedDown { get; private set; }
@@ -22,33 +22,16 @@ public class InputSystem : MonoBehaviour
     {
         Instance = this;
 
-        KeyActionPressedDown = this.UpdateAsObservable()
-            .Where(_ => Input.GetKeyDown(KeyCode.E));
-
-        KeyInventoryPressedDown = this.UpdateAsObservable()
-            .Where(_ => Input.GetKeyDown(KeyCode.I));
-
-        KeyInspectPressedDown = this.UpdateAsObservable()
-            .Where(_ => Input.GetKeyDown(KeyCode.O));
-
-
-        KeyLeftArrowPressed = this.UpdateAsObservable()
-            .Where(_ => Input.GetKey(KeyCode.A));
-
-        KeyRightArrowPressed = this.UpdateAsObservable()
-            .Where(_ => Input.GetKey(KeyCode.D));
+        KeyActionPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E));
+        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.I));
+        KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.O));
         
-        KeyUpArrowPressed = this.UpdateAsObservable()
-            .Where(_ => Input.GetKey(KeyCode.W));
-
-        KeyDownArrowPressed = this.UpdateAsObservable()
-            .Where(_ => Input.GetKey(KeyCode.S));
+        KeyUpArrowPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.W));
+        KeyDownArrowPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.S));      
+        KeyLeftArrowPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.A));
+        KeyRightArrowPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.D));     
         
-        
-        KeyLeftArrowPressedDown = this.UpdateAsObservable()
-            .Where(_ => Input.GetKeyDown(KeyCode.A));
-
-        KeyRightArrowPressedDown = this.UpdateAsObservable()
-            .Where(_ => Input.GetKeyDown(KeyCode.D));
+        KeyLeftArrowPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.A));
+        KeyRightArrowPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.D));
     }
 }
