@@ -1,4 +1,5 @@
 ﻿using System;
+using UniRx;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 
@@ -24,6 +25,13 @@ public class GameManagerSystem : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        InputSystem.Instance.KeyInventoryPressedDown
+            .Subscribe(_ => OnKeyInventoryPressedDown())
+            .AddTo(this);
+    }
+
     private void ShowPadlockNoKeyFound()
     {
         _canvasPadlockNoKeyHint.SetActive(true);
@@ -47,26 +55,26 @@ public class GameManagerSystem : MonoBehaviour
         _canvasPadlockNoKeyHint.SetActive(false);
     }
 
-    public void ShowInventoryView()
+    private void ShowInventoryView()
     {
         _player.GetComponent<ThirdPersonUserControl>().LockInput = true;
         _canvasInventoryView.SetActive(true);
     }
 
-    public void HideInventoryView()
+    private void HideInventoryView()
     {
         _player.GetComponent<ThirdPersonUserControl>().LockInput = false;
         _canvasInventoryView.SetActive(false);
     }
-
-    public void ShowInspectView()
+    
+    private void OnKeyInventoryPressedDown()
     {
-        throw new NotImplementedException();
-    }
+        var isInventoryActive = !_canvasInventoryView.activeSelf;
 
-    public void HideInspectView()
-    {
-        throw new NotImplementedException();
+        if (isInventoryActive)
+            ShowInventoryView();
+        else
+            HideInventoryView();
     }
 
 }

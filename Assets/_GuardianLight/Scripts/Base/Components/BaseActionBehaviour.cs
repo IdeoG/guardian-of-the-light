@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class BaseActionBehaviour : MonoBehaviour
 {
     private const string RequiredTag = "Player";
-    private IDisposable _action;
+    private IDisposable _keyActionPressedDown;
     protected Animator Animator;
 
     private void OnTriggerEnter(Collider other)
@@ -15,8 +15,8 @@ public abstract class BaseActionBehaviour : MonoBehaviour
 
         if (!isPlayer) return;
 
-        _action = InputSystem.Instance.KeyActionPressed
-            .Subscribe(_ => OnKeyPressedAction())
+        _keyActionPressedDown = InputSystem.Instance.KeyActionPressedDown
+            .Subscribe(_ => OnKeyActionPressedDown())
             .AddTo(this);
     }
 
@@ -26,7 +26,7 @@ public abstract class BaseActionBehaviour : MonoBehaviour
 
         if (!isPlayer) return;
 
-        _action.Dispose();
+        _keyActionPressedDown.Dispose();
     }
 
     private void Awake()
@@ -36,5 +36,5 @@ public abstract class BaseActionBehaviour : MonoBehaviour
         gameObject.GetComponent<BoxCollider>().isTrigger = true;
     }
 
-    protected abstract void OnKeyPressedAction();
+    protected abstract void OnKeyActionPressedDown();
 }

@@ -18,12 +18,12 @@ public class InventoryItemsBehaviour : MonoBehaviour
     private List<RectTransform> _rectTransforms = new List<RectTransform>();
     private List<Image> _images = new List<Image>();
 
-    private IDisposable _leftArrowPress;
-    private IDisposable _rightArrowPress;
+    private IDisposable _leftArrowPressDown;
+    private IDisposable _rightArrowPressDown;
 
     private int _inventoryPosition;
     private List<Item> _inventoryItems;
-    
+
 
     private void Awake()
     {
@@ -36,30 +36,28 @@ public class InventoryItemsBehaviour : MonoBehaviour
 
     private void OnEnable()
     {
-        _leftArrowPress = InputSystem.Instance.KeyLeftArrowPressed
-            .Subscribe(_ =>
-            {
-                Debug.Log(string.Format("LeftArrowPressed"));
-                OnLeftArrowPressed();
-            })
+        
+        _leftArrowPressDown = InputSystem.Instance.KeyLeftArrowPressedDown
+            .Subscribe(_ => OnLeftArrowPressedDown())
             .AddTo(this);
 
-        _rightArrowPress = InputSystem.Instance.KeyRightArrowPressed
-            .Subscribe(_ => OnRightArrowPressed())
+        _rightArrowPressDown = InputSystem.Instance.KeyRightArrowPressedDown
+            .Subscribe(_ => OnRightArrowPressedDown())
             .AddTo(this);
     }
 
     private void OnDisable()
     {
-        _leftArrowPress.Dispose();
-        _rightArrowPress.Dispose();
+        _leftArrowPressDown.Dispose();
+        _rightArrowPressDown.Dispose();
     }
 
-    private void OnLeftArrowPressed()
+    private void OnLeftArrowPressedDown()
     {
+        // BUG: Когда количество предметов четное - не работает на крайних предметах
         if (_inventoryPosition % 2 == 0)
         {
-            if (_inventoryPosition >= _items.Count - 2) return;
+            if ( _inventoryPosition >= _items.Count - 4) return;
             _inventoryPosition += 2;
         }
         else
@@ -67,15 +65,17 @@ public class InventoryItemsBehaviour : MonoBehaviour
             _inventoryPosition = Mathf.Clamp(_inventoryPosition - 2, 0, _items.Count);
         }
 
+        Debug.Log(string.Format("OnLeftArrowPressedDown: _inventoryPosition = {0}, _items.Count = {1}", _inventoryPosition, _items.Count));
         SetCurrentLighting(_inventoryPosition);
         SetCurrentDescription(_inventoryItems[_inventoryPosition].Name);
     }
 
-    private void OnRightArrowPressed()
+    private void OnRightArrowPressedDown()
     {
+        // BUG: Когда количество предметов четное - не работает на крайних предметах
         if (_inventoryPosition % 2 != 0)
         {
-            if (_inventoryPosition >= _items.Count - 1) return;
+            if (_inventoryPosition >= _items.Count - 4) return;
 
             _inventoryPosition = _inventoryPosition + 2;
         }
@@ -91,6 +91,7 @@ public class InventoryItemsBehaviour : MonoBehaviour
             }
         }
 
+        Debug.Log(string.Format("OnRightArrowPressedDown: _inventoryPosition = {0}, _items.Count = {1}", _inventoryPosition, _items.Count));
         SetCurrentLighting(_inventoryPosition);
         SetCurrentDescription(_inventoryItems[_inventoryPosition].Name);
     }
@@ -123,9 +124,11 @@ public class InventoryItemsBehaviour : MonoBehaviour
     public void SetItems(List<Item> items)
     {
         ClearImages();
-        
-        SetCurrentDescription(items[0].Name);
 
+        SetCurrentDescription(items[0].Name);
+        SetCurrentLighting(0);
+
+        Debug.Log(string.Format("Awake: _rectTransforms.Count = {0}", _rectTransforms.Count));
         var len = items.Count;
         for (var ind = 0; ind < len; ind++)
         {
@@ -133,5 +136,10 @@ public class InventoryItemsBehaviour : MonoBehaviour
         }
 
         _inventoryItems = items;
+    }
+
+    public int GetCurrentPosition()
+    {
+        return _inventoryPosition;
     }
 }

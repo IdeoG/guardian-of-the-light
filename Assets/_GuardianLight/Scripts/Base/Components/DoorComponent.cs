@@ -6,7 +6,7 @@
         Animator.SetBool("isOpenDoor", !doorState);
     }
 
-    protected override void OnKeyPressedAction()
+    protected override void OnKeyActionPressedDown()
     {
         ChangeDoorState();
     }

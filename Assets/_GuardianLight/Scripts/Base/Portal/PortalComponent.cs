@@ -7,7 +7,7 @@ public class PortalComponent : BaseActionBehaviour
     [SerializeField] private string _sceneName;
     [SerializeField] private int _startPointNumber;
 
-    protected override void OnKeyPressedAction()
+    protected override void OnKeyActionPressedDown()
     {
         StartCoroutine(LoadScene());
     }

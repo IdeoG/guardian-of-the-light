@@ -1,63 +1,49 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using UniRx;
 using UnityEngine;
 
 public class InventoryCanvasBehaviour : MonoBehaviour
 {
-    [SerializeField] private GameObject _inventoryArrows;
-    [SerializeField] private GameObject _oddIventoryItems;
-    [SerializeField] private GameObject _evenIventoryItems;
+    [SerializeField] private GameObject _basicView;
+    [SerializeField] private GameObject _inspectView;
 
-    private InventoryItemsBehaviour _oddItemsBehaviour;
-    private InventoryItemsBehaviour _evenItemsBehaviour;
-    
 
-    private void Awake()
+    private IDisposable _keyInspectItemPressedDown;
+
+
+    private void OnKeyInspectItemPressedDown()
     {
-        _oddItemsBehaviour = _oddIventoryItems.GetComponent<InventoryItemsBehaviour>();
-        _evenItemsBehaviour = _evenIventoryItems.GetComponent<InventoryItemsBehaviour>();
+        var isInpectViewActive = _inspectView.activeSelf;
+
+        if (!isInpectViewActive)
+        {
+            var item = _basicView.GetComponent<BasicViewBehaviour>().GetCurrentItem();
+
+            _basicView.SetActive(false);
+            _inspectView.SetActive(true);
+            
+            _inspectView.GetComponent<InspectViewBehaviour>().SetItem(item);
+        }
+        else
+        {
+            _basicView.SetActive(true);
+            _inspectView.SetActive(false);
+        }
     }
 
     private void OnEnable()
     {
-        /** TODO: OnEnable
-         * 1. Обращаемся к инвентарю
-         * 2. Получаем все подобранные предметы из инвентаря
-         * 3.1. Если количество предметов четное, то используем четный паттерн
-         * 3.1. Если количество предметов нечетное, то используем нечетный паттерн
-         * 4. Заполняем места предметы графического инвентаря спрайтами и цветами
-         */
+        _keyInspectItemPressedDown = InputSystem.Instance.KeyInspectPressedDown
+            .Subscribe(_ => OnKeyInspectItemPressedDown())
+            .AddTo(this);
+        
+        _basicView.SetActive(true);
+        _inspectView.SetActive(false);
 
-        var inventory = InventorySystem.Instance;
-
-        var items = inventory.GetItems();
-
-
-        if (items.Count % 2 == 0 && items.Count < 5)
-        {
-            SetEvenPattern(items);
-        }
-        else
-        {
-            SetOddPattern(items);
-        }
-
-        _inventoryArrows.SetActive(items.Count > 5);
     }
 
-    private void SetEvenPattern(List<Item> items)
+    private void OnDisable()
     {
-        _oddIventoryItems.SetActive(false);
-        _evenIventoryItems.SetActive(true);
-        
-        _evenItemsBehaviour.SetItems(items);
-        
-    }
-
-    private void SetOddPattern(List<Item> items)
-    {
-        _oddIventoryItems.SetActive(true);
-        _evenIventoryItems.SetActive(false);
-
-        _oddItemsBehaviour.SetItems(items);
+        _keyInspectItemPressedDown.Dispose();
     }
 }

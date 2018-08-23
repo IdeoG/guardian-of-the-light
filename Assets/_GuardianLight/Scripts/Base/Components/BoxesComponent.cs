@@ -1,6 +1,6 @@
 ﻿public class BoxesComponent : BaseActionBehaviour
 {
-    protected override void OnKeyPressedAction()
+    protected override void OnKeyActionPressedDown()
     {
         /** TODO: OnKeyPressedAction
          * Сделать красивее!
