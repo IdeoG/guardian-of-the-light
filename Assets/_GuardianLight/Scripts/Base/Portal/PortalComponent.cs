@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,7 +15,7 @@ public class PortalComponent : BaseActionBehaviour
     private IEnumerator LoadScene()
     {
         SceneBundle.StartPointNumber = _startPointNumber;
-        
+
         /** BUG: LoadScene
          * Этот кусок кода работает неправильно. Показывает только загрузку на 1% и по завершению загрузки.
          * Нет детализации.
@@ -33,5 +32,4 @@ public class PortalComponent : BaseActionBehaviour
             yield return null;
         }
     }
-    
 }

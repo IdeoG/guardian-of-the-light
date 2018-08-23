@@ -1,17 +1,15 @@
-﻿using System;
-using UniRx;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider), typeof(Animator))]
 public class PadlockComponent : BaseActionBehaviour
 {
     [SerializeField] private KeyType _keyType;
     [SerializeField] private GameObject _lockedDoor;
-    
+
     private void PlayOnDestroyAnimation()
     {
         GameManagerSystem.Instance.HideHint();
-        
+
         /** PlayOnDestroyAnimation
          * 1. Анимация поднятия зацепки в замке
          * 2. Добавляем rigidbody замку
@@ -23,7 +21,7 @@ public class PadlockComponent : BaseActionBehaviour
 
         _lockedDoor.GetComponent<BoxCollider>().enabled = true;
         gameObject.GetComponent<BoxCollider>().enabled = false;
-        
+
         Destroy(gameObject, 3f);
     }
 
@@ -43,20 +41,8 @@ public class PadlockComponent : BaseActionBehaviour
     {
         var isContainsKey = _InventorySystem.Instance.IsContainsKey(_keyType);
         if (isContainsKey)
-        {
             PlayOnDestroyAnimation();
-        }
         else
-        {
-            /** TODO: OnKeyPressedAction
-             * 1. Блокируем все кнопки, кроме кнопки действия
-             * 2. Анимация плавного показа подсказки
-             * 3. Ждем пока нажмем кнопку действия
-             * 4. По нажатию на кнопку действия проигрываем анимацию плавного скрытия подсказки
-             * 5. Разблокировка всех кнопок
-             */
             GameManagerSystem.Instance.ShowHint(HintType.PadlockNoKeyFound);
-        }
     }
 }
-

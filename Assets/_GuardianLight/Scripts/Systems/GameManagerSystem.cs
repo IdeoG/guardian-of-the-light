@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 /**
  * TODO: GameManagerSystem
@@ -9,10 +10,13 @@ using UnityEngine;
  */
 public class GameManagerSystem : MonoBehaviour
 {
-    [SerializeField] private GameObject _canvasPadlockNoKeyHint;
-    [SerializeField] private GameObject _canvasInventoryView;
-    [SerializeField] private GameObject _canvasInspectView;
+    [Header("Герой")] [SerializeField] private GameObject _player;
     
+    [Header("Полотна")]
+    [SerializeField] private GameObject _canvasInspectView;
+    [SerializeField] private GameObject _canvasInventoryView;
+    [SerializeField] private GameObject _canvasPadlockNoKeyHint;
+
     public static GameManagerSystem Instance { get; private set; }
 
     private void Awake()
@@ -20,6 +24,12 @@ public class GameManagerSystem : MonoBehaviour
         Instance = this;
     }
 
+    private void ShowPadlockNoKeyFound()
+    {
+        _canvasPadlockNoKeyHint.SetActive(true);
+        Invoke("HideHint", 2f);
+    }
+    
     public void ShowHint(HintType hintType)
     {
         switch (hintType)
@@ -31,7 +41,7 @@ public class GameManagerSystem : MonoBehaviour
                 throw new ArgumentOutOfRangeException("hintType", hintType, null);
         }
     }
-    
+
     public void HideHint()
     {
         _canvasPadlockNoKeyHint.SetActive(false);
@@ -39,11 +49,13 @@ public class GameManagerSystem : MonoBehaviour
 
     public void ShowInventoryView()
     {
+        _player.GetComponent<ThirdPersonUserControl>().LockInput = true;
         _canvasInventoryView.SetActive(true);
     }
 
     public void HideInventoryView()
     {
+        _player.GetComponent<ThirdPersonUserControl>().LockInput = false;
         _canvasInventoryView.SetActive(false);
     }
 
@@ -55,13 +67,6 @@ public class GameManagerSystem : MonoBehaviour
     public void HideInspectView()
     {
         throw new NotImplementedException();
-    }
-    
-    
-    private void ShowPadlockNoKeyFound()
-    {
-        _canvasPadlockNoKeyHint.SetActive(true);
-        Invoke("HideHint", 2f);
     }
 
 }

@@ -5,14 +5,17 @@ using UnityEngine;
 
 public class InventorySystem : MonoBehaviour
 {
+    private IDisposable _inspectAction;
+
+    private IDisposable _inventoryAction;
+    private bool _isOpenInspectView;
+
+    private bool _isOpenInventory;
+
     [Header("Все предметы инвентаря")] [SerializeField]
     private List<Item> _items;
 
-    private IDisposable _inventoryAction;
-    private IDisposable _inspectAction;
-
-    private bool _isOpenInventory;
-    private bool _isOpenInspectView;
+    public static InventorySystem Instance { get; private set; }
     /** TODO: InventorySystem
      * 1. Добавить обработку нажатия кнопки инвенторя
      * 2. Добавить метод для добавления предмета по имени
@@ -20,6 +23,12 @@ public class InventorySystem : MonoBehaviour
      * 4. Добавить метод для отображения всех доступных элементов в инвентаре по нажатию кнопки
      * 5. Добавить обработку нажатия кнопки просмотра предмета
      */
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -31,30 +40,26 @@ public class InventorySystem : MonoBehaviour
     private void OnKeyInventoryPressed()
     {
         _isOpenInventory = !_isOpenInventory;
-        
+
         if (_isOpenInventory)
-        {
             ShowInventory();
-        }
         else
-        {
             HideInventory();
-        }
     }
-    
+
     private void HideInventory()
     {
         _inspectAction.Dispose();
-        
+
         GameManagerSystem.Instance.HideInventoryView();
     }
-    
+
     private void ShowInventory()
     {
         _inspectAction = InputSystem.Instance.KeyInspectPressed
             .Subscribe(_ => OnKeyInspectPressed())
             .AddTo(this);
-        
+
         GameManagerSystem.Instance.ShowInventoryView();
     }
 
@@ -63,13 +68,9 @@ public class InventorySystem : MonoBehaviour
         _isOpenInspectView = !_isOpenInspectView;
 
         if (_isOpenInspectView)
-        {
             ShowInspectView();
-        }
         else
-        {
             HideInspectView();
-        }
     }
 
     private void HideInspectView()
@@ -82,4 +83,17 @@ public class InventorySystem : MonoBehaviour
         throw new NotImplementedException();
     }
 
+    public List<Item> GetItems()
+    {
+        var items = new List<Item>();
+
+        foreach (var item in _items)
+        {
+            if (item.IsTook)
+            {
+                items.Add(item);
+            }
+        }
+        return items;
+    }
 }
