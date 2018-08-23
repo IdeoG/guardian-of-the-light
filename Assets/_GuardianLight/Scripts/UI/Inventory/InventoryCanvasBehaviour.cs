@@ -31,7 +31,7 @@ public class InventoryCanvasBehaviour : MonoBehaviour
 
         var items = inventory.GetItems();
 
-        
+
         if (items.Count % 2 == 0 && items.Count < 5)
         {
             SetEvenPattern(items);
@@ -48,27 +48,16 @@ public class InventoryCanvasBehaviour : MonoBehaviour
     {
         _oddIventoryItems.SetActive(false);
         _evenIventoryItems.SetActive(true);
-        _evenItemsBehaviour.ClearImages();
         
-        var len = items.Count;
-        for (var ind = 0; ind < len; ind++)
-        {
-            _evenItemsBehaviour.SetImage(ind, items[ind].Sprite, Color.white);
-            _evenItemsBehaviour.SetCurrentDescription(items[ind].Name);
-        }
+        _evenItemsBehaviour.SetItems(items);
+        
     }
 
     private void SetOddPattern(List<Item> items)
     {
         _oddIventoryItems.SetActive(true);
         _evenIventoryItems.SetActive(false);
-        _oddItemsBehaviour.ClearImages();
 
-        var len = items.Count;
-        for (var ind = 0; ind < len; ind++)
-        {
-            _oddItemsBehaviour.SetImage(ind, items[ind].Sprite, Color.white);
-            _oddItemsBehaviour.SetCurrentDescription(items[ind].Name);
-        }
+        _oddItemsBehaviour.SetItems(items);
     }
 }

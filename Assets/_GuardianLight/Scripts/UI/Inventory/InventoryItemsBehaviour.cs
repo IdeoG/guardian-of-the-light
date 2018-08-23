@@ -22,6 +22,8 @@ public class InventoryItemsBehaviour : MonoBehaviour
     private IDisposable _rightArrowPress;
 
     private int _inventoryPosition;
+    private List<Item> _inventoryItems;
+    
 
     private void Awake()
     {
@@ -66,6 +68,7 @@ public class InventoryItemsBehaviour : MonoBehaviour
         }
 
         SetCurrentLighting(_inventoryPosition);
+        SetCurrentDescription(_inventoryItems[_inventoryPosition].Name);
     }
 
     private void OnRightArrowPressed()
@@ -89,6 +92,7 @@ public class InventoryItemsBehaviour : MonoBehaviour
         }
 
         SetCurrentLighting(_inventoryPosition);
+        SetCurrentDescription(_inventoryItems[_inventoryPosition].Name);
     }
 
     private void SetCurrentLighting(int position)
@@ -96,23 +100,38 @@ public class InventoryItemsBehaviour : MonoBehaviour
         _itemLighting.SetPositionAndRotation(_rectTransforms[position].position, _rectTransforms[position].rotation);
     }
 
-    public void SetImage(int position, Sprite sprite, Color color)
+    private void SetImage(int position, Sprite sprite, Color color)
     {
         _images[position].sprite = sprite;
         _images[position].color = color;
     }
 
-    public void SetCurrentDescription(string text)
+    private void SetCurrentDescription(string text)
     {
         _itemDescription.text = text;
     }
 
-    public void ClearImages()
+    private void ClearImages()
     {
         foreach (var image in _images)
         {
             image.sprite = null;
             image.color = new Color(0, 0, 0, 0);
         }
+    }
+
+    public void SetItems(List<Item> items)
+    {
+        ClearImages();
+        
+        SetCurrentDescription(items[0].Name);
+
+        var len = items.Count;
+        for (var ind = 0; ind < len; ind++)
+        {
+            SetImage(ind, items[ind].Sprite, Color.white);
+        }
+
+        _inventoryItems = items;
     }
 }
