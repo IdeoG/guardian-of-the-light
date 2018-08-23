@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class KeyComponent : BaseActionBehaviour
 {
-    [SerializeField] private KeyType _keyType;
+//    [SerializeField] private KeyType _keyType;
 
-    protected override void OnKeyPressedAction()
+    protected override void OnKeyActionPressedDown()
     {
         CollectKey();
         PlayKeyAnimation();
@@ -24,17 +24,17 @@ public class KeyComponent : BaseActionBehaviour
 
     private void CollectKey()
     {
-        var inventory = _InventorySystem.Instance;
-
-        switch (_keyType)
-        {
-            case KeyType.Alchemist:
-                inventory.IsContainsAlchemistKey = true;
-                break;
-            case KeyType.Mine:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+//        var inventory = _InventorySystem.Instance;
+//
+//        switch (_keyType)
+//        {
+//            case KeyType.Alchemist:
+//                inventory.IsContainsAlchemistKey = true;
+//                break;
+//            case KeyType.Mine:
+//                break;
+//            default:
+//                throw new ArgumentOutOfRangeException();
+//        }
     }
 }

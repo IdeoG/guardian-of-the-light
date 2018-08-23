@@ -3,7 +3,7 @@
 [RequireComponent(typeof(BoxCollider), typeof(Animator))]
 public class PadlockComponent : BaseActionBehaviour
 {
-    [SerializeField] private KeyType _keyType;
+//    [SerializeField] private KeyType _keyType;
     [SerializeField] private GameObject _lockedDoor;
 
     private void PlayOnDestroyAnimation()
@@ -37,12 +37,12 @@ public class PadlockComponent : BaseActionBehaviour
         Animator.enabled = false;
     }
 
-    protected override void OnKeyPressedAction()
+    protected override void OnKeyActionPressedDown()
     {
-        var isContainsKey = _InventorySystem.Instance.IsContainsKey(_keyType);
-        if (isContainsKey)
-            PlayOnDestroyAnimation();
-        else
-            GameManagerSystem.Instance.ShowHint(HintType.PadlockNoKeyFound);
+//        var isContainsKey = _InventorySystem.Instance.IsContainsKey(_keyType);
+//        if (isContainsKey)
+//            PlayOnDestroyAnimation();
+//        else
+//            GameManagerSystem.Instance.ShowHint(HintType.PadlockNoKeyFound);
     }
 }
