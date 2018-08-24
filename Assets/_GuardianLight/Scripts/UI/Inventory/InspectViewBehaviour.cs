@@ -12,6 +12,8 @@ public class InspectViewBehaviour : MonoBehaviour
     [Header("Просмотр объекта")]
     [SerializeField] private float _sensetivityX;
     [SerializeField] private float _sensetivityY;
+    [SerializeField] private float _minScale;
+    [SerializeField] private float _maxScale;
     
     private GameObject _item;
     private Transform _itemTransform;
@@ -57,14 +59,16 @@ public class InspectViewBehaviour : MonoBehaviour
 
     private void OnKeyUpArrowPressed()
     {
-        // TODO: Добавить ограничения на (min,max) scale
+        if (_itemTransform.localScale.x > _maxScale) return;
+        
         _itemTransform.localScale += _sensetivityY * Vector3.one;
     }
 
     
     private void OnKeyDownArrowPressed()
     {
-        // TODO: Добавить ограничения на (min,max) scale
+        if (_itemTransform.localScale.x < _minScale) return;
+        
         _itemTransform.localScale -= _sensetivityY * Vector3.one;
     }
 
