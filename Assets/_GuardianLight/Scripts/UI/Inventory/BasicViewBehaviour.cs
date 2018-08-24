@@ -1,37 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class BasicViewBehaviour : MonoBehaviour {
 
 	[SerializeField] private GameObject _inventoryArrows;
-	[SerializeField] private GameObject _oddIventoryItems;
-	[SerializeField] private GameObject _evenIventoryItems;
+	[SerializeField] private GameObject _oddInventoryItems;
+	[SerializeField] private GameObject _evenInventoryItems;
 
 	private InventoryItemsBehaviour _itemsBehaviour;
 	private List<Item> _items;
 
 	private void SetEvenPattern(List<Item> items)
 	{
-		_oddIventoryItems.SetActive(false);
-		_evenIventoryItems.SetActive(true);
+		_oddInventoryItems.SetActive(false);
+		_evenInventoryItems.SetActive(true);
         
-		_itemsBehaviour = _evenIventoryItems.GetComponent<InventoryItemsBehaviour>();
+		_itemsBehaviour = _evenInventoryItems.GetComponent<InventoryItemsBehaviour>();
 		_itemsBehaviour.SetItems(items);
         
 	}
 
 	private void SetOddPattern(List<Item> items)
 	{
-		_oddIventoryItems.SetActive(true);
-		_evenIventoryItems.SetActive(false);
+		_oddInventoryItems.SetActive(true);
+		_evenInventoryItems.SetActive(false);
 
-		_itemsBehaviour = _oddIventoryItems.GetComponent<InventoryItemsBehaviour>();
+		_itemsBehaviour = _oddInventoryItems.GetComponent<InventoryItemsBehaviour>();
 		_itemsBehaviour.SetItems(items);
 	}
 
 	private void OnEnable()
 	{
+		Debug.Log($"BasicViewBehaviour: OnEnable");
 		var items = InventorySystem.Instance.GetItems();
 		_items = items;
 		

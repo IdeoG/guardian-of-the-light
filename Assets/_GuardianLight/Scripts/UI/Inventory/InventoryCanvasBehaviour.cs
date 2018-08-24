@@ -13,9 +13,9 @@ public class InventoryCanvasBehaviour : MonoBehaviour
 
     private void OnKeyInspectItemPressedDown()
     {
-        var isInpectViewActive = _inspectView.activeSelf;
+        var isInspectViewActive = _inspectView.activeSelf;
 
-        if (!isInpectViewActive)
+        if (!isInspectViewActive)
         {
             var item = _basicView.GetComponent<BasicViewBehaviour>().GetCurrentItem();
 
