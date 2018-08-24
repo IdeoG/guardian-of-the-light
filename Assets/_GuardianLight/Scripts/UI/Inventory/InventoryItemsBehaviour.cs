@@ -57,37 +57,33 @@ public class InventoryItemsBehaviour : MonoBehaviour
 
     private void OnLeftArrowPressedDown()
     {
-        // BUG: Когда количество предметов четное - не работает на крайних предметах
         if (_inventoryPosition % 2 == 0)
         {
-            if ( _inventoryPosition >= _items.Count - 4) return;
+            if ( _inventoryPosition >= _inventoryItems.Count - 2) return;
             _inventoryPosition += 2;
         }
         else
         {
-            _inventoryPosition = Mathf.Clamp(_inventoryPosition - 2, 0, _items.Count);
+            _inventoryPosition = Mathf.Clamp(_inventoryPosition - 2, 0, _inventoryItems.Count);
         }
 
-        Debug.Log($"OnLeftArrowPressedDown: _inventoryPosition = {_inventoryPosition}, _items.Count = {_items.Count}");
         SetCurrentLighting(_inventoryPosition);
         SetCurrentDescription(_inventoryItems[_inventoryPosition].Name);
     }
 
     private void OnRightArrowPressedDown()
     {
-        // BUG: Когда количество предметов четное - не работает на крайних предметах
         if (_inventoryPosition % 2 != 0)
         {
-            if (_inventoryPosition >= _items.Count - 4) return;
+            if (_inventoryPosition >= _inventoryItems.Count - 2) return;
 
             _inventoryPosition = _inventoryPosition + 2;
         }
         else
         {
-            _inventoryPosition = _inventoryPosition == 0 ? 1 : Mathf.Clamp(_inventoryPosition - 2, 0, _items.Count);
+            _inventoryPosition = _inventoryPosition == 0 ? 1 : Mathf.Clamp(_inventoryPosition - 2, 0, _inventoryItems.Count);
         }
 
-        Debug.Log($"OnRightArrowPressedDown: _inventoryPosition = {_inventoryPosition}, _items.Count = {_items.Count}");
         SetCurrentLighting(_inventoryPosition);
         SetCurrentDescription(_inventoryItems[_inventoryPosition].Name);
     }
