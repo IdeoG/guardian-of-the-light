@@ -15,8 +15,8 @@ public class InventoryItemsBehaviour : MonoBehaviour
     [Header("Пулл предметов")] [SerializeField]
     private List<GameObject> _items;
 
-    private List<RectTransform> _rectTransforms = new List<RectTransform>();
-    private List<Image> _images = new List<Image>();
+    private List<RectTransform> _rectTransforms;
+    private List<Image> _images;
 
     private IDisposable _leftArrowPressDown;
     private IDisposable _rightArrowPressDown;
@@ -25,8 +25,11 @@ public class InventoryItemsBehaviour : MonoBehaviour
     private List<Item> _inventoryItems;
 
 
-    private void Awake()
+    private void FetchItems()
     {
+        _rectTransforms = new List<RectTransform>();
+        _images = new List<Image>();
+
         foreach (var item in _items)
         {
             _rectTransforms.Add(item.GetComponent<RectTransform>());
@@ -65,7 +68,7 @@ public class InventoryItemsBehaviour : MonoBehaviour
             _inventoryPosition = Mathf.Clamp(_inventoryPosition - 2, 0, _items.Count);
         }
 
-        Debug.Log(string.Format("OnLeftArrowPressedDown: _inventoryPosition = {0}, _items.Count = {1}", _inventoryPosition, _items.Count));
+        Debug.Log($"OnLeftArrowPressedDown: _inventoryPosition = {_inventoryPosition}, _items.Count = {_items.Count}");
         SetCurrentLighting(_inventoryPosition);
         SetCurrentDescription(_inventoryItems[_inventoryPosition].Name);
     }
@@ -81,17 +84,10 @@ public class InventoryItemsBehaviour : MonoBehaviour
         }
         else
         {
-            if (_inventoryPosition == 0)
-            {
-                _inventoryPosition = 1;
-            }
-            else
-            {
-                _inventoryPosition = Mathf.Clamp(_inventoryPosition - 2, 0, _items.Count);
-            }
+            _inventoryPosition = _inventoryPosition == 0 ? 1 : Mathf.Clamp(_inventoryPosition - 2, 0, _items.Count);
         }
 
-        Debug.Log(string.Format("OnRightArrowPressedDown: _inventoryPosition = {0}, _items.Count = {1}", _inventoryPosition, _items.Count));
+        Debug.Log($"OnRightArrowPressedDown: _inventoryPosition = {_inventoryPosition}, _items.Count = {_items.Count}");
         SetCurrentLighting(_inventoryPosition);
         SetCurrentDescription(_inventoryItems[_inventoryPosition].Name);
     }
@@ -123,13 +119,18 @@ public class InventoryItemsBehaviour : MonoBehaviour
 
     public void SetItems(List<Item> items)
     {
+        if (_images == null)
+        {
+            FetchItems();
+        }
+
         ClearImages();
 
         SetCurrentDescription(items[0].Name);
         SetCurrentLighting(0);
 
-        Debug.Log(string.Format("Awake: _rectTransforms.Count = {0}", _rectTransforms.Count));
         var len = items.Count;
+        
         for (var ind = 0; ind < len; ind++)
         {
             SetImage(ind, items[ind].Sprite, Color.white);
