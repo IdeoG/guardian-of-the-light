@@ -3,7 +3,7 @@ using UniRx;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider), typeof(Animator))]
-public abstract class BaseActionBehaviour : MonoBehaviour
+public abstract class BaseAction : MonoBehaviour
 {
     private const string RequiredTag = "Player";
     private IDisposable _keyActionPressedDown;

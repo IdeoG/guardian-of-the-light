@@ -1,9 +1,11 @@
 ﻿using System;
+using DG.Tweening;
+using DG.Tweening.Core;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InspectViewBehaviour : MonoBehaviour
+public class InspectView : MonoBehaviour
 {
     [SerializeField] private Text _itemDescription;
     [SerializeField] private Vector3 _eulerRotation;
@@ -31,11 +33,16 @@ public class InspectViewBehaviour : MonoBehaviour
         _item = Instantiate(item.Prefab);
         _item.layer = LayerMask.NameToLayer("UI");
 
+
         _itemTransform = _item.transform;
         _itemTransform.parent = _pivotTransform;
-        _itemTransform.position = _pivotTransform.position;
-        _itemTransform.rotation = Quaternion.Euler(_eulerRotation);
-        _itemTransform.localScale = _pivotTransform.localScale;
+        
+        _itemTransform.localPosition = Vector3.zero;
+        _itemTransform.localRotation = Quaternion.Euler(0, 180f, 0);
+        _itemTransform.localScale = Vector3.zero;
+
+        _item.transform.DOScale(1, 2);
+        _item.transform.DOLocalRotate(new Vector3(0, 360f, 0), 3, RotateMode.FastBeyond360);
     }
 
     private void OnEnable()
@@ -88,7 +95,10 @@ public class InspectViewBehaviour : MonoBehaviour
         _keyDownArrowPressed.Dispose();
         _keyLeftArrowPressed.Dispose();
         _keyRightArrowPressed.Dispose();
-        
+
         Destroy(_item);
+//        _item.transform.DOScale(0, 1);
+//        _item.transform.DOLocalRotate(new Vector3(0, -360f, 0), 2, RotateMode.FastBeyond360).OnComplete(() => Destroy(_item) );
     }
+
 }

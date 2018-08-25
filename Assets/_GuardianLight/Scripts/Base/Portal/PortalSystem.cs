@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class MinePortalSystem : MonoBehaviour
+public class PortalSystem : MonoBehaviour
 {
     [Header("Начальная позиция персонажа")] [SerializeField]
     private Transform _playerPosition;

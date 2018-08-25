@@ -2,7 +2,7 @@
 using UniRx;
 using UnityEngine;
 
-public class InventoryCanvasBehaviour : MonoBehaviour
+public class InventoryCanvas : MonoBehaviour
 {
     [SerializeField] private GameObject _basicView;
     [SerializeField] private GameObject _inspectView;
@@ -17,17 +17,22 @@ public class InventoryCanvasBehaviour : MonoBehaviour
 
         if (!isInspectViewActive)
         {
-            var item = _basicView.GetComponent<BasicViewBehaviour>().GetCurrentItem();
+            var item = _basicView.GetComponent<BasicView>().GetCurrentItem();
 
-            _basicView.SetActive(false);
-            _inspectView.SetActive(true);
+//            _basicView.SetActive(false);
+//            _inspectView.SetActive(true);
             
-            _inspectView.GetComponent<InspectViewBehaviour>().SetItem(item);
+            _basicView.GetComponent<FadeEffect>().FadeOut();
+            _inspectView.GetComponent<FadeEffect>().FadeIn();
+            
+            _inspectView.GetComponent<InspectView>().SetItem(item);
         }
         else
         {
-            _basicView.SetActive(true);
-            _inspectView.SetActive(false);
+//            _basicView.SetActive(true);
+            _basicView.GetComponent<FadeEffect>().FadeIn();
+            _inspectView.GetComponent<FadeEffect>().FadeOut();
+//            _inspectView.SetActive(false);
         }
     }
 
@@ -37,9 +42,8 @@ public class InventoryCanvasBehaviour : MonoBehaviour
             .Subscribe(_ => OnKeyInspectItemPressedDown())
             .AddTo(this);
         
-        _basicView.SetActive(true);
+        _basicView.GetComponent<FadeEffect>().FadeIn();
         _inspectView.SetActive(false);
-
     }
 
     private void OnDisable()

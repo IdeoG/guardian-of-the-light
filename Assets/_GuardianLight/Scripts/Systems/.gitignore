@@ -1,0 +1,4 @@
+*.meta
+/GameManagerSystem.cs.meta
+/InputSystem.cs.meta
+/InventorySystem.cs.meta

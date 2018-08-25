@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class KeyComponent : BaseActionBehaviour
+public class Key : BaseAction
 {
 //    [SerializeField] private KeyType _keyType;
 

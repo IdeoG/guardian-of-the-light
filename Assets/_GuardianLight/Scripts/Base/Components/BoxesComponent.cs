@@ -1,4 +1,4 @@
-﻿public class BoxesComponent : BaseActionBehaviour
+﻿public class BoxesComponent : BaseAction
 {
     protected override void OnKeyActionPressedDown()
     {

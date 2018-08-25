@@ -1,0 +1,5 @@
+*.meta
+/BoxesComponent.cs.meta
+/Door.cs.meta
+/Key.cs.meta
+/Padlock.cs.meta

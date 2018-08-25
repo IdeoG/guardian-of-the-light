@@ -1,0 +1,5 @@
+*.meta
+/CameraTrigger.cs.meta
+/GameMannager.cs.meta
+/TriggerPortal.cs.meta
+/WatchObj.cs.meta

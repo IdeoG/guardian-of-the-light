@@ -1,4 +1,4 @@
-﻿public class DoorComponent : BaseActionBehaviour
+﻿public class Door : BaseAction
 {
     private void ChangeDoorState()
     {

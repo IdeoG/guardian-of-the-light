@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PortalComponent : BaseActionBehaviour
+public class Portal : BaseAction
 {
     [SerializeField] private string _sceneName;
     [SerializeField] private int _startPointNumber;

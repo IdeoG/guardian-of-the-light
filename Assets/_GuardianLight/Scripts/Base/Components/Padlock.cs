@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider), typeof(Animator))]
-public class PadlockComponent : BaseActionBehaviour
+public class Padlock : BaseAction
 {
 //    [SerializeField] private KeyType _keyType;
     [SerializeField] private GameObject _lockedDoor;

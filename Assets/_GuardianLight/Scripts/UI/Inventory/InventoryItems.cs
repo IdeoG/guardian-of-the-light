@@ -4,7 +4,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryItemsBehaviour : MonoBehaviour
+public class InventoryItems : MonoBehaviour
 {
     [Header("Описание текущего предмета")] [SerializeField]
     private Text _itemDescription;
