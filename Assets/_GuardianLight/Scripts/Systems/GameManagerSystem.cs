@@ -12,17 +12,19 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class GameManagerSystem : MonoBehaviour
 {
     [Header("Герой")] [SerializeField] private GameObject _player;
-    
-    [Header("Полотна")]
-    [SerializeField] private GameObject _canvasInspectView;
+
+    [Header("Полотна")] [SerializeField] private GameObject _canvasInspectView;
     [SerializeField] private GameObject _canvasInventoryView;
     [SerializeField] private GameObject _canvasPadlockNoKeyHint;
 
-    public static GameManagerSystem Instance { get; private set; }
+    [Header("Fixed frame rate")] [SerializeField]
+    private int _frameRate;
+
 
     private void Awake()
     {
         Instance = this;
+        Application.targetFrameRate = _frameRate;
     }
 
     private void Start()
@@ -36,6 +38,28 @@ public class GameManagerSystem : MonoBehaviour
     {
         _canvasPadlockNoKeyHint.SetActive(true);
         Invoke("HideHint", 2f);
+    }
+
+    private void ShowInventoryView()
+    {
+        _player.GetComponent<ThirdPersonUserControl>().LockInput = true;
+        _canvasInventoryView.SetActive(true);
+    }
+
+    private void HideInventoryView()
+    {
+        _player.GetComponent<ThirdPersonUserControl>().LockInput = false;
+        _canvasInventoryView.SetActive(false);
+    }
+
+    private void OnKeyInventoryPressedDown()
+    {
+        var isInventoryActive = !_canvasInventoryView.activeSelf;
+
+        if (isInventoryActive)
+            ShowInventoryView();
+        else
+            HideInventoryView();
     }
     
     public void ShowHint(HintType hintType)
@@ -55,28 +79,8 @@ public class GameManagerSystem : MonoBehaviour
         _canvasPadlockNoKeyHint.SetActive(false);
     }
 
-    private void ShowInventoryView()
-    {
-        _player.GetComponent<ThirdPersonUserControl>().LockInput = true;
-        _canvasInventoryView.SetActive(true);
-    }
-
-    private void HideInventoryView()
-    {
-        _player.GetComponent<ThirdPersonUserControl>().LockInput = false;
-        _canvasInventoryView.SetActive(false);
-    }
     
-    private void OnKeyInventoryPressedDown()
-    {
-        var isInventoryActive = !_canvasInventoryView.activeSelf;
-
-        if (isInventoryActive)
-            ShowInventoryView();
-        else
-            HideInventoryView();
-    }
-
+    public static GameManagerSystem Instance { get; private set; }
 }
 
 public enum HintType
