@@ -122,8 +122,9 @@ public class InventoryItemsBehaviour : MonoBehaviour
 
         ClearImages();
 
-        SetCurrentDescription(items[0].Name);
-        SetCurrentLighting(0);
+        _inventoryPosition = 0;
+        SetCurrentDescription(items[_inventoryPosition].Name);
+        SetCurrentLighting(_inventoryPosition);
 
         var len = items.Count;
         

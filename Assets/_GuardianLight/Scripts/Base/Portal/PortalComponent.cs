@@ -17,9 +17,11 @@ public class PortalComponent : BaseActionBehaviour
         SceneBundle.StartPointNumber = _startPointNumber;
 
         /** BUG: LoadScene
-         * Этот кусок кода работает неправильно. Показывает только загрузку на 1% и по завершению загрузки.
+         * 1. Этот кусок кода работает неправильно. Показывает только загрузку на 1% и по завершению загрузки.
          * Нет детализации.
+         * 2. Loading scene takes too much time to switch the scene. Loading time is about 1 second!!
          */
+        
         var operation = SceneManager.LoadSceneAsync(_sceneName);
 //            .AsAsyncOperationObservable()
 //            .Do(x => Debug.Log(string.Format("Current progress = {0}%", x.progress)))

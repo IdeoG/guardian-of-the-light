@@ -31,7 +31,6 @@ public class BasicViewBehaviour : MonoBehaviour {
 
 	private void OnEnable()
 	{
-		Debug.Log($"BasicViewBehaviour: OnEnable");
 		var items = InventorySystem.Instance.GetItems();
 		_items = items;
 		
@@ -52,4 +51,6 @@ public class BasicViewBehaviour : MonoBehaviour {
 		var ind = _itemsBehaviour.GetCurrentPosition();
 		return _items[ind];
 	}
+
+	
 }
