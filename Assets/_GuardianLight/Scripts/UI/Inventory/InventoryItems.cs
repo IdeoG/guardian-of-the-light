@@ -122,7 +122,7 @@ public class InventoryItems : MonoBehaviour
 
         ClearImages();
 
-        _inventoryPosition = 0;
+//        _inventoryPosition = 0;
         SetCurrentDescription(items[_inventoryPosition].Name);
         SetCurrentLighting(_inventoryPosition);
 

@@ -1,9 +1,0 @@
-/**/*.meta
-*.meta
-/.gitignore.meta
-/Base.meta
-/Inventory.meta
-/Player.meta
-/Systems.meta
-/UI.meta
-/Unstructured.meta
