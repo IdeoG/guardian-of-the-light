@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class PortalSystem : MonoBehaviour
 {
-    [Header("Начальная позиция персонажа")] [SerializeField]
+    [Header("Player initial point.")] [SerializeField]
     private Transform _playerPosition;
 
-    [Space(10)] [Header("Доступные порталы локации")] [SerializeField]
+    [Space(10)] [Header("Available location portals.")] [SerializeField]
     private List<Transform> _portals;
 
     private void Awake()

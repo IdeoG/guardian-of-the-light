@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,29 +10,17 @@ public class Portal : BaseAction
 
     protected override void OnKeyActionPressedDown()
     {
-        StartCoroutine(LoadScene());
+        LoadScene();
     }
 
-    private IEnumerator LoadScene()
+    private void LoadScene()
     {
         SceneBundle.StartPointNumber = _startPointNumber;
 
-        /** BUG: LoadScene
-         * 1. Этот кусок кода работает неправильно. Показывает только загрузку на 1% и по завершению загрузки.
-         * Нет детализации.
-         * 2. Loading scene takes too much time to switch the scene. Loading time is about 1 second!!
-         */
-        
-        var operation = SceneManager.LoadSceneAsync(_sceneName);
-//            .AsAsyncOperationObservable()
-//            .Do(x => Debug.Log(string.Format("Current progress = {0}%", x.progress)))
-//            .Subscribe(x => Debug.Log(string.Format("Is Done = {0}%", x.isDone)));
+        SceneManager.LoadSceneAsync(_sceneName)
+            .AsAsyncOperationObservable()
+            .Do(x => Debug.Log($"Current progress = {x.progress}%"))
+            .Subscribe(x => Debug.Log($"Is Done = {x.isDone}%"));
 
-        while (!operation.isDone)
-        {
-            Debug.Log(operation.progress);
-
-            yield return null;
-        }
     }
 }

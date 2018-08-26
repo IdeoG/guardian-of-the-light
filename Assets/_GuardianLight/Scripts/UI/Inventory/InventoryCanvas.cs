@@ -18,9 +18,6 @@ public class InventoryCanvas : MonoBehaviour
         if (!isInspectViewActive)
         {
             var item = _basicView.GetComponent<BasicView>().GetCurrentItem();
-
-//            _basicView.SetActive(false);
-//            _inspectView.SetActive(true);
             
             _basicView.GetComponent<FadeEffect>().FadeOut();
             _inspectView.GetComponent<FadeEffect>().FadeIn();
@@ -29,10 +26,8 @@ public class InventoryCanvas : MonoBehaviour
         }
         else
         {
-//            _basicView.SetActive(true);
             _basicView.GetComponent<FadeEffect>().FadeIn();
             _inspectView.GetComponent<FadeEffect>().FadeOut();
-//            _inspectView.SetActive(false);
         }
     }
 

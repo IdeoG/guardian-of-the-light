@@ -2,9 +2,7 @@
 {
     protected override void OnKeyActionPressedDown()
     {
-        /** TODO: OnKeyPressedAction
-         * Сделать красивее!
-         */
+        // TODO: Add attractive animation =)
         DestroyBoxes();
     }
 

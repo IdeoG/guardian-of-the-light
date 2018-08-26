@@ -3,17 +3,17 @@ using DG.Tweening;
 using DG.Tweening.Core;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class InspectView : MonoBehaviour
 {
     [SerializeField] private Text _itemDescription;
-    [SerializeField] private Vector3 _eulerRotation;
     [SerializeField] private Transform _pivotTransform;
 
     [Header("Просмотр объекта")]
-    [SerializeField] private float _sensetivityX;
-    [SerializeField] private float _sensetivityY;
+    [SerializeField] private float _sensitivityX;
+    [SerializeField] private float _sensitivityY;
     [SerializeField] private float _minScale;
     [SerializeField] private float _maxScale;
     
@@ -68,7 +68,7 @@ public class InspectView : MonoBehaviour
     {
         if (_itemTransform.localScale.x > _maxScale) return;
         
-        _itemTransform.localScale += _sensetivityY * Vector3.one;
+        _itemTransform.localScale += _sensitivityY * Vector3.one;
     }
 
     
@@ -76,17 +76,17 @@ public class InspectView : MonoBehaviour
     {
         if (_itemTransform.localScale.x < _minScale) return;
         
-        _itemTransform.localScale -= _sensetivityY * Vector3.one;
+        _itemTransform.localScale -= _sensitivityY * Vector3.one;
     }
 
     private void OnKeyLeftArrowPressed()
     {
-        _itemTransform.localRotation *= Quaternion.Euler(new Vector3(0, -_sensetivityX * 1f, 0));
+        _itemTransform.localRotation *= Quaternion.Euler(new Vector3(0, -_sensitivityX * 1f, 0));
     }
 
     private void OnKeyRightArrowPressed()
     {
-        _itemTransform.localRotation *= Quaternion.Euler(new Vector3(0, _sensetivityX * 1f, 0));
+        _itemTransform.localRotation *= Quaternion.Euler(new Vector3(0, _sensitivityX * 1f, 0));
     }
     
     private void OnDisable()

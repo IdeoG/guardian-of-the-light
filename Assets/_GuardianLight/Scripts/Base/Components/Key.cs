@@ -1,10 +1,5 @@
-﻿using System;
-using UnityEngine;
-
-public class Key : BaseAction
+﻿public class Key : BaseAction
 {
-//    [SerializeField] private KeyType _keyType;
-
     protected override void OnKeyActionPressedDown()
     {
         CollectKey();
@@ -13,17 +8,13 @@ public class Key : BaseAction
 
     private void PlayKeyAnimation()
     {
-        /** PlayKeyAnimation
-         * TODO: 1. Проиграть анимацию поднятия ключа
-         * 2. Удалить объект как только закончится анимация
-         */
-
-
+        // TODO: PlayKeyAnimation -> Add attractive animation
         Destroy(gameObject, 1);
     }
 
     private void CollectKey()
     {
+        // TODO: CollectKey -> Implement key collection functionality
 //        var inventory = _InventorySystem.Instance;
 //
 //        switch (_keyType)

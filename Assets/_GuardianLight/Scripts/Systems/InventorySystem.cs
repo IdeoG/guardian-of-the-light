@@ -5,8 +5,7 @@ public class InventorySystem : MonoBehaviour
 {
     private bool _isOpenInventory;
 
-    [Header("Все предметы инвентаря")] [SerializeField]
-    private List<Item> _items;
+    [SerializeField] private List<Item> _items;
 
 
     private void Awake()

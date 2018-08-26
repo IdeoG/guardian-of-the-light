@@ -3,20 +3,10 @@
 [RequireComponent(typeof(BoxCollider), typeof(Animator))]
 public class Padlock : BaseAction
 {
-//    [SerializeField] private KeyType _keyType;
     [SerializeField] private GameObject _lockedDoor;
 
     private void PlayOnDestroyAnimation()
     {
-        GameManagerSystem.Instance.HideHint();
-
-        /** PlayOnDestroyAnimation
-         * 1. Анимация поднятия зацепки в замке
-         * 2. Добавляем rigidbody замку
-         * 3. От падения на землю считаем 3 секунды и плавно в это время меняем альфу у материала
-         * 4. Разрушаем объект
-         */
-
         Animator.enabled = true;
 
         _lockedDoor.GetComponent<BoxCollider>().enabled = true;
@@ -39,6 +29,7 @@ public class Padlock : BaseAction
 
     protected override void OnKeyActionPressedDown()
     {
+        // TODO: OnKeyActionPressedDown -> Implement Padlock action
 //        var isContainsKey = _InventorySystem.Instance.IsContainsKey(_keyType);
 //        if (isContainsKey)
 //            PlayOnDestroyAnimation();

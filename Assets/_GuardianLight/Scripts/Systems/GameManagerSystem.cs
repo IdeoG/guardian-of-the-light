@@ -3,17 +3,11 @@ using UniRx;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 
-/**
- * TODO: GameManagerSystem
- * 1. Сделать одно полотно для подсказок
- * 2. Создать класс, который хранит карту из текста подсказки и ссылки на картинку
- * 3. В окне подсказки, текст должен содержать имя ключа и подсказку типа "Этим ключом можно что-то открыть"
- */
 public class GameManagerSystem : MonoBehaviour
 {
-    [Header("Герой")] [SerializeField] private GameObject _player;
+    [Header("Player")] [SerializeField] private GameObject _player;
 
-    [Header("Полотна")] [SerializeField] private GameObject _canvasInspectView;
+    [Header("Canvases")] [SerializeField] private GameObject _canvasInspectView;
     [SerializeField] private GameObject _canvasInventoryView;
     [SerializeField] private GameObject _canvasPadlockNoKeyHint;
 

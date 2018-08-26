@@ -6,13 +6,11 @@ using UnityEngine.UI;
 
 public class InventoryItems : MonoBehaviour
 {
-    [Header("Описание текущего предмета")] [SerializeField]
-    private Text _itemDescription;
+    [SerializeField] private Text _itemDescription;
 
-    [Header("Подсветка текущего предмета")] [SerializeField]
-    private RectTransform _itemLighting;
+    [SerializeField] private RectTransform _itemLighting;
 
-    [Header("Пулл предметов")] [SerializeField]
+    [Header("Items pool")] [SerializeField]
     private List<GameObject> _items;
 
     private List<RectTransform> _rectTransforms;
@@ -39,7 +37,6 @@ public class InventoryItems : MonoBehaviour
 
     private void OnEnable()
     {
-        
         _leftArrowPressDown = InputSystem.Instance.KeyLeftArrowPressedDown
             .Subscribe(_ => OnLeftArrowPressedDown())
             .AddTo(this);
@@ -59,7 +56,7 @@ public class InventoryItems : MonoBehaviour
     {
         if (_inventoryPosition % 2 == 0)
         {
-            if ( _inventoryPosition >= _inventoryItems.Count - 2) return;
+            if (_inventoryPosition >= _inventoryItems.Count - 2) return;
             _inventoryPosition += 2;
         }
         else
@@ -81,7 +78,9 @@ public class InventoryItems : MonoBehaviour
         }
         else
         {
-            _inventoryPosition = _inventoryPosition == 0 ? 1 : Mathf.Clamp(_inventoryPosition - 2, 0, _inventoryItems.Count);
+            _inventoryPosition = _inventoryPosition == 0
+                ? 1
+                : Mathf.Clamp(_inventoryPosition - 2, 0, _inventoryItems.Count);
         }
 
         SetCurrentLighting(_inventoryPosition);
@@ -122,12 +121,11 @@ public class InventoryItems : MonoBehaviour
 
         ClearImages();
 
-//        _inventoryPosition = 0;
         SetCurrentDescription(items[_inventoryPosition].Name);
         SetCurrentLighting(_inventoryPosition);
 
         var len = items.Count;
-        
+
         for (var ind = 0; ind < len; ind++)
         {
             SetImage(ind, items[ind].Sprite, Color.white);
