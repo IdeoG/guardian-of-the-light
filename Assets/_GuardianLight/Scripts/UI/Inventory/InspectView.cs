@@ -11,12 +11,16 @@ public class InspectView : MonoBehaviour
     [SerializeField] private Text _itemDescription;
     [SerializeField] private Transform _pivotTransform;
 
-    [Header("Просмотр объекта")]
+    [Header("Inspect Item Configuration")] 
     [SerializeField] private float _sensitivityX;
     [SerializeField] private float _sensitivityY;
     [SerializeField] private float _minScale;
     [SerializeField] private float _maxScale;
-    
+
+    [Header("Animation duration")] 
+    [SerializeField] private float _onEnableItemAnimationDuration;
+    [SerializeField] private float _onDisableItemAnimationDuration;
+
     private GameObject _item;
     private Transform _itemTransform;
 
@@ -24,8 +28,23 @@ public class InspectView : MonoBehaviour
     private IDisposable _keyRightArrowPressed;
     private IDisposable _keyUpArrowPressed;
     private IDisposable _keyDownArrowPressed;
-    
-    
+
+
+    public void PlayOnEnableAnimation()
+    {
+        _item.transform.DOLocalMove(Vector3.zero, _onEnableItemAnimationDuration);
+        _item.transform.DOScale(1, _onEnableItemAnimationDuration);
+        _item.transform.DOLocalRotate(new Vector3(0, 360f, 0), _onEnableItemAnimationDuration, RotateMode.FastBeyond360);
+    }
+
+    public void PlayOnDisableAnimation()
+    {
+        _item.transform.DOLocalMove(new Vector3(0, -0.5f, 0), _onDisableItemAnimationDuration);
+        _item.transform.DOScale(0, _onDisableItemAnimationDuration);
+        _item.transform.DOLocalRotate(new Vector3(0, 180f, 0), _onDisableItemAnimationDuration, RotateMode.FastBeyond360)
+            .OnComplete(() =>  Destroy(_item) );
+    }
+
     public void SetItem(Item item)
     {
         _itemDescription.text = item.Description;
@@ -36,13 +55,10 @@ public class InspectView : MonoBehaviour
 
         _itemTransform = _item.transform;
         _itemTransform.parent = _pivotTransform;
-        
-        _itemTransform.localPosition = Vector3.zero;
+
+        _itemTransform.localPosition = new Vector3(0, -0.5f, 0);
         _itemTransform.localRotation = Quaternion.Euler(0, 180f, 0);
         _itemTransform.localScale = Vector3.zero;
-
-        _item.transform.DOScale(1, 2);
-        _item.transform.DOLocalRotate(new Vector3(0, 360f, 0), 3, RotateMode.FastBeyond360);
     }
 
     private void OnEnable()
@@ -50,15 +66,15 @@ public class InspectView : MonoBehaviour
         _keyUpArrowPressed = InputSystem.Instance.KeyUpArrowPressed
             .Subscribe(_ => OnKeyUpArrowPressed())
             .AddTo(this);
-        
+
         _keyDownArrowPressed = InputSystem.Instance.KeyDownArrowPressed
             .Subscribe(_ => OnKeyDownArrowPressed())
             .AddTo(this);
-        
+
         _keyLeftArrowPressed = InputSystem.Instance.KeyLeftArrowPressed
             .Subscribe(_ => OnKeyLeftArrowPressed())
             .AddTo(this);
-        
+
         _keyRightArrowPressed = InputSystem.Instance.KeyRightArrowPressed
             .Subscribe(_ => OnKeyRightArrowPressed())
             .AddTo(this);
@@ -67,15 +83,15 @@ public class InspectView : MonoBehaviour
     private void OnKeyUpArrowPressed()
     {
         if (_itemTransform.localScale.x > _maxScale) return;
-        
+
         _itemTransform.localScale += _sensitivityY * Vector3.one;
     }
 
-    
+
     private void OnKeyDownArrowPressed()
     {
         if (_itemTransform.localScale.x < _minScale) return;
-        
+
         _itemTransform.localScale -= _sensitivityY * Vector3.one;
     }
 
@@ -88,17 +104,12 @@ public class InspectView : MonoBehaviour
     {
         _itemTransform.localRotation *= Quaternion.Euler(new Vector3(0, _sensitivityX * 1f, 0));
     }
-    
+
     private void OnDisable()
     {
         _keyUpArrowPressed.Dispose();
         _keyDownArrowPressed.Dispose();
         _keyLeftArrowPressed.Dispose();
         _keyRightArrowPressed.Dispose();
-
-        Destroy(_item);
-//        _item.transform.DOScale(0, 1);
-//        _item.transform.DOLocalRotate(new Vector3(0, -360f, 0), 2, RotateMode.FastBeyond360).OnComplete(() => Destroy(_item) );
     }
-
 }

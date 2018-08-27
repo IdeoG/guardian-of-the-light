@@ -7,7 +7,6 @@ public class InventoryCanvas : MonoBehaviour
     [SerializeField] private GameObject _basicView;
     [SerializeField] private GameObject _inspectView;
 
-
     private IDisposable _keyInspectItemPressedDown;
 
 
@@ -23,11 +22,13 @@ public class InventoryCanvas : MonoBehaviour
             _inspectView.GetComponent<FadeEffect>().FadeIn();
             
             _inspectView.GetComponent<InspectView>().SetItem(item);
+            _inspectView.GetComponent<InspectView>().PlayOnEnableAnimation();
         }
         else
         {
             _basicView.GetComponent<FadeEffect>().FadeIn();
             _inspectView.GetComponent<FadeEffect>().FadeOut();
+            _inspectView.GetComponent<InspectView>().PlayOnDisableAnimation();
         }
     }
 
