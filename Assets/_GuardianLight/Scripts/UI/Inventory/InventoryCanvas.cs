@@ -12,6 +12,7 @@ public class InventoryCanvas : MonoBehaviour
 
     private void OnKeyInspectItemPressedDown()
     {
+        // BUG: Fast double click on Inventory Button leads to Missing Reference on GameObject. Block double click, then fade effect is running.
         var isInspectViewActive = _inspectView.activeSelf;
 
         if (!isInspectViewActive)
