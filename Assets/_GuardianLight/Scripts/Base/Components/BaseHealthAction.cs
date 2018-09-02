@@ -33,6 +33,7 @@ public abstract class BaseHealthAction : MonoBehaviour
         if (!isPlayer) return;
 
         _keyActionPressed.Dispose();
+        _keyExtraActionPressed.Dispose();
     }
 
     private void Awake()
