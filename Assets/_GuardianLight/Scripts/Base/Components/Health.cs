@@ -2,13 +2,13 @@
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] public float MaxHealth;
+    [SerializeField] public float MaxValue;
     [SerializeField] public float Value;
 
 
     public bool CanEnhance()
     {
-        return Value < MaxHealth;
+        return Value < MaxValue;
     }
 
     public bool CanReduce()
@@ -18,16 +18,16 @@ public class Health : MonoBehaviour
 
     public void Reduce(float value)
     {
-        Value = Mathf.Clamp(Value - value, 0, MaxHealth);
+        Value = Mathf.Clamp(Value - value, 0, MaxValue);
     }
 
     public void Enhance(float value)
     {
-        Value = Mathf.Clamp(Value + value, 0, MaxHealth);
+        Value = Mathf.Clamp(Value + value, 0, MaxValue);
     }
 
     private void Awake()
     {
-        Value = Value > 0 ? Value : MaxHealth;
+        Value = Value > 0 ? Value : MaxValue;
     }
 }

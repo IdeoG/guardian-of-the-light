@@ -14,7 +14,7 @@ public class Mushroom : BaseHealthAction
         if (!_health.CanReduce() || !playerHealth.CanEnhance()) return;
 
         _health.Reduce(_consumedHealthPerFrame);
-        _skinnedMesh.material.ReduceEmissionColorAlpha(0.3f * _consumedHealthPerFrame / _health.MaxHealth);
+        _skinnedMesh.material.ReduceEmissionColorAlpha(0.3f * _consumedHealthPerFrame / _health.MaxValue);
         _skinnedMesh.SetBlendShapeWeight(0, _skinnedMesh.GetBlendShapeWeight(0) + _consumedHealthPerFrame * _skinnedMeshK);
         
         playerHealth.Enhance(_consumedHealthPerFrame);
@@ -25,7 +25,7 @@ public class Mushroom : BaseHealthAction
         if (!_health.CanEnhance() || !playerHealth.CanReduce()) return;
 
         _health.Enhance(_consumedHealthPerFrame);
-        _skinnedMesh.material.EnhanceEmissionColorAlpha(0.3f * _consumedHealthPerFrame / _health.MaxHealth);
+        _skinnedMesh.material.EnhanceEmissionColorAlpha(0.3f * _consumedHealthPerFrame / _health.MaxValue);
         _skinnedMesh.SetBlendShapeWeight(0, _skinnedMesh.GetBlendShapeWeight(0) - _consumedHealthPerFrame * _skinnedMeshK);
         
         playerHealth.Reduce(_consumedHealthPerFrame);
@@ -36,7 +36,7 @@ public class Mushroom : BaseHealthAction
         _health = GetComponent<Health>();
         _skinnedMesh = GetComponent<SkinnedMeshRenderer>();
 
-        _skinnedMeshK = 100f / _health.MaxHealth;
+        _skinnedMeshK = 100f / _health.MaxValue;
     }
 
 }
