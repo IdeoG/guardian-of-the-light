@@ -1,5 +1,10 @@
 ﻿using UnityEngine;
 
+/** TODO: Mushroom
+ * Два поля в инспекторе
+ * 1. Начальный цвет для гриба - 100%
+ * 2. Конечный цвет для гриба - 0%
+ */
 public class Mushroom : BaseHealthAction
 {
     [Header("Mushroom Light")] 
