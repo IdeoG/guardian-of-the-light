@@ -2,6 +2,7 @@ using System;
 using UniRx;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator), typeof(Health), typeof(BoxCollider))]
 public abstract class BaseHealthAction : MonoBehaviour
 {
     private const string RequiredTag = "Player";
@@ -9,20 +10,23 @@ public abstract class BaseHealthAction : MonoBehaviour
     private IDisposable _keyExtraActionPressed;
 
     protected Animator Animator;
+    protected Health Health;
     
     
     private void OnTriggerEnter(Collider other)
-    {
+    {    
         var isPlayer = other.tag.Equals(RequiredTag);
 
         if (!isPlayer) return;
 
+        var playerHealth = GameManagerSystem.Instance.Player.GetComponent<Health>();
+
         _keyActionPressed = InputSystem.Instance.KeyActionPressed
-            .Subscribe(_ => OnKeyActionPressed(other.gameObject.GetComponent<Health>()))
+            .Subscribe(_ => OnKeyActionPressed(playerHealth))
             .AddTo(this);
         
         _keyExtraActionPressed = InputSystem.Instance.KeyExtraActionPressed
-            .Subscribe(_ => OnKeyExtraActionPressed(other.gameObject.GetComponent<Health>()))
+            .Subscribe(_ => OnKeyExtraActionPressed(playerHealth))
             .AddTo(this);
     }
 
@@ -39,6 +43,7 @@ public abstract class BaseHealthAction : MonoBehaviour
     private void Awake()
     {
         Animator = GetComponent<Animator>();
+        Health = GetComponent<Health>();
 
         gameObject.GetComponent<BoxCollider>().isTrigger = true;
     }

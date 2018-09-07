@@ -31,7 +31,7 @@ public class BasicView : MonoBehaviour
 
     private void OnEnable()
     {
-        var items = InventorySystem.Instance.GetItems();
+        var items = InventorySystem.Instance.GetTookItems();
         _items = items;
 
         _inventoryArrows.SetActive(items.Count > 5);

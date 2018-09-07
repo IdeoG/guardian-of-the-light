@@ -15,13 +15,15 @@ public class InventorySystem : MonoBehaviour
         Instance = this;
     }
 
-    public List<Item> GetItems()
+    public List<Item> GetTookItems()
     {
         var items = new List<Item>();
 
         foreach (var item in _items)
             if (item.IsTook)
                 items.Add(item);
+
+       
 
         return items;
     }

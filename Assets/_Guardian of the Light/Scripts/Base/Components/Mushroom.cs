@@ -1,42 +1,69 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Health))]
 public class Mushroom : BaseHealthAction
 {
-    [SerializeField] private float _consumedHealthPerFrame;
+    [Header("Mushroom Light")] 
+    [SerializeField] private Light _light;
+    [SerializeField] private float _maxIntensity;
+    
+    [Header("Mushroom Mesh Color")]
+    [SerializeField] private SkinnedMeshRenderer _skinnedMesh;
+    [SerializeField] private Color _defaultMeshColor;
 
-    private SkinnedMeshRenderer _skinnedMesh;
-    private float _skinnedMeshK;
-    private Health _health;
+    [SerializeField] private float _reducedHealthPerTime = 0.1f;
 
     protected override void OnKeyActionPressed(Health playerHealth)
     {
-        if (!_health.CanReduce() || !playerHealth.CanEnhance()) return;
-
-        _health.Reduce(_consumedHealthPerFrame);
-        _skinnedMesh.material.ReduceEmissionColorAlpha(0.3f * _consumedHealthPerFrame / _health.MaxValue);
-        _skinnedMesh.SetBlendShapeWeight(0, _skinnedMesh.GetBlendShapeWeight(0) + _consumedHealthPerFrame * _skinnedMeshK);
+        if (!Health.CanReduce() || !playerHealth.CanEnhance()) return;
         
-        playerHealth.Enhance(_consumedHealthPerFrame);
+        ReduceHealth(Health.ReactivePercent.Value);
+        playerHealth.Enhance(_reducedHealthPerTime);
     }
 
     protected override void OnKeyExtraActionPressed(Health playerHealth)
     {
-        if (!_health.CanEnhance() || !playerHealth.CanReduce()) return;
-
-        _health.Enhance(_consumedHealthPerFrame);
-        _skinnedMesh.material.EnhanceEmissionColorAlpha(0.3f * _consumedHealthPerFrame / _health.MaxValue);
-        _skinnedMesh.SetBlendShapeWeight(0, _skinnedMesh.GetBlendShapeWeight(0) - _consumedHealthPerFrame * _skinnedMeshK);
-        
-        playerHealth.Reduce(_consumedHealthPerFrame);
+        if (!Health.CanEnhance() || !playerHealth.CanReduce()) return;
+      
+        EnhanceHealth(Health.ReactivePercent.Value);
+        playerHealth.Reduce(_reducedHealthPerTime);
     }
 
-    private void Awake()
+    private void EnhanceHealth(float percent)
     {
-        _health = GetComponent<Health>();
-        _skinnedMesh = GetComponent<SkinnedMeshRenderer>();
-
-        _skinnedMeshK = 100f / _health.MaxValue;
+        Health.Enhance(_reducedHealthPerTime);
+        SetMushroomLightAndAnimation(percent);
+        EnhanceMeshColor();
+    }
+    
+    private void ReduceHealth(float percent)
+    {
+        Health.Reduce(_reducedHealthPerTime);
+        SetMushroomLightAndAnimation(percent);
+        ReduceMeshColor();
     }
 
+    private void EnhanceMeshColor()
+    {
+        var color = _skinnedMesh.material.GetColor("_EmissionColor");
+        var deltaColor = 0.05f * Mathf.LinearToGammaSpace(_reducedHealthPerTime);
+
+        color = color * (1 + deltaColor);
+        _skinnedMesh.material.SetColor("_EmissionColor", color);
+    }
+    
+    private void ReduceMeshColor()
+    {
+        var color = _skinnedMesh.material.GetColor("_EmissionColor");
+        var deltaColor = 0.05f * Mathf.LinearToGammaSpace(_reducedHealthPerTime);
+
+        color = color * (1 - deltaColor);
+        _skinnedMesh.material.SetColor("_EmissionColor", color);
+    }
+
+    private void SetMushroomLightAndAnimation(float percent)
+    {
+        _light.intensity = percent * _maxIntensity;
+        Animator.Play("Mushroom", 0, 1 - percent); 
+    }
+    
 }
