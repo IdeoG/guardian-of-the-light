@@ -6,6 +6,11 @@ public class Mushroom : BaseHealthAction
     [SerializeField] private Light _light;
     [SerializeField] private float _maxIntensity;
     
+    [Header("Mushroom Particles")]
+    [SerializeField] private ParticleSystem _particles;
+    [SerializeField] private float _maxEmission;
+    
+    
     [Header("Mushroom Mesh Color")]
     [SerializeField] private SkinnedMeshRenderer _skinnedMesh;
     [SerializeField] private Color _defaultMeshColor;
@@ -31,6 +36,7 @@ public class Mushroom : BaseHealthAction
     private void EnhanceHealth(float percent)
     {
         Health.Enhance(_reducedHealthPerTime);
+        SetMushroomParticlesEmission(percent);
         SetMushroomLightAndAnimation(percent);
         EnhanceMeshColor();
     }
@@ -39,13 +45,14 @@ public class Mushroom : BaseHealthAction
     {
         Health.Reduce(_reducedHealthPerTime);
         SetMushroomLightAndAnimation(percent);
+        SetMushroomParticlesEmission(percent);
         ReduceMeshColor();
     }
 
     private void EnhanceMeshColor()
     {
         var color = _skinnedMesh.material.GetColor("_EmissionColor");
-        var deltaColor = 0.05f * Mathf.LinearToGammaSpace(_reducedHealthPerTime);
+        var deltaColor = 0.08f * Mathf.LinearToGammaSpace(_reducedHealthPerTime);
 
         color = color * (1 + deltaColor);
         _skinnedMesh.material.SetColor("_EmissionColor", color);
@@ -54,7 +61,7 @@ public class Mushroom : BaseHealthAction
     private void ReduceMeshColor()
     {
         var color = _skinnedMesh.material.GetColor("_EmissionColor");
-        var deltaColor = 0.05f * Mathf.LinearToGammaSpace(_reducedHealthPerTime);
+        var deltaColor = 0.08f * Mathf.LinearToGammaSpace(_reducedHealthPerTime);
 
         color = color * (1 - deltaColor);
         _skinnedMesh.material.SetColor("_EmissionColor", color);
@@ -64,6 +71,11 @@ public class Mushroom : BaseHealthAction
     {
         _light.intensity = percent * _maxIntensity;
         Animator.Play("Mushroom", 0, 1 - percent); 
+    }
+
+    private void SetMushroomParticlesEmission(float percent)
+    {
+        _particles.emissionRate = percent * _maxEmission;
     }
     
 }
