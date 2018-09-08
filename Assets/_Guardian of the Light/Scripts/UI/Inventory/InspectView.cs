@@ -4,33 +4,32 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-/** TODO: InspectView
- * 1. Переделать кнопки увеличения/уменьшения на UpArrow/DownArrow
- * 2. Добавить кнопки поворота по оси Z на W/S
- */
 public class InspectView : MonoBehaviour
 {
     private GameObject _item;
     private Transform _itemTransform;
     
+    private IDisposable _keyUpArrowPressed;
     private IDisposable _keyDownArrowPressed;
     private IDisposable _keyLeftArrowPressed;
     private IDisposable _keyRightArrowPressed;
-    private IDisposable _keyUpArrowPressed;
+    private IDisposable _keyReduceSizePressed;
+    private IDisposable _keyIncreaseSizePressed;
     
     [SerializeField] private Text _itemDescription;
     
-    [SerializeField] private float _maxScale;
-    [SerializeField] private float _minScale;
-    [SerializeField] private float _onDisableItemAnimationDuration;
+    [SerializeField] private float _maxScale = 2f;
+    [SerializeField] private float _minScale = 1f;
+    [SerializeField] private float _onDisableItemAnimationDuration = 0.4f;
 
     [Header("Animation duration")] 
     [SerializeField] private float _onEnableItemAnimationDuration;
     [SerializeField] private Transform _pivotTransform;
 
     [Header("Inspect Item Configuration")] 
-    [SerializeField] private float _sensitivityX;
-    [SerializeField] private float _sensitivityY;
+    [SerializeField] private float _sensitivityX = 2f;
+    [SerializeField] private float _sensitivityY = 2f;
+    [SerializeField] private float _sensitivityScale = 0.02f;
 
 
     public void PlayOnEnableAnimation()
@@ -71,21 +70,32 @@ public class InspectView : MonoBehaviour
         _keyDownArrowPressed = InputSystem.Instance.KeyDownArrowPressed.Subscribe(_ => OnKeyDownArrowPressed()).AddTo(this);
         _keyLeftArrowPressed = InputSystem.Instance.KeyLeftArrowPressed.Subscribe(_ => OnKeyLeftArrowPressed()).AddTo(this);
         _keyRightArrowPressed = InputSystem.Instance.KeyRightArrowPressed.Subscribe(_ => OnKeyRightArrowPressed()).AddTo(this);
+        _keyReduceSizePressed = InputSystem.Instance.KeyReduceSizePressed.Subscribe(_ => OnKeyReduceSizePressed()).AddTo(this);
+        _keyIncreaseSizePressed = InputSystem.Instance.KeyIncreaseSizePressed.Subscribe(_ => OnKeyIncreaseSizePressed()).AddTo(this);
+    }
+
+    private void OnKeyIncreaseSizePressed()
+    {
+        if (_itemTransform.localScale.x > _maxScale) return;
+
+        _itemTransform.localScale += _sensitivityScale * Vector3.one;
+    }
+
+    private void OnKeyReduceSizePressed()
+    {
+        if (_itemTransform.localScale.x < _minScale) return;
+
+        _itemTransform.localScale -= _sensitivityScale * Vector3.one;
     }
 
     private void OnKeyUpArrowPressed()
     {
-        if (_itemTransform.localScale.x > _maxScale) return;
-
-        _itemTransform.localScale += _sensitivityY * Vector3.one;
+        _itemTransform.localRotation *= Quaternion.Euler(new Vector3( _sensitivityY * 1f, 0, 0));
     }
-
 
     private void OnKeyDownArrowPressed()
     {
-        if (_itemTransform.localScale.x < _minScale) return;
-
-        _itemTransform.localScale -= _sensitivityY * Vector3.one;
+        _itemTransform.localRotation *= Quaternion.Euler(new Vector3(-_sensitivityY * 1f, 0, 0));
     }
 
     private void OnKeyLeftArrowPressed()
@@ -104,7 +114,9 @@ public class InspectView : MonoBehaviour
         _keyDownArrowPressed.Dispose();
         _keyLeftArrowPressed.Dispose();
         _keyRightArrowPressed.Dispose();
-        
+        _keyReduceSizePressed.Dispose();
+        _keyIncreaseSizePressed.Dispose();
+     
         if (_item != null) Destroy(_item);
     }
 }

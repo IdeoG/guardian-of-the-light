@@ -21,6 +21,9 @@ public class InputSystem : MonoBehaviour
 
     public IObservable<Unit> KeyLeftArrowPressedDown { get; private set; }
     public IObservable<Unit> KeyRightArrowPressedDown { get; private set; }
+    
+    public IObservable<Unit> KeyReduceSizePressed { get; private set; }
+    public IObservable<Unit> KeyIncreaseSizePressed { get; private set; }
 
 
     private void Awake()
@@ -41,5 +44,8 @@ public class InputSystem : MonoBehaviour
 
         KeyLeftArrowPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.A));
         KeyRightArrowPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.D));
+        
+        KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.UpArrow));
+        KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.DownArrow));
     }
 }
