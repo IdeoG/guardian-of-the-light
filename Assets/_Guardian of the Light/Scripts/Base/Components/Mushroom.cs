@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-/** TODO: Mushroom
+/** TODO: Mushroom -> Inspector View Improvements
  * Два поля в инспекторе
  * 1. Начальный цвет для гриба - 100%
  * 2. Конечный цвет для гриба - 0%
