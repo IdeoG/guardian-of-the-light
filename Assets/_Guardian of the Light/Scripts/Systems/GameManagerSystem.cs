@@ -4,17 +4,21 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
 public class GameManagerSystem : MonoBehaviour
 {
+    [Header("Player")] [SerializeField] public GameObject Player;
+    public static GameManagerSystem Instance { get; private set; }
+    
     [Header("Canvases")] [SerializeField] private GameObject _canvasInventoryView;
     [Header("vSyncCount")] [SerializeField] private int _vSyncCount = 3;
-    [Header("Player")] [SerializeField] public GameObject Player;
 
-    public static GameManagerSystem Instance { get; private set; }
-
+    private InventoryCanvas _inventoryCanvas;
 
     private void Awake()
     {
         Instance = this;
+        
         QualitySettings.vSyncCount = _vSyncCount;
+
+        _inventoryCanvas = _canvasInventoryView.GetComponent<InventoryCanvas>();
     }
 
     private void Start()
@@ -27,13 +31,13 @@ public class GameManagerSystem : MonoBehaviour
     private void ShowInventoryView()
     {
         Player.GetComponent<ThirdPersonUserControl>().LockInput = true;
-        _canvasInventoryView.SetActive(true);
+        _inventoryCanvas.Show();
     }
 
     private void HideInventoryView()
     {
         Player.GetComponent<ThirdPersonUserControl>().LockInput = false;
-        _canvasInventoryView.SetActive(false);
+        _inventoryCanvas.Hide();
     }
 
     private void OnKeyInventoryPressedDown()

@@ -67,17 +67,10 @@ public class InspectView : MonoBehaviour
 
     private void OnEnable()
     {
-        _keyUpArrowPressed = InputSystem.Instance.KeyUpArrowPressed.Subscribe(_ => OnKeyUpArrowPressed())
-            .AddTo(this);
-
-        _keyDownArrowPressed = InputSystem.Instance.KeyDownArrowPressed.Subscribe(_ => OnKeyDownArrowPressed())
-            .AddTo(this);
-
-        _keyLeftArrowPressed = InputSystem.Instance.KeyLeftArrowPressed.Subscribe(_ => OnKeyLeftArrowPressed())
-            .AddTo(this);
-
-        _keyRightArrowPressed = InputSystem.Instance.KeyRightArrowPressed.Subscribe(_ => OnKeyRightArrowPressed())
-            .AddTo(this);
+        _keyUpArrowPressed = InputSystem.Instance.KeyUpArrowPressed.Subscribe(_ => OnKeyUpArrowPressed()).AddTo(this);
+        _keyDownArrowPressed = InputSystem.Instance.KeyDownArrowPressed.Subscribe(_ => OnKeyDownArrowPressed()).AddTo(this);
+        _keyLeftArrowPressed = InputSystem.Instance.KeyLeftArrowPressed.Subscribe(_ => OnKeyLeftArrowPressed()).AddTo(this);
+        _keyRightArrowPressed = InputSystem.Instance.KeyRightArrowPressed.Subscribe(_ => OnKeyRightArrowPressed()).AddTo(this);
     }
 
     private void OnKeyUpArrowPressed()
@@ -111,5 +104,7 @@ public class InspectView : MonoBehaviour
         _keyDownArrowPressed.Dispose();
         _keyLeftArrowPressed.Dispose();
         _keyRightArrowPressed.Dispose();
+        
+        if (_item != null) Destroy(_item);
     }
 }

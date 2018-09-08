@@ -11,8 +11,9 @@ public class FadeEffect : MonoBehaviour
     
     public void FadeIn()
     {
+        gameObject.SetActive(true);
         _canvasGroup.alpha = 0f;
-        _canvasGroup.DOFade(1f, _fadeInDuration).OnStart(() => gameObject.SetActive(true));
+        _canvasGroup.DOFade(1f, _fadeInDuration);
     }
 
     public void FadeOut()

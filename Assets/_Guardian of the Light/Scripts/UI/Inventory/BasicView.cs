@@ -3,13 +3,12 @@ using UnityEngine;
 
 public class BasicView : MonoBehaviour
 {
-    [SerializeField] private GameObject _evenInventoryItems;
-
-    [SerializeField] private GameObject _inventoryArrows;
-    private List<Item> _items;
-
-    private InventoryItems _itemsBehaviour;
     [SerializeField] private GameObject _oddInventoryItems;
+    [SerializeField] private GameObject _evenInventoryItems;
+    [SerializeField] private GameObject _inventoryArrows;
+    
+    private List<Item> _items;
+    private InventoryItems _itemsBehaviour;
 
     private void SetEvenPattern(List<Item> items)
     {

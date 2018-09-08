@@ -5,10 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider), typeof(Animator))]
 public abstract class BaseAction : MonoBehaviour
 {
+    protected Animator Animator;
+    
     private const string RequiredTag = "Player";
     private IDisposable _keyActionPressedDown;
-    protected Animator Animator;
 
+    protected abstract void OnKeyActionPressedDown();
+    
     private void OnTriggerEnter(Collider other)
     {
         var isPlayer = other.tag.Equals(RequiredTag);
@@ -36,5 +39,4 @@ public abstract class BaseAction : MonoBehaviour
         gameObject.GetComponent<BoxCollider>().isTrigger = true;
     }
 
-    protected abstract void OnKeyActionPressedDown();
 }
