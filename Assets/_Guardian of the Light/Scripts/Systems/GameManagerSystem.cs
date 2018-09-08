@@ -5,10 +5,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class GameManagerSystem : MonoBehaviour
 {
     [Header("Canvases")] [SerializeField] private GameObject _canvasInventoryView;
-
-    [Header("Fixed frame rate")] [SerializeField]
-    private int _frameRate;
-
+    [Header("vSyncCount")] [SerializeField] private int _vSyncCount = 3;
     [Header("Player")] [SerializeField] public GameObject Player;
 
     public static GameManagerSystem Instance { get; private set; }
@@ -17,7 +14,7 @@ public class GameManagerSystem : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        Application.targetFrameRate = _frameRate;
+        QualitySettings.vSyncCount = _vSyncCount;
     }
 
     private void Start()

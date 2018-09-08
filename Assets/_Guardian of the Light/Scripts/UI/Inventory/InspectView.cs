@@ -4,28 +4,32 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
+/** TODO: InspectView
+ * 1. Переделать кнопки увеличения/уменьшения на UpArrow/DownArrow
+ * 2. Добавить кнопки поворота по оси Z на W/S
+ */
 public class InspectView : MonoBehaviour
 {
     private GameObject _item;
-    [SerializeField] private Text _itemDescription;
     private Transform _itemTransform;
+    
     private IDisposable _keyDownArrowPressed;
-
     private IDisposable _keyLeftArrowPressed;
     private IDisposable _keyRightArrowPressed;
     private IDisposable _keyUpArrowPressed;
+    
+    [SerializeField] private Text _itemDescription;
+    
     [SerializeField] private float _maxScale;
     [SerializeField] private float _minScale;
     [SerializeField] private float _onDisableItemAnimationDuration;
 
-    [Header("Animation duration")] [SerializeField]
-    private float _onEnableItemAnimationDuration;
-
+    [Header("Animation duration")] 
+    [SerializeField] private float _onEnableItemAnimationDuration;
     [SerializeField] private Transform _pivotTransform;
 
-    [Header("Inspect Item Configuration")] [SerializeField]
-    private float _sensitivityX;
-
+    [Header("Inspect Item Configuration")] 
+    [SerializeField] private float _sensitivityX;
     [SerializeField] private float _sensitivityY;
 
 
@@ -53,7 +57,6 @@ public class InspectView : MonoBehaviour
         _item = Instantiate(item.Prefab);
         _item.layer = LayerMask.NameToLayer("UI");
 
-
         _itemTransform = _item.transform;
         _itemTransform.parent = _pivotTransform;
 
@@ -64,20 +67,16 @@ public class InspectView : MonoBehaviour
 
     private void OnEnable()
     {
-        _keyUpArrowPressed = InputSystem.Instance.KeyUpArrowPressed
-            .Subscribe(_ => OnKeyUpArrowPressed())
+        _keyUpArrowPressed = InputSystem.Instance.KeyUpArrowPressed.Subscribe(_ => OnKeyUpArrowPressed())
             .AddTo(this);
 
-        _keyDownArrowPressed = InputSystem.Instance.KeyDownArrowPressed
-            .Subscribe(_ => OnKeyDownArrowPressed())
+        _keyDownArrowPressed = InputSystem.Instance.KeyDownArrowPressed.Subscribe(_ => OnKeyDownArrowPressed())
             .AddTo(this);
 
-        _keyLeftArrowPressed = InputSystem.Instance.KeyLeftArrowPressed
-            .Subscribe(_ => OnKeyLeftArrowPressed())
+        _keyLeftArrowPressed = InputSystem.Instance.KeyLeftArrowPressed.Subscribe(_ => OnKeyLeftArrowPressed())
             .AddTo(this);
 
-        _keyRightArrowPressed = InputSystem.Instance.KeyRightArrowPressed
-            .Subscribe(_ => OnKeyRightArrowPressed())
+        _keyRightArrowPressed = InputSystem.Instance.KeyRightArrowPressed.Subscribe(_ => OnKeyRightArrowPressed())
             .AddTo(this);
     }
 

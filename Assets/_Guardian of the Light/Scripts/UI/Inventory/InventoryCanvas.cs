@@ -27,6 +27,8 @@ public class InventoryCanvas : MonoBehaviour
 
     private void HideInspectView()
     {
+        // BUG: Hide Effect does not work
+        
         _basicView.GetComponent<FadeEffect>().FadeIn();
         _inspectView.GetComponent<FadeEffect>().FadeOut();
         _inspectView.GetComponent<InspectView>().PlayOnDisableAnimation();

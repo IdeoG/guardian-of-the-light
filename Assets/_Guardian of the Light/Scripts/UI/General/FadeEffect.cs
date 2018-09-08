@@ -6,7 +6,7 @@ public class FadeEffect : MonoBehaviour
     private CanvasGroup _canvasGroup;
     [SerializeField] private float _fadeInDuration;
     [SerializeField] private float _fadeOutDuration;
-    private const float _fadeWaitDelayPeriod = 0.04f;
+    private const float FadeWaitDelayPeriod = 0.04f;
 
 
     public void FadeIn()
@@ -24,13 +24,13 @@ public class FadeEffect : MonoBehaviour
         gameObject.SetActive(true);
         _canvasGroup.alpha = 0;
 
-        var fadeDelta = _fadeWaitDelayPeriod / _fadeInDuration;
+        var fadeDelta = FadeWaitDelayPeriod / _fadeInDuration;
         var fadeCount = (int) (1 / fadeDelta);
 
         while (fadeCount-- > 0)
         {
             _canvasGroup.alpha += fadeDelta;
-            await new WaitForSeconds(_fadeWaitDelayPeriod);
+            await new WaitForSeconds(FadeWaitDelayPeriod);
         }
 
         _canvasGroup.alpha = 1f;
@@ -40,13 +40,13 @@ public class FadeEffect : MonoBehaviour
     {
         _canvasGroup.alpha = 1f;
 
-        var fadeDelta = _fadeWaitDelayPeriod / _fadeOutDuration;
+        var fadeDelta = FadeWaitDelayPeriod / _fadeOutDuration;
         var fadeCount = (int) (1 / fadeDelta);
 
         while (fadeCount-- > 0)
         {
             _canvasGroup.alpha -= fadeDelta;
-            await new WaitForSeconds(_fadeWaitDelayPeriod);
+            await new WaitForSeconds(FadeWaitDelayPeriod);
         }
 
         _canvasGroup.alpha = 0f;
