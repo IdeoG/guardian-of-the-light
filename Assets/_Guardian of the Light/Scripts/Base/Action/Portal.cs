@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UniRx;
+﻿using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,7 +14,7 @@ public class Portal : BaseAction
 
     private void LoadScene()
     {
-        SceneBundle.StartPointNumber = _startPointNumber;
+        SceneBundleSystem.StartPointNumber = _startPointNumber;
 
         SceneManager.LoadSceneAsync(_sceneName)
             .AsAsyncOperationObservable()

@@ -11,7 +11,7 @@ public class PortalSystem : MonoBehaviour
 
     private void Awake()
     {
-        var portal = _portals[SceneBundle.StartPointNumber];
+        var portal = _portals[SceneBundleSystem.StartPointNumber];
 
         _playerPosition.position = portal.position;
     }
