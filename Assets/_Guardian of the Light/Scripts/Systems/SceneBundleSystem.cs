@@ -1,3 +1,3 @@
 ﻿public static class SceneBundleSystem {
-    public static int StartPointNumber;
+    public static int SpawnPointNumber;
 }

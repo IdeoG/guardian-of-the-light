@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class Portal : BaseAction
 {
     [SerializeField] private string _sceneName;
-    [SerializeField] private int _startPointNumber;
+    [SerializeField] private int _spawnPointNumber;
 
     protected override void OnKeyActionPressedDown()
     {
@@ -14,7 +14,7 @@ public class Portal : BaseAction
 
     private void LoadScene()
     {
-        SceneBundleSystem.StartPointNumber = _startPointNumber;
+        SceneBundleSystem.SpawnPointNumber = _spawnPointNumber;
 
         SceneManager.LoadSceneAsync(_sceneName)
             .AsAsyncOperationObservable()

@@ -12,6 +12,8 @@ public abstract class BaseHealthAction : MonoBehaviour
     protected Animator Animator;
     protected Health Health;
     
+    protected abstract void OnKeyActionPressed(Health playerHealth);
+    protected abstract void OnKeyExtraActionPressed(Health playerHealth);
     
     private void OnTriggerEnter(Collider other)
     {    
@@ -48,6 +50,4 @@ public abstract class BaseHealthAction : MonoBehaviour
         gameObject.GetComponent<BoxCollider>().isTrigger = true;
     }
     
-    protected abstract void OnKeyActionPressed(Health playerHealth);
-    protected abstract void OnKeyExtraActionPressed(Health playerHealth);
 }

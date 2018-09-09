@@ -3,16 +3,14 @@ using UnityEngine;
 
 public class PortalSystem : MonoBehaviour
 {
-    [Header("Player initial point.")] [SerializeField]
-    private Transform _playerPosition;
-
-    [Space(10)] [Header("Available location portals.")] [SerializeField]
+    [Header("Available location portals.")] [SerializeField]
     private List<Transform> _portals;
 
-    private void Awake()
+    private void Start()
     {
-        var portal = _portals[SceneBundleSystem.StartPointNumber];
-
-        _playerPosition.position = portal.position;
+        var portal = _portals[SceneBundleSystem.SpawnPointNumber];
+            
+        GameManagerSystem.Instance.Player.transform.position = portal.position;
+        GameManagerSystem.Instance.Player.transform.rotation = portal.rotation;
     }
 }
