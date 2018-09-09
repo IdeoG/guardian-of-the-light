@@ -42,6 +42,8 @@ public class GameManagerSystem : MonoBehaviour
 
     private void OnKeyInventoryPressedDown()
     {
+        if (_inventoryCanvas.IsInspectViewActive) return;
+        
         var isInventoryActive = _canvasInventoryView.activeSelf;
 
         if (isInventoryActive)

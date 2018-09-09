@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class InventoryCanvas : MonoBehaviour
 {
+    public bool IsInspectViewActive => _inspectView.activeSelf;
+
     [SerializeField] private GameObject _basicView;
     [SerializeField] private GameObject _inspectView;
 
     [SerializeField] private float _canvasDisappearanceDuration;
 
     private IDisposable _keyInspectItemPressedDown;
-
-
+    
     public void Show()
     {
         gameObject.SetActive(true);
@@ -23,9 +24,7 @@ public class InventoryCanvas : MonoBehaviour
 
     public void Hide()
     {
-        var canvasGroup = _basicView.activeSelf
-            ? _basicView.GetComponent<CanvasGroup>()
-            : _inspectView.GetComponent<CanvasGroup>();
+        var canvasGroup = _basicView.GetComponent<CanvasGroup>();
 
         canvasGroup.alpha = 1f;
         canvasGroup.DOFade(0f, _canvasDisappearanceDuration).OnComplete(() =>
