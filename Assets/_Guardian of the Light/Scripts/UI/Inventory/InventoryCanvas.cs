@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class InventoryCanvas : MonoBehaviour
 {
-    public bool IsInspectViewActive => _inspectView.activeSelf;
+    public bool IsInspectViewActive => _inspectView.activeInHierarchy;
 
     [SerializeField] private GameObject _basicView;
     [SerializeField] private GameObject _inspectView;
@@ -36,9 +36,7 @@ public class InventoryCanvas : MonoBehaviour
 
     private void OnKeyInspectItemPressedDown()
     {
-        var isInspectViewActive = _inspectView.activeSelf;
-
-        if (isInspectViewActive)
+        if (IsInspectViewActive)
         {
             HideInspectView();
         }
