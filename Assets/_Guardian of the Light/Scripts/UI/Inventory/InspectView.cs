@@ -78,34 +78,36 @@ public class InspectView : MonoBehaviour
     {
         if (_itemTransform.localScale.x > _maxScale) return;
 
-        _itemTransform.localScale += _sensitivityScale * Vector3.one;
+        _itemTransform.localScale += _sensitivityScale * Vector3.one * Time.deltaTime;
     }
 
     private void OnKeyReduceSizePressed()
     {
         if (_itemTransform.localScale.x < _minScale) return;
 
-        _itemTransform.localScale -= _sensitivityScale * Vector3.one;
+        _itemTransform.localScale -= _sensitivityScale * Vector3.one * Time.deltaTime;
     }
 
     private void OnKeyUpArrowPressed()
     {
-        _itemTransform.localRotation *= Quaternion.Euler(new Vector3( _sensitivityY * 1f, 0, 0));
+        //_itemTransform.rotation *= Quaternion.Euler(new Vector3( _sensitivityY * 1f, 0, 0));
+        //TODO: умножили значение _sensitivityY на Time.deltaTime 
+        _itemTransform.Rotate(new Vector3(1f, 0, 0), _sensitivityY * Time.deltaTime, Space.World);
     }
 
     private void OnKeyDownArrowPressed()
     {
-        _itemTransform.localRotation *= Quaternion.Euler(new Vector3(-_sensitivityY * 1f, 0, 0));
+        _itemTransform.Rotate(new Vector3(1f, 0, 0), -_sensitivityY * Time.deltaTime, Space.World);
     }
 
     private void OnKeyLeftArrowPressed()
     {
-        _itemTransform.localRotation *= Quaternion.Euler(new Vector3(0, -_sensitivityX * 1f, 0));
+        _itemTransform.Rotate(new Vector3(0, 1f, 0), _sensitivityX * Time.deltaTime, Space.World);
     }
 
     private void OnKeyRightArrowPressed()
     {
-        _itemTransform.localRotation *= Quaternion.Euler(new Vector3(0, _sensitivityX * 1f, 0));
+        _itemTransform.Rotate(new Vector3(0, 1f, 0), -_sensitivityX * Time.deltaTime, Space.World);
     }
 
     private void OnDisable()
