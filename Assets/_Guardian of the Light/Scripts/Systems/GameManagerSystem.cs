@@ -8,7 +8,7 @@ public class GameManagerSystem : MonoBehaviour
     public static GameManagerSystem Instance { get; private set; }
     
     [Header("Canvases")] [SerializeField] private GameObject _canvasInventoryView;
-    [Header("vSyncCount")] [SerializeField] private int _vSyncCount = 3;
+    [Header("vSyncCount")] [SerializeField] private VSyncType _vSyncCount = VSyncType.EveryVSync60Fps;
 
     private InventoryCanvas _inventoryCanvas;
 
@@ -16,7 +16,7 @@ public class GameManagerSystem : MonoBehaviour
     {
         Instance = this;
         
-        QualitySettings.vSyncCount = _vSyncCount;
+        QualitySettings.vSyncCount = (int) _vSyncCount;
 
         _inventoryCanvas = _canvasInventoryView.GetComponent<InventoryCanvas>();
     }
@@ -32,6 +32,7 @@ public class GameManagerSystem : MonoBehaviour
     {
         Player.GetComponent<ThirdPersonUserControl>().LockInput = true;
         _inventoryCanvas.Show();
+        
     }
 
     private void HideInventoryView()
@@ -51,4 +52,10 @@ public class GameManagerSystem : MonoBehaviour
         else
             ShowInventoryView();
     }
+}
+
+public enum VSyncType {
+    EveryVSync60Fps = 1,
+    EverySecondVSync30Fps = 2,
+    NoVSync = 0
 }
