@@ -30,7 +30,10 @@ public class GameManagerSystem : MonoBehaviour
 
     private void ShowInventoryView()
     {
+        if (InventorySystem.Instance.GetTookItems().Count == 0) return;
+        
         Player.GetComponent<ThirdPersonUserControl>().LockInput = true;
+        InputSystem.Instance.IsInInventory = true;
         _inventoryCanvas.Show();
         
     }
@@ -38,6 +41,7 @@ public class GameManagerSystem : MonoBehaviour
     private void HideInventoryView()
     {
         Player.GetComponent<ThirdPersonUserControl>().LockInput = false;
+        InputSystem.Instance.IsInInventory = false;
         _inventoryCanvas.Hide();
     }
 

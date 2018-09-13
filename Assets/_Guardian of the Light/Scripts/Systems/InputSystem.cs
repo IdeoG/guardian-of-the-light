@@ -5,13 +5,6 @@ using UnityEngine;
 
 public class InputSystem : MonoBehaviour
 {
-    [SerializeField] private KeyCode _actionKey = KeyCode.J;
-    [SerializeField] private KeyCode _extraActionKey = KeyCode.L;
-    
-    [SerializeField] private KeyCode _reduceSizeKey = KeyCode.J;
-    [SerializeField] private KeyCode _increaseSizeKey = KeyCode.L;
-    
-
     public static InputSystem Instance { get; private set; }
 
     public IObservable<Unit> KeyActionPressed { get; private set; }
@@ -32,7 +25,16 @@ public class InputSystem : MonoBehaviour
     public IObservable<Unit> KeyReduceSizePressed { get; private set; }
     public IObservable<Unit> KeyIncreaseSizePressed { get; private set; }
 
+    public bool IsInInventory;
+    
+    [SerializeField] private KeyCode _actionKey = KeyCode.J;
+    [SerializeField] private KeyCode _extraActionKey = KeyCode.L;
+    
+    [SerializeField] private KeyCode _reduceSizeKey = KeyCode.J;
+    [SerializeField] private KeyCode _increaseSizeKey = KeyCode.L;
 
+
+    
     private void Awake()
     {
         Instance = this;

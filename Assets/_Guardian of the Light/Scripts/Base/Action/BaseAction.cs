@@ -6,12 +6,12 @@ using UnityEngine;
 public abstract class BaseAction : MonoBehaviour
 {
     protected Animator Animator;
-    
+
     private const string RequiredTag = "Player";
     private IDisposable _keyActionPressedDown;
 
     protected abstract void OnKeyActionPressedDown();
-    
+
     private void OnTriggerEnter(Collider other)
     {
         var isPlayer = other.tag.Equals(RequiredTag);
@@ -19,7 +19,10 @@ public abstract class BaseAction : MonoBehaviour
         if (!isPlayer) return;
 
         _keyActionPressedDown = InputSystem.Instance.KeyActionPressedDown
-            .Subscribe(_ => OnKeyActionPressedDown())
+            .Subscribe(_ =>
+            {
+                if (!InputSystem.Instance.IsInInventory) OnKeyActionPressedDown();
+            })
             .AddTo(this);
     }
 
@@ -38,5 +41,4 @@ public abstract class BaseAction : MonoBehaviour
 
         gameObject.GetComponent<BoxCollider>().isTrigger = true;
     }
-
 }
