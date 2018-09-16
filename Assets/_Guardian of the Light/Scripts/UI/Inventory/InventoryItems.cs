@@ -6,12 +6,7 @@ using UnityEngine.UI;
 
 public class InventoryItems : MonoBehaviour
 {
-    private List<Image> _images;
-    private List<InventoryItem> _inventoryItems;
-
-    private int _inventoryPosition;
     [SerializeField] private Text _itemDescription;
-
     [SerializeField] private RectTransform _itemLighting;
 
     [Header("Items pool")]
@@ -21,7 +16,17 @@ public class InventoryItems : MonoBehaviour
     private IDisposable _leftArrowPressDown;
     private IDisposable _rightArrowPressDown;
     
+    private List<Image> _images;
+    private List<InventoryItem> _inventoryItems;
 
+    private int _inventoryPosition;
+    private List<InventoryItemPosition> _itemsPositions;
+
+    public int GetCurrentPosition()
+    {
+        return _inventoryPosition;
+    }
+    
     private void OnEnable()
     {
         _leftArrowPressDown = InputSystem.Instance.KeyLeftArrowPressedDown
@@ -37,6 +42,9 @@ public class InventoryItems : MonoBehaviour
     {
         _leftArrowPressDown.Dispose();
         _rightArrowPressDown.Dispose();
+
+        _itemsPositions = null;
+        ClearVisibleItems();
     }
 
     private void OnLeftArrowPressedDown()
@@ -53,6 +61,7 @@ public class InventoryItems : MonoBehaviour
 
         SetCurrentLighting(_inventoryPosition);
         SetCurrentDescription(_inventoryItems[_inventoryPosition].Name);
+        SetItemsCurrentPosition();
     }
 
     private void OnRightArrowPressedDown()
@@ -72,6 +81,7 @@ public class InventoryItems : MonoBehaviour
 
         SetCurrentLighting(_inventoryPosition);
         SetCurrentDescription(_inventoryItems[_inventoryPosition].Name);
+        SetItemsCurrentPosition();
     }
 
     private void SetCurrentLighting(int position)
@@ -94,14 +104,17 @@ public class InventoryItems : MonoBehaviour
         SetCurrentLighting(_inventoryPosition);
 
         var len = items.Count;
-
+        _itemsPositions = new List<InventoryItemPosition>();
+        
         for (var ind = 0; ind < len; ind++)
         {
             var prefab = items[ind].Prefab2D;
-            var rect = prefab.GetComponent<RectTransform>();
             
             prefab.SetActive(true);
-            rect.localPosition = _itemsRectTransforms[ind].localPosition;
+            prefab.GetComponent<InventoryItemPosition>().SelfPosition = ind;
+            prefab.GetComponent<RectTransform>().localPosition = _itemsRectTransforms[ind].localPosition;
+
+            _itemsPositions.Add(prefab.GetComponent<InventoryItemPosition>());
         }
 
         _inventoryItems = items;
@@ -115,8 +128,11 @@ public class InventoryItems : MonoBehaviour
         }
     }
 
-    public int GetCurrentPosition()
+    private void SetItemsCurrentPosition()
     {
-        return _inventoryPosition;
+        foreach (var _itemPosition in _itemsPositions)
+        {
+            _itemPosition.CurrentPosition = _inventoryPosition;
+        }
     }
 }
