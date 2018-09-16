@@ -49,19 +49,19 @@ public class InspectView : MonoBehaviour
             .OnComplete(() => Destroy(_item));
     }
 
-    public void SetItem(Item item)
+    public void SetItem(InventoryItem inventoryItem)
     {
-        _itemDescription.text = item.Description;
-
-        _item = Instantiate(item.Prefab);
-        _item.layer = LayerMask.NameToLayer("UI");
-
-        _itemTransform = _item.transform;
-        _itemTransform.parent = _pivotTransform;
-
-        _itemTransform.localPosition = new Vector3(0, -0.5f, 0);
-        _itemTransform.localRotation = Quaternion.Euler(0, 180f, 0);
-        _itemTransform.localScale = Vector3.zero;
+//        _itemDescription.text = item.Description;
+//
+//        _item = Instantiate(item.Prefab);
+//        _item.layer = LayerMask.NameToLayer("UI");
+//
+//        _itemTransform = _item.transform;
+//        _itemTransform.parent = _pivotTransform;
+//
+//        _itemTransform.localPosition = new Vector3(0, -0.5f, 0);
+//        _itemTransform.localRotation = Quaternion.Euler(0, 180f, 0);
+//        _itemTransform.localScale = Vector3.zero;
     }
 
     private void OnEnable()

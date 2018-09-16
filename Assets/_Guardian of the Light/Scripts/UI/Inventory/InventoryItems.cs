@@ -7,33 +7,20 @@ using UnityEngine.UI;
 public class InventoryItems : MonoBehaviour
 {
     private List<Image> _images;
-    private List<Item> _inventoryItems;
+    private List<InventoryItem> _inventoryItems;
 
     private int _inventoryPosition;
     [SerializeField] private Text _itemDescription;
 
     [SerializeField] private RectTransform _itemLighting;
 
-    [Header("Items pool")] [SerializeField]
-    private List<GameObject> _items;
+    [Header("Items pool")]
+    [SerializeField] private List<RectTransform> _itemsRectTransforms;
+    [SerializeField] private Transform _prefabs2D;
 
     private IDisposable _leftArrowPressDown;
-
-    private List<RectTransform> _rectTransforms;
     private IDisposable _rightArrowPressDown;
-
-
-    private void FetchItems()
-    {
-        _rectTransforms = new List<RectTransform>();
-        _images = new List<Image>();
-
-        foreach (var item in _items)
-        {
-            _rectTransforms.Add(item.GetComponent<RectTransform>());
-            _images.Add(item.GetComponent<Image>());
-        }
-    }
+    
 
     private void OnEnable()
     {
@@ -78,7 +65,7 @@ public class InventoryItems : MonoBehaviour
         }
         else
         {
-            _inventoryPosition = _inventoryPosition == 0
+            _inventoryPosition = _inventoryPosition == 0 && _inventoryItems.Count > 1
                 ? 1
                 : Mathf.Clamp(_inventoryPosition - 2, 0, _inventoryItems.Count);
         }
@@ -89,43 +76,43 @@ public class InventoryItems : MonoBehaviour
 
     private void SetCurrentLighting(int position)
     {
-        _itemLighting.SetPositionAndRotation(_rectTransforms[position].position, _rectTransforms[position].rotation);
+        _itemLighting.SetPositionAndRotation(_itemsRectTransforms[position].position, _itemsRectTransforms[position].rotation);
     }
 
-    private void SetImage(int position, Sprite sprite, Color color)
-    {
-        _images[position].sprite = sprite;
-        _images[position].color = color;
-    }
 
     private void SetCurrentDescription(string text)
     {
         _itemDescription.text = text;
     }
 
-    private void ClearImages()
-    {
-        foreach (var image in _images)
-        {
-            image.sprite = null;
-            image.color = new Color(0, 0, 0, 0);
-        }
-    }
 
-    public void SetItems(List<Item> items)
+    public void SetItems(List<InventoryItem> items)
     {
-        if (_images == null) FetchItems();
-
-        ClearImages();
+        ClearVisibleItems();
 
         SetCurrentDescription(items[_inventoryPosition].Name);
         SetCurrentLighting(_inventoryPosition);
 
         var len = items.Count;
 
-        for (var ind = 0; ind < len; ind++) SetImage(ind, items[ind].Sprite, Color.white);
+        for (var ind = 0; ind < len; ind++)
+        {
+            var prefab = items[ind].Prefab2D;
+            var rect = prefab.GetComponent<RectTransform>();
+            
+            prefab.SetActive(true);
+            rect.localPosition = _itemsRectTransforms[ind].localPosition;
+        }
 
         _inventoryItems = items;
+    }
+
+    private void ClearVisibleItems()
+    {
+        for (var index = 0; index < _prefabs2D.childCount; index++)
+        {
+            _prefabs2D.GetChild(index).gameObject.SetActive(false);
+        }
     }
 
     public int GetCurrentPosition()

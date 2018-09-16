@@ -7,10 +7,42 @@ public class BasicView : MonoBehaviour
     [SerializeField] private GameObject _evenInventoryItems;
     [SerializeField] private GameObject _inventoryArrows;
     
-    private List<Item> _items;
+    private List<InventoryItem> _items;
     private InventoryItems _itemsBehaviour;
 
-    private void SetEvenPattern(List<Item> items)
+    
+    public InventoryItem GetCurrentItem()
+    {
+        var ind = _itemsBehaviour.GetCurrentPosition();
+        return _items[ind];
+    }
+
+    private void OnEnable()
+    {
+        _items = FetchInventoryItems();
+    }
+
+    private List<InventoryItem> FetchInventoryItems()
+    {
+        var items = InventorySystem.Instance.GetTookItems();
+        if (items.Count == 0)
+        {
+            transform.parent.gameObject.SetActive(false);
+            return null;
+        }
+
+
+        if (items.Count % 2 == 0 && items.Count < 5)
+            SetEvenPattern(items);
+        else
+            SetOddPattern(items);
+
+        _inventoryArrows.SetActive(items.Count > 5);
+
+        return items;
+    }
+    
+    private void SetEvenPattern(List<InventoryItem> items)
     {
         _oddInventoryItems.SetActive(false);
         _evenInventoryItems.SetActive(true);
@@ -19,30 +51,12 @@ public class BasicView : MonoBehaviour
         _itemsBehaviour.SetItems(items);
     }
 
-    private void SetOddPattern(List<Item> items)
+    private void SetOddPattern(List<InventoryItem> items)
     {
         _oddInventoryItems.SetActive(true);
         _evenInventoryItems.SetActive(false);
 
         _itemsBehaviour = _oddInventoryItems.GetComponent<InventoryItems>();
         _itemsBehaviour.SetItems(items);
-    }
-
-    private void OnEnable()
-    {
-        var items = InventorySystem.Instance.GetTookItems();
-        _items = items;
-
-        _inventoryArrows.SetActive(items.Count > 5);
-        if (items.Count % 2 == 0 && items.Count < 5)
-            SetEvenPattern(items);
-        else
-            SetOddPattern(items);
-    }
-
-    public Item GetCurrentItem()
-    {
-        var ind = _itemsBehaviour.GetCurrentPosition();
-        return _items[ind];
     }
 }
