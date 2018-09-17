@@ -1,56 +1,49 @@
 using System;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(Animator), typeof(Health), typeof(BoxCollider))]
-public abstract class BaseHealthAction : MonoBehaviour
+[RequireComponent(typeof(Slider), typeof(Health), typeof(InventoryItemPosition))]
+public abstract class BaseHealthInventoryAction : MonoBehaviour
 {
-    private const string RequiredTag = "Player";
+    private InventoryItemPosition _itemPosition;
+
     private IDisposable _keyActionPressed;
     private IDisposable _keyExtraActionPressed;
-    protected Animator Animator;
     protected Health Health;
 
+    protected Slider Slider;
 
     protected abstract void OnKeyActionPressed(Health playerHealth);
     protected abstract void OnKeyExtraActionPressed(Health playerHealth);
 
-    private void OnTriggerEnter(Collider other)
+    private void OnEnable()
     {
-        var isPlayer = other.tag.Equals(RequiredTag);
-
-        if (!isPlayer) return;
-
         var playerHealth = GameManagerSystem.Instance.Player.GetComponent<Health>();
 
         _keyActionPressed = InputSystem.Instance.KeyActionPressed.Subscribe(_ =>
             {
-                if (!InputSystem.Instance.IsInInventory) OnKeyActionPressed(playerHealth);
+                if (_itemPosition.CurrentPosition == _itemPosition.SelfPosition) OnKeyActionPressed(playerHealth);
             })
             .AddTo(this);
 
         _keyExtraActionPressed = InputSystem.Instance.KeyExtraActionPressed.Subscribe(_ =>
             {
-                if (!InputSystem.Instance.IsInInventory) OnKeyExtraActionPressed(playerHealth);
+                if (_itemPosition.CurrentPosition == _itemPosition.SelfPosition) OnKeyExtraActionPressed(playerHealth);
             })
             .AddTo(this);
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnDisable()
     {
-        var isPlayer = other.tag.Equals(RequiredTag);
-
-        if (!isPlayer) return;
-
         _keyActionPressed.Dispose();
         _keyExtraActionPressed.Dispose();
     }
 
     private void Awake()
     {
-        Animator = GetComponent<Animator>();
+        Slider = GetComponent<Slider>();
         Health = GetComponent<Health>();
-
-        gameObject.GetComponent<BoxCollider>().isTrigger = true;
+        _itemPosition = GetComponent<InventoryItemPosition>();
     }
 }

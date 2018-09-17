@@ -5,6 +5,13 @@ using UnityEngine;
 
 public class InputSystem : MonoBehaviour
 {
+    [SerializeField] private KeyCode _actionKey = KeyCode.J;
+    [SerializeField] private KeyCode _extraActionKey = KeyCode.L;
+    [SerializeField] private KeyCode _increaseSizeKey = KeyCode.L;
+
+    [SerializeField] private KeyCode _reduceSizeKey = KeyCode.J;
+
+    public bool IsInInventory;
     public static InputSystem Instance { get; private set; }
 
     public IObservable<Unit> KeyActionPressed { get; private set; }
@@ -21,20 +28,11 @@ public class InputSystem : MonoBehaviour
 
     public IObservable<Unit> KeyLeftArrowPressedDown { get; private set; }
     public IObservable<Unit> KeyRightArrowPressedDown { get; private set; }
-    
+
     public IObservable<Unit> KeyReduceSizePressed { get; private set; }
     public IObservable<Unit> KeyIncreaseSizePressed { get; private set; }
 
-    public bool IsInInventory;
-    
-    [SerializeField] private KeyCode _actionKey = KeyCode.J;
-    [SerializeField] private KeyCode _extraActionKey = KeyCode.L;
-    
-    [SerializeField] private KeyCode _reduceSizeKey = KeyCode.J;
-    [SerializeField] private KeyCode _increaseSizeKey = KeyCode.L;
 
-
-    
     private void Awake()
     {
         Instance = this;
@@ -53,7 +51,7 @@ public class InputSystem : MonoBehaviour
 
         KeyLeftArrowPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.A));
         KeyRightArrowPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.D));
-        
+
         KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_reduceSizeKey));
         KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_increaseSizeKey));
     }

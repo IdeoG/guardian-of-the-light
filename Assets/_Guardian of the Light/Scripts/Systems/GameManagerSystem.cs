@@ -4,18 +4,20 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
 public class GameManagerSystem : MonoBehaviour
 {
-    [Header("Player")] [SerializeField] public GameObject Player;
-    public static GameManagerSystem Instance { get; private set; }
-    
     [Header("Canvases")] [SerializeField] private GameObject _canvasInventoryView;
-    [Header("vSyncCount")] [SerializeField] private VSyncType _vSyncCount = VSyncType.EveryVSync60Fps;
 
     private InventoryCanvas _inventoryCanvas;
+
+    [Header("vSyncCount")] [SerializeField]
+    private VSyncType _vSyncCount = VSyncType.EveryVSync60Fps;
+
+    [Header("Player")] [SerializeField] public GameObject Player;
+    public static GameManagerSystem Instance { get; private set; }
 
     private void Awake()
     {
         Instance = this;
-        
+
         QualitySettings.vSyncCount = (int) _vSyncCount;
 
         _inventoryCanvas = _canvasInventoryView.GetComponent<InventoryCanvas>();
@@ -31,11 +33,10 @@ public class GameManagerSystem : MonoBehaviour
     private void ShowInventoryView()
     {
         if (InventorySystem.Instance.GetTookItems().Count == 0) return;
-        
+
         Player.GetComponent<ThirdPersonUserControl>().LockInput = true;
         InputSystem.Instance.IsInInventory = true;
         _inventoryCanvas.Show();
-        
     }
 
     private void HideInventoryView()
@@ -48,7 +49,7 @@ public class GameManagerSystem : MonoBehaviour
     private void OnKeyInventoryPressedDown()
     {
         if (_inventoryCanvas.IsInspectViewActive) return;
-        
+
         var isInventoryActive = _canvasInventoryView.activeSelf;
 
         if (isInventoryActive)
@@ -58,7 +59,8 @@ public class GameManagerSystem : MonoBehaviour
     }
 }
 
-public enum VSyncType {
+public enum VSyncType
+{
     EveryVSync60Fps = 1,
     EverySecondVSync30Fps = 2,
     NoVSync = 0

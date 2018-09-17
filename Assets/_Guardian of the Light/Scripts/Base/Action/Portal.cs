@@ -20,6 +20,5 @@ public class Portal : BaseAction
             .AsAsyncOperationObservable()
             .Do(x => Debug.Log($"Current progress = {x.progress}%"))
             .Subscribe(x => Debug.Log($"Is Done = {x.isDone}%"));
-
     }
 }

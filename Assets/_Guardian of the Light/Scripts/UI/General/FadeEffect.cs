@@ -8,7 +8,7 @@ public class FadeEffect : MonoBehaviour
     [SerializeField] private float _fadeInDuration;
     [SerializeField] private float _fadeOutDuration;
 
-    
+
     public void FadeIn()
     {
         gameObject.SetActive(true);

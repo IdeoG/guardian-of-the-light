@@ -5,7 +5,7 @@ public class InventorySystem : MonoBehaviour
 {
     private bool _isOpenInventory;
 
-    [SerializeField] private List<Item> _items;
+    [SerializeField] private List<InventoryItem> _items;
 
     public static InventorySystem Instance { get; private set; }
 
@@ -15,29 +15,23 @@ public class InventorySystem : MonoBehaviour
         Instance = this;
     }
 
-    public List<Item> GetTookItems()
+    public List<InventoryItem> GetTookItems()
     {
-        var items = new List<Item>();
+        var items = new List<InventoryItem>();
 
         foreach (var item in _items)
             if (item.IsTook)
                 items.Add(item);
 
-       
-
         return items;
     }
 
 
-    public Item GetItemByName(string itemName)
+    public InventoryItem GetItemByName(string itemName)
     {
         for (var i = 0; i < _items.Count; i++)
-        {
             if (itemName == _items[i].Name)
-            {
                 return _items[i];
-            }
-        }
 
         return null;
     }
