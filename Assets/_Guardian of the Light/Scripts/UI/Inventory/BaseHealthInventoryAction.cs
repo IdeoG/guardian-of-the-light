@@ -6,13 +6,13 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Slider), typeof(Health), typeof(InventoryItemPosition))]
 public abstract class BaseHealthInventoryAction : MonoBehaviour
 {
-    
-    protected Slider Slider;
-    protected Health Health;
-    
+    private InventoryItemPosition _itemPosition;
+
     private IDisposable _keyActionPressed;
     private IDisposable _keyExtraActionPressed;
-    private InventoryItemPosition _itemPosition;
+    protected Health Health;
+
+    protected Slider Slider;
 
     protected abstract void OnKeyActionPressed(Health playerHealth);
     protected abstract void OnKeyExtraActionPressed(Health playerHealth);
@@ -20,16 +20,16 @@ public abstract class BaseHealthInventoryAction : MonoBehaviour
     private void OnEnable()
     {
         var playerHealth = GameManagerSystem.Instance.Player.GetComponent<Health>();
-        
+
         _keyActionPressed = InputSystem.Instance.KeyActionPressed.Subscribe(_ =>
             {
-                if(_itemPosition.CurrentPosition == _itemPosition.SelfPosition) OnKeyActionPressed(playerHealth);
+                if (_itemPosition.CurrentPosition == _itemPosition.SelfPosition) OnKeyActionPressed(playerHealth);
             })
             .AddTo(this);
 
         _keyExtraActionPressed = InputSystem.Instance.KeyExtraActionPressed.Subscribe(_ =>
             {
-                if(_itemPosition.CurrentPosition == _itemPosition.SelfPosition) OnKeyExtraActionPressed(playerHealth);
+                if (_itemPosition.CurrentPosition == _itemPosition.SelfPosition) OnKeyExtraActionPressed(playerHealth);
             })
             .AddTo(this);
     }

@@ -30,12 +30,8 @@ public class InventorySystem : MonoBehaviour
     public InventoryItem GetItemByName(string itemName)
     {
         for (var i = 0; i < _items.Count; i++)
-        {
             if (itemName == _items[i].Name)
-            {
                 return _items[i];
-            }
-        }
 
         return null;
     }

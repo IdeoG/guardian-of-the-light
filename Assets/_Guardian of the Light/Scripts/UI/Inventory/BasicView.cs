@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class BasicView : MonoBehaviour
 {
-    [SerializeField] private GameObject _oddInventoryItems;
     [SerializeField] private GameObject _evenInventoryItems;
     [SerializeField] private GameObject _inventoryArrows;
-    
+
     private List<InventoryItem> _items;
     private InventoryItems _itemsBehaviour;
+    [SerializeField] private GameObject _oddInventoryItems;
 
-    
+
     public InventoryItem GetCurrentItem()
     {
         var ind = _itemsBehaviour.GetCurrentPosition();
@@ -41,7 +41,7 @@ public class BasicView : MonoBehaviour
 
         return items;
     }
-    
+
     private void SetEvenPattern(List<InventoryItem> items)
     {
         _oddInventoryItems.SetActive(false);

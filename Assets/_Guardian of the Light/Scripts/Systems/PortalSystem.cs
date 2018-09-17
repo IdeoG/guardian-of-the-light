@@ -9,7 +9,7 @@ public class PortalSystem : MonoBehaviour
     private void Start()
     {
         var portal = _portals[SceneBundleSystem.SpawnPointNumber];
-            
+
         GameManagerSystem.Instance.Player.transform.position = portal.position;
         GameManagerSystem.Instance.Player.transform.rotation = portal.rotation;
     }

@@ -5,12 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Animator), typeof(Health), typeof(BoxCollider))]
 public abstract class BaseHealthAction : MonoBehaviour
 {
-    protected Animator Animator;
-    protected Health Health;
-
     private const string RequiredTag = "Player";
     private IDisposable _keyActionPressed;
     private IDisposable _keyExtraActionPressed;
+    protected Animator Animator;
+    protected Health Health;
 
 
     protected abstract void OnKeyActionPressed(Health playerHealth);

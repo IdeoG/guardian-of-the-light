@@ -2,18 +2,18 @@
 
 public class CollectableItem : BaseAction
 {
-	[SerializeField] private string _itemName;
-	
-	protected override void OnKeyActionPressedDown()
-	{
-		CollectItem();
-	}
+    [SerializeField] private string _itemName;
 
-	private void CollectItem()
-	{
-		var item = InventorySystem.Instance.GetItemByName(_itemName);
-		item.IsTook = true;
+    protected override void OnKeyActionPressedDown()
+    {
+        CollectItem();
+    }
 
-		Destroy(gameObject);
-	}
+    private void CollectItem()
+    {
+        var item = InventorySystem.Instance.GetItemByName(_itemName);
+        item.IsTook = true;
+
+        Destroy(gameObject);
+    }
 }

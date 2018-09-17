@@ -5,19 +5,18 @@ using UnityEngine;
 
 public class InventoryCanvas : MonoBehaviour
 {
-    public bool IsInspectViewActive => _inspectView.activeInHierarchy;
-
     [SerializeField] private GameObject _basicView;
-    [SerializeField] private GameObject _inspectView;
 
     [SerializeField] private float _canvasDisappearanceDuration;
+    [SerializeField] private GameObject _inspectView;
 
     private IDisposable _keyInspectItemPressedDown;
-    
+    public bool IsInspectViewActive => _inspectView.activeInHierarchy;
+
     public void Show()
     {
         gameObject.SetActive(true);
-        
+
         _basicView.GetComponent<FadeEffect>().FadeIn();
         _inspectView.SetActive(false);
     }
@@ -37,13 +36,9 @@ public class InventoryCanvas : MonoBehaviour
     private void OnKeyInspectItemPressedDown()
     {
         if (IsInspectViewActive)
-        {
             HideInspectView();
-        }
         else
-        {
             ShowInspectView();
-        }
     }
 
     private void HideInspectView()
