@@ -17,6 +17,7 @@ public class InspectView : MonoBehaviour
     private IDisposable _keyIncreaseSizePressed;
     
     [SerializeField] private Text _itemDescription;
+    [SerializeField] private LayerMask _itemLayerMask;
     
     [SerializeField] private float _maxScale = 2f;
     [SerializeField] private float _minScale = 1f;
@@ -43,25 +44,23 @@ public class InspectView : MonoBehaviour
     public void PlayOnDisableAnimation()
     {
         _item.transform.DOLocalMove(new Vector3(0, -0.5f, 0), _onDisableItemAnimationDuration);
-        _item.transform.DOScale(0, _onDisableItemAnimationDuration);
-        _item.transform.DOLocalRotate(new Vector3(0, 180f, 0), _onDisableItemAnimationDuration,
-                RotateMode.FastBeyond360)
+        _item.transform.DOScale(0, _onDisableItemAnimationDuration)
             .OnComplete(() => Destroy(_item));
     }
 
     public void SetItem(InventoryItem inventoryItem)
     {
-//        _itemDescription.text = item.Description;
-//
-//        _item = Instantiate(item.Prefab);
-//        _item.layer = LayerMask.NameToLayer("UI");
-//
-//        _itemTransform = _item.transform;
-//        _itemTransform.parent = _pivotTransform;
-//
-//        _itemTransform.localPosition = new Vector3(0, -0.5f, 0);
-//        _itemTransform.localRotation = Quaternion.Euler(0, 180f, 0);
-//        _itemTransform.localScale = Vector3.zero;
+       _itemDescription.text = inventoryItem.Description;
+
+       _item = Instantiate(inventoryItem.Prefab3D);
+       _item.layer = _itemLayerMask;
+
+       _itemTransform = _item.transform;
+       _itemTransform.parent = _pivotTransform;
+
+       _itemTransform.localPosition = new Vector3(0, -0.5f, 0);
+        _itemTransform.localRotation = Quaternion.Euler(0, 180f, 0);
+        _itemTransform.localScale = Vector3.zero;
     }
 
     private void OnEnable()
