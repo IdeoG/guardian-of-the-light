@@ -1,4 +1,5 @@
 ﻿using System;
+using Boo.Lang;
 using DG.Tweening;
 using UniRx;
 using UnityEngine;
@@ -9,31 +10,31 @@ public class InspectView : MonoBehaviour
     private GameObject _item;
 
     [SerializeField] private Text _itemDescription;
-    [SerializeField] private LayerMask _itemLayerMask;
+    [SerializeField] private LayerMask _itemLayerMask = -1;
+    [SerializeField] private float _onDisableItemAnimationDuration = 0.4f;
+
+    [Header("Animation duration")] 
+    [SerializeField] private float _onEnableItemAnimationDuration;
+    [SerializeField] private Transform _pivotTransform;
+
+    [Header("Inspect Item Configuration")] 
+    [SerializeField] private float _sensitivityX = 2f;
+    [SerializeField] private float _sensitivityY = 2f;
+    [SerializeField] private float _sensitivityScale = 0.02f;
+    
+    [Header("Perspective Camera")]
+    [SerializeField] private Transform _perspectiveCameraTransform;
+    [SerializeField] private float _basePositionZ = 3.5f;
+    [SerializeField] private float _minScale = 1f;
+    [SerializeField] private float _maxScale = 2f;
+
     private Transform _itemTransform;
     private IDisposable _keyDownArrowPressed;
     private IDisposable _keyIncreaseSizePressed;
     private IDisposable _keyLeftArrowPressed;
     private IDisposable _keyReduceSizePressed;
     private IDisposable _keyRightArrowPressed;
-
     private IDisposable _keyUpArrowPressed;
-
-    [SerializeField] private float _maxScale = 2f;
-    [SerializeField] private float _minScale = 1f;
-    [SerializeField] private float _onDisableItemAnimationDuration = 0.4f;
-
-    [Header("Animation duration")] [SerializeField]
-    private float _onEnableItemAnimationDuration;
-
-    [SerializeField] private Transform _pivotTransform;
-    [SerializeField] private float _sensitivityScale = 0.02f;
-
-    [Header("Inspect Item Configuration")] [SerializeField]
-    private float _sensitivityX = 2f;
-
-    [SerializeField] private float _sensitivityY = 2f;
-
 
     public void PlayOnEnableAnimation()
     {
@@ -53,9 +54,9 @@ public class InspectView : MonoBehaviour
     public void SetItem(InventoryItem inventoryItem)
     {
         _itemDescription.text = inventoryItem.Description;
-
+        
         _item = Instantiate(inventoryItem.Prefab3D);
-        _item.layer = _itemLayerMask;
+        _item.layer = Mathf.RoundToInt(Mathf.Log(_itemLayerMask.value, 2));
 
         _itemTransform = _item.transform;
         _itemTransform.parent = _pivotTransform;
@@ -68,36 +69,33 @@ public class InspectView : MonoBehaviour
     private void OnEnable()
     {
         _keyUpArrowPressed = InputSystem.Instance.KeyUpArrowPressed.Subscribe(_ => OnKeyUpArrowPressed()).AddTo(this);
-        _keyDownArrowPressed =
-            InputSystem.Instance.KeyDownArrowPressed.Subscribe(_ => OnKeyDownArrowPressed()).AddTo(this);
-        _keyLeftArrowPressed =
-            InputSystem.Instance.KeyLeftArrowPressed.Subscribe(_ => OnKeyLeftArrowPressed()).AddTo(this);
-        _keyRightArrowPressed = InputSystem.Instance.KeyRightArrowPressed.Subscribe(_ => OnKeyRightArrowPressed())
-            .AddTo(this);
-        _keyReduceSizePressed = InputSystem.Instance.KeyReduceSizePressed.Subscribe(_ => OnKeyReduceSizePressed())
-            .AddTo(this);
-        _keyIncreaseSizePressed = InputSystem.Instance.KeyIncreaseSizePressed.Subscribe(_ => OnKeyIncreaseSizePressed())
-            .AddTo(this);
+        _keyDownArrowPressed = InputSystem.Instance.KeyDownArrowPressed.Subscribe(_ => OnKeyDownArrowPressed()).AddTo(this);
+        _keyLeftArrowPressed = InputSystem.Instance.KeyLeftArrowPressed.Subscribe(_ => OnKeyLeftArrowPressed()).AddTo(this);
+        _keyRightArrowPressed = InputSystem.Instance.KeyRightArrowPressed.Subscribe(_ => OnKeyRightArrowPressed()).AddTo(this);
+        _keyReduceSizePressed = InputSystem.Instance.KeyReduceSizePressed.Subscribe(_ => OnKeyReduceSizePressed()).AddTo(this);
+        _keyIncreaseSizePressed = InputSystem.Instance.KeyIncreaseSizePressed.Subscribe(_ => OnKeyIncreaseSizePressed()).AddTo(this);
     }
 
     private void OnKeyIncreaseSizePressed()
     {
-        if (_itemTransform.localScale.x > _maxScale) return;
+        if (_perspectiveCameraTransform.localPosition.z > _maxScale * _basePositionZ) return;
 
-        _itemTransform.localScale += _sensitivityScale * Vector3.one * Time.deltaTime;
+        var localPosition = _perspectiveCameraTransform.localPosition;
+        localPosition.z += _sensitivityScale * Time.deltaTime;
+        _perspectiveCameraTransform.localPosition = localPosition;
     }
 
     private void OnKeyReduceSizePressed()
     {
-        if (_itemTransform.localScale.x < _minScale) return;
+        if (_perspectiveCameraTransform.localPosition.z < _minScale * _basePositionZ) return;
 
-        _itemTransform.localScale -= _sensitivityScale * Vector3.one * Time.deltaTime;
+        var localPosition = _perspectiveCameraTransform.localPosition;
+        localPosition.z -= _sensitivityScale * Time.deltaTime;
+        _perspectiveCameraTransform.localPosition = localPosition;
     }
 
     private void OnKeyUpArrowPressed()
     {
-        //_itemTransform.rotation *= Quaternion.Euler(new Vector3( _sensitivityY * 1f, 0, 0));
-        //TODO: умножили значение _sensitivityY на Time.deltaTime 
         _itemTransform.Rotate(new Vector3(1f, 0, 0), _sensitivityY * Time.deltaTime, Space.World);
     }
 
