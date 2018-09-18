@@ -1,17 +1,11 @@
 ﻿using UnityEngine;
 
-/** TODO: Mushroom -> Inspector View Improvements
- * Два поля в инспекторе
- * 1. Начальный цвет для гриба - 100%
- * 2. Конечный цвет для гриба - 0%
- */
 public class Mushroom : BaseHealthAction
 {
     [ColorUsageAttribute(true,true)] [SerializeField] private Color _maxHealthMeshColor;
     [ColorUsageAttribute(true,true)] [SerializeField] private Color _minHealthMeshColor;
 
-    [Header("Mushroom Light")] [SerializeField]
-    private Light _light;
+    [Header("Mushroom Light")] [SerializeField] private Light _light;
 
     [SerializeField] private float _maxEmission;
     [SerializeField] private float _maxIntensity;
