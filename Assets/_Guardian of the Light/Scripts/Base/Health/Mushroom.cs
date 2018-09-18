@@ -7,7 +7,8 @@
  */
 public class Mushroom : BaseHealthAction
 {
-    [SerializeField] private Color _defaultMeshColor;
+    [ColorUsageAttribute(true,true)] [SerializeField] private Color _maxHealthMeshColor;
+    [ColorUsageAttribute(true,true)] [SerializeField] private Color _minHealthMeshColor;
 
     [Header("Mushroom Light")] [SerializeField]
     private Light _light;
@@ -15,11 +16,9 @@ public class Mushroom : BaseHealthAction
     [SerializeField] private float _maxEmission;
     [SerializeField] private float _maxIntensity;
 
-    [Header("Mushroom Particles")] [SerializeField]
-    private ParticleSystem _particles;
-
+    [Header("Mushroom Particles")] 
+    [SerializeField] private ParticleSystem _particles;
     [SerializeField] private float _reducedHealthPerTime = 0.1f;
-
 
     [Header("Mushroom Mesh Color")] [SerializeField]
     private SkinnedMeshRenderer _skinnedMesh;
@@ -45,7 +44,8 @@ public class Mushroom : BaseHealthAction
         Health.Enhance(_reducedHealthPerTime);
         SetMushroomParticlesEmission(percent);
         SetMushroomLightAndAnimation(percent);
-        EnhanceMeshColor();
+        SetMeshColor(percent);
+//        EnhanceMeshColor();
     }
 
     private void ReduceHealth(float percent)
@@ -53,9 +53,17 @@ public class Mushroom : BaseHealthAction
         Health.Reduce(_reducedHealthPerTime);
         SetMushroomLightAndAnimation(percent);
         SetMushroomParticlesEmission(percent);
-        ReduceMeshColor();
+        SetMeshColor(percent);
+//        ReduceMeshColor();
     }
 
+    private void SetMeshColor(float percent)
+    {
+        var color = Color.Lerp(_minHealthMeshColor, _maxHealthMeshColor, percent);
+        
+        _skinnedMesh.material.SetColor("_EmissionColor", color);
+    }
+    
     private void EnhanceMeshColor()
     {
         var color = _skinnedMesh.material.GetColor("_EmissionColor");
@@ -68,7 +76,7 @@ public class Mushroom : BaseHealthAction
     private void ReduceMeshColor()
     {
         var color = _skinnedMesh.material.GetColor("_EmissionColor");
-        var deltaColor = 0.08f * Mathf.LinearToGammaSpace(_reducedHealthPerTime);
+        var deltaColor = 0.04f * Mathf.LinearToGammaSpace(_reducedHealthPerTime);
 
         color = color * (1 - deltaColor);
         _skinnedMesh.material.SetColor("_EmissionColor", color);

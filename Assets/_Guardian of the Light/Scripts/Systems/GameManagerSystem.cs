@@ -28,6 +28,10 @@ public class GameManagerSystem : MonoBehaviour
         InputSystem.Instance.KeyInventoryPressedDown
             .Subscribe(_ => OnKeyInventoryPressedDown())
             .AddTo(this);
+        
+        InputSystem.Instance.KeyBackViewPressedDown
+            .Subscribe(_ => OnKeyBackViewPressedDown())
+            .AddTo(this);
     }
 
     private void ShowInventoryView()
@@ -41,21 +45,25 @@ public class GameManagerSystem : MonoBehaviour
 
     private void HideInventoryView()
     {
-        Player.GetComponent<ThirdPersonUserControl>().LockInput = false;
-        InputSystem.Instance.IsInInventory = false;
         _inventoryCanvas.Hide();
+        InputSystem.Instance.IsInInventory = false;
+        Player.GetComponent<ThirdPersonUserControl>().LockInput = false;
     }
 
     private void OnKeyInventoryPressedDown()
     {
         if (_inventoryCanvas.IsInspectViewActive) return;
+        if (_canvasInventoryView.activeSelf) return;
 
-        var isInventoryActive = _canvasInventoryView.activeSelf;
+        ShowInventoryView();
+    }
 
-        if (isInventoryActive)
-            HideInventoryView();
-        else
-            ShowInventoryView();
+    private void OnKeyBackViewPressedDown()
+    {
+        if (_inventoryCanvas.IsInspectViewActive) return;
+        if (!_canvasInventoryView.activeSelf) return;
+
+        HideInventoryView();
     }
 }
 

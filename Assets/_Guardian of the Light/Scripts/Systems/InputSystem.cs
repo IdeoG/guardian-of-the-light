@@ -11,9 +11,10 @@ public class InputSystem : MonoBehaviour
     
     [Header("Inventory")]
     [SerializeField] private KeyCode _increaseSizeKey = KeyCode.J;
-    [SerializeField] private KeyCode _reduceSizeKey = KeyCode.I;
-    [SerializeField] private KeyCode _inventoryKey = KeyCode.L;
+    [SerializeField] private KeyCode _reduceSizeKey = KeyCode.K;
+    [SerializeField] private KeyCode _inventoryKey = KeyCode.I;
     [SerializeField] private KeyCode _inspectViewKey = KeyCode.J;
+    [SerializeField] private KeyCode _backViewKey = KeyCode.L;
     
     [Header("Player Controls")]
     [SerializeField] private KeyCode _crouchKey = KeyCode.K;
@@ -28,6 +29,7 @@ public class InputSystem : MonoBehaviour
     public IObservable<Unit> KeyActionPressedDown { get; private set; }
     public IObservable<Unit> KeyInspectPressedDown { get; private set; }
     public IObservable<Unit> KeyInventoryPressedDown { get; private set; }
+    public IObservable<Unit> KeyBackViewPressedDown { get; private set; }
 
     public IObservable<Unit> KeyUpArrowPressed { get; private set; }
     public IObservable<Unit> KeyDownArrowPressed { get; private set; }
@@ -56,6 +58,7 @@ public class InputSystem : MonoBehaviour
         
         KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_inspectViewKey));
         KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_inventoryKey));
+        KeyBackViewPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_backViewKey));
 
         KeyUpArrowPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.W));
         KeyDownArrowPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.S));

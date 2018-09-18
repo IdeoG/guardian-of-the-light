@@ -11,7 +11,7 @@ public class InventoryCanvas : MonoBehaviour
     [SerializeField] private GameObject _inspectView;
 
     private IDisposable _keyInspectItemPressedDown;
-    private IDisposable _keyInventoryPressedDown;
+    private IDisposable _keyBackViewPressedDown;
     
     public bool IsInspectViewActive => _inspectView.activeInHierarchy;
 
@@ -41,7 +41,7 @@ public class InventoryCanvas : MonoBehaviour
         _inspectView.GetComponent<FadeEffect>().FadeOut();
         _inspectView.GetComponent<InspectView>().PlayOnDisableAnimation();
         
-        _keyInventoryPressedDown?.Dispose();
+        _keyBackViewPressedDown?.Dispose();
         
         _keyInspectItemPressedDown = InputSystem.Instance.KeyInspectPressedDown
             .Subscribe(_ => ShowInspectView())
@@ -60,7 +60,7 @@ public class InventoryCanvas : MonoBehaviour
         
         _keyInspectItemPressedDown?.Dispose();
         
-        _keyInventoryPressedDown = InputSystem.Instance.KeyInventoryPressedDown
+        _keyBackViewPressedDown = InputSystem.Instance.KeyBackViewPressedDown
             .Subscribe(_ => HideInspectView())
             .AddTo(this);
     }
@@ -75,6 +75,6 @@ public class InventoryCanvas : MonoBehaviour
     private void OnDisable()
     {
         _keyInspectItemPressedDown?.Dispose();
-        _keyInventoryPressedDown?.Dispose();
+        _keyBackViewPressedDown?.Dispose();
     }
 }
