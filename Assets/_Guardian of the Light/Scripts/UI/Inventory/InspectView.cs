@@ -36,11 +36,15 @@ public class InspectView : MonoBehaviour
     private IDisposable _keyRightArrowPressed;
     private IDisposable _keyUpArrowPressed;
 
+    private Vector3 _itemEulerRotation = Vector3.forward;
+    
     public void PlayOnEnableAnimation()
     {
         _item.transform.DOLocalMove(Vector3.zero, _onEnableItemAnimationDuration);
         _item.transform.DOScale(1, _onEnableItemAnimationDuration);
-        _item.transform.DOLocalRotate(new Vector3(0, 360f, 0), _onEnableItemAnimationDuration,
+        _item.transform.DOLocalRotate(
+            new Vector3(_itemEulerRotation.x, 360f + _itemEulerRotation.y, _itemEulerRotation.z),
+            _onEnableItemAnimationDuration,
             RotateMode.FastBeyond360);
     }
 
@@ -59,6 +63,7 @@ public class InspectView : MonoBehaviour
         _item.layer = Mathf.RoundToInt(Mathf.Log(_itemLayerMask.value, 2));
 
         _itemTransform = _item.transform;
+        _itemEulerRotation = _itemTransform.localEulerAngles;
         _itemTransform.parent = _pivotTransform;
 
         _itemTransform.localPosition = new Vector3(0, -0.5f, 0);
