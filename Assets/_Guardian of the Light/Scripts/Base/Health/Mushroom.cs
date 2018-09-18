@@ -45,7 +45,6 @@ public class Mushroom : BaseHealthAction
         SetMushroomParticlesEmission(percent);
         SetMushroomLightAndAnimation(percent);
         SetMeshColor(percent);
-//        EnhanceMeshColor();
     }
 
     private void ReduceHealth(float percent)
@@ -54,31 +53,12 @@ public class Mushroom : BaseHealthAction
         SetMushroomLightAndAnimation(percent);
         SetMushroomParticlesEmission(percent);
         SetMeshColor(percent);
-//        ReduceMeshColor();
     }
 
     private void SetMeshColor(float percent)
     {
         var color = Color.Lerp(_minHealthMeshColor, _maxHealthMeshColor, percent);
         
-        _skinnedMesh.material.SetColor("_EmissionColor", color);
-    }
-    
-    private void EnhanceMeshColor()
-    {
-        var color = _skinnedMesh.material.GetColor("_EmissionColor");
-        var deltaColor = 0.08f * Mathf.LinearToGammaSpace(_reducedHealthPerTime);
-
-        color = color * (1 + deltaColor);
-        _skinnedMesh.material.SetColor("_EmissionColor", color);
-    }
-
-    private void ReduceMeshColor()
-    {
-        var color = _skinnedMesh.material.GetColor("_EmissionColor");
-        var deltaColor = 0.04f * Mathf.LinearToGammaSpace(_reducedHealthPerTime);
-
-        color = color * (1 - deltaColor);
         _skinnedMesh.material.SetColor("_EmissionColor", color);
     }
 
