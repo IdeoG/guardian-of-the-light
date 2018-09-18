@@ -31,4 +31,9 @@ public class HealthInventoryItem : BaseHealthInventoryAction
         Health.Reduce(_healthMultiplier * Time.deltaTime);
         Slider.value = Health.ReactivePercent.Value;
     }
+
+    private void Start()
+    {
+        Slider.value = Health.ReactivePercent.Value;
+    }
 }

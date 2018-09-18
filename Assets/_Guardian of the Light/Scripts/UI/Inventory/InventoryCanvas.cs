@@ -11,6 +11,8 @@ public class InventoryCanvas : MonoBehaviour
     [SerializeField] private GameObject _inspectView;
 
     private IDisposable _keyInspectItemPressedDown;
+    private IDisposable _keyInventoryPressedDown;
+    
     public bool IsInspectViewActive => _inspectView.activeInHierarchy;
 
     public void Show()
@@ -33,19 +35,17 @@ public class InventoryCanvas : MonoBehaviour
         });
     }
 
-    private void OnKeyInspectItemPressedDown()
-    {
-        if (IsInspectViewActive)
-            HideInspectView();
-        else
-            ShowInspectView();
-    }
-
     private void HideInspectView()
     {
         _basicView.GetComponent<FadeEffect>().FadeIn();
         _inspectView.GetComponent<FadeEffect>().FadeOut();
         _inspectView.GetComponent<InspectView>().PlayOnDisableAnimation();
+        
+        _keyInventoryPressedDown?.Dispose();
+        
+        _keyInspectItemPressedDown = InputSystem.Instance.KeyInspectPressedDown
+            .Subscribe(_ => ShowInspectView())
+            .AddTo(this);
     }
 
     private void ShowInspectView()
@@ -57,17 +57,24 @@ public class InventoryCanvas : MonoBehaviour
 
         _inspectView.GetComponent<InspectView>().SetItem(item);
         _inspectView.GetComponent<InspectView>().PlayOnEnableAnimation();
+        
+        _keyInspectItemPressedDown?.Dispose();
+        
+        _keyInventoryPressedDown = InputSystem.Instance.KeyInventoryPressedDown
+            .Subscribe(_ => HideInspectView())
+            .AddTo(this);
     }
 
     private void OnEnable()
     {
         _keyInspectItemPressedDown = InputSystem.Instance.KeyInspectPressedDown
-            .Subscribe(_ => OnKeyInspectItemPressedDown())
+            .Subscribe(_ => ShowInspectView())
             .AddTo(this);
     }
 
     private void OnDisable()
     {
-        _keyInspectItemPressedDown.Dispose();
+        _keyInspectItemPressedDown?.Dispose();
+        _keyInventoryPressedDown?.Dispose();
     }
 }

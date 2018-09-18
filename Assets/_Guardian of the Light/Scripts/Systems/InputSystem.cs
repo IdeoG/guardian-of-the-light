@@ -5,11 +5,19 @@ using UnityEngine;
 
 public class InputSystem : MonoBehaviour
 {
+    [Header("Actions")]
     [SerializeField] private KeyCode _actionKey = KeyCode.J;
     [SerializeField] private KeyCode _extraActionKey = KeyCode.L;
-    [SerializeField] private KeyCode _increaseSizeKey = KeyCode.L;
-
-    [SerializeField] private KeyCode _reduceSizeKey = KeyCode.J;
+    
+    [Header("Inventory")]
+    [SerializeField] private KeyCode _increaseSizeKey = KeyCode.J;
+    [SerializeField] private KeyCode _reduceSizeKey = KeyCode.I;
+    [SerializeField] private KeyCode _inventoryKey = KeyCode.L;
+    [SerializeField] private KeyCode _inspectViewKey = KeyCode.J;
+    
+    [Header("Player Controls")]
+    [SerializeField] private KeyCode _crouchKey = KeyCode.K;
+    [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
 
     public bool IsInInventory;
     public static InputSystem Instance { get; private set; }
@@ -31,6 +39,10 @@ public class InputSystem : MonoBehaviour
 
     public IObservable<Unit> KeyReduceSizePressed { get; private set; }
     public IObservable<Unit> KeyIncreaseSizePressed { get; private set; }
+    
+    public IObservable<Unit> KeyCrouchPressedDown { get; private set; }
+    public IObservable<Unit> KeyJumpPressedDown { get; private set; }
+
 
 
     private void Awake()
@@ -41,8 +53,9 @@ public class InputSystem : MonoBehaviour
         KeyExtraActionPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_extraActionKey));
 
         KeyActionPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E));
-        KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.O));
-        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.I));
+        
+        KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_inspectViewKey));
+        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_inventoryKey));
 
         KeyUpArrowPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.W));
         KeyDownArrowPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.S));
@@ -54,5 +67,8 @@ public class InputSystem : MonoBehaviour
 
         KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_reduceSizeKey));
         KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_increaseSizeKey));
+        
+        KeyCrouchPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKey(_crouchKey));
+        KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKey(_jumpKey));
     }
 }
