@@ -96,12 +96,12 @@ public class InspectView : MonoBehaviour
 
     private void OnKeyUpArrowPressed()
     {
-        _itemTransform.Rotate(new Vector3(1f, 0, 0), _sensitivityY * Time.deltaTime, Space.World);
+        _itemTransform.Rotate(new Vector3(1f, 0, 0), -_sensitivityY * Time.deltaTime, Space.World);
     }
 
     private void OnKeyDownArrowPressed()
     {
-        _itemTransform.Rotate(new Vector3(1f, 0, 0), -_sensitivityY * Time.deltaTime, Space.World);
+        _itemTransform.Rotate(new Vector3(1f, 0, 0), _sensitivityY * Time.deltaTime, Space.World);
     }
 
     private void OnKeyLeftArrowPressed()
