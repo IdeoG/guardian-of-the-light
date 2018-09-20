@@ -16,7 +16,8 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
     #region private_vars
         
     private int _itemIndex;
-    private int _baseItemIndex;
+    private int _itemsCount;
+    private int _baseItemIndex = 2;
     
     private IDisposable _leftArrowPressDown;
     private IDisposable _rightArrowPressDown;
@@ -39,7 +40,8 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
             {
                 _itemIndex--;
                 ClearVisibleItems();
-                SetVisibleItems(_itemIndex);
+                UpdateBaseItems(_itemIndex);
+                SetVisibleItems();
             }
             
             _baseItemIndex = 0;
@@ -47,7 +49,7 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
         
         _effects.SetName(_baseItems[_baseItemIndex].Name);
         _effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
-        _effects.SetArrowsVisibility(_itemIndex - 2 + _baseItemIndex > 0, _itemIndex + 2 < _items.Count - 1);
+        _effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
         
     }
 
@@ -61,7 +63,8 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
             {
                 _itemIndex++;
                 ClearVisibleItems();
-                SetVisibleItems(_itemIndex);
+                UpdateBaseItems(_itemIndex);
+                SetVisibleItems();
             }
             
             _baseItemIndex = 4;
@@ -69,22 +72,45 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
         
         _effects.SetName(_baseItems[_baseItemIndex].Name);
         _effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
-        _effects.SetArrowsVisibility(_itemIndex - 2 + _baseItemIndex > 0, _itemIndex + 2 < _items.Count - 1);
+        _effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
     }
 
     public void UpdateItems(List<InventoryItem> items)
     {
         _items = items;
 
-        _baseItemIndex = 2;
-        _itemIndex = _items.Count / 2;
+        if (_itemsCount != _items.Count)
+        {
+            _itemsCount = _items.Count;
+            _itemIndex = _itemsCount / 2;
+            UpdateBaseItems(_itemIndex);
+        }
             
-        _effects.SetName(_items[_baseItemIndex].Name);
+        _effects.SetName((_baseItems)[_baseItemIndex].Name);
         _effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
-        _effects.SetArrowsVisibility(_items.Count > 6, _items.Count > 5);
+        _effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
 
         ClearVisibleItems();
-        SetVisibleItems(_itemIndex);
+        SetVisibleItems();
+    }
+
+    private void UpdateBaseItems(int index)
+    {
+        if (_items.Count > 3)
+        {
+            _baseItems = new List<InventoryItem>
+            {
+                _items[index - 2],
+                _items[index - 1],
+                _items[index],
+                _items[index + 1],
+                _items[index + 2]
+            };
+        }
+        else
+        {
+            _baseItems = _items;
+        }
     }
 
     public InventoryItem GetCurrentItem()
@@ -100,25 +126,10 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
         }
     }
 
-    private void SetVisibleItems(int index)
+    private void SetVisibleItems()
     {
-        var placeholderOffset = 0;
-        if (_items.Count > 3)
-        {
-            _baseItems = new List<InventoryItem>
-            {
-                _items[index - 2],
-                _items[index - 1],
-                _items[index],
-                _items[index + 1],
-                _items[index + 2]
-            };
-        }
-        else
-        {
-            placeholderOffset = _items.Count == 1 ? 2 : 1;
-            _baseItems = _items;
-        }
+        var placeholderOffset = _baseItems.Count == 1 ? 2 : 1;
+        placeholderOffset = _baseItems.Count > 3 ? 0 : 1;
 
         var length = _baseItems.Count;
         for (var ind = 0; ind < length; ind++)
