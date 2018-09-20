@@ -3,10 +3,10 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Slider), typeof(Health), typeof(InventoryItemPosition))]
+[RequireComponent(typeof(Slider), typeof(Health), typeof(BasicViewItemPosition))]
 public abstract class BaseHealthInventoryAction : MonoBehaviour
 {
-    private InventoryItemPosition _itemPosition;
+    private BasicViewItemPosition _itemPosition;
 
     private IDisposable _keyActionPressed;
     private IDisposable _keyExtraActionPressed;
@@ -44,6 +44,6 @@ public abstract class BaseHealthInventoryAction : MonoBehaviour
     {
         Slider = GetComponent<Slider>();
         Health = GetComponent<Health>();
-        _itemPosition = GetComponent<InventoryItemPosition>();
+        _itemPosition = GetComponent<BasicViewItemPosition>();
     }
 }

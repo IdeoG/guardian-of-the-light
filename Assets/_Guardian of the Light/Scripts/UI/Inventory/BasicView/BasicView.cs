@@ -3,19 +3,11 @@ using UnityEngine;
 
 public class BasicView : MonoBehaviour
 {
+    [SerializeField] private GameObject _oddInventoryItems;
     [SerializeField] private GameObject _evenInventoryItems;
-    [SerializeField] private GameObject _inventoryArrows;
 
     private List<InventoryItem> _items;
     private InventoryItems _itemsBehaviour;
-    [SerializeField] private GameObject _oddInventoryItems;
-
-
-    public InventoryItem GetCurrentItem()
-    {
-        var ind = _itemsBehaviour.GetCurrentPosition();
-        return _items[ind];
-    }
 
     private void OnEnable()
     {
@@ -37,8 +29,6 @@ public class BasicView : MonoBehaviour
         else
             SetOddPattern(items);
 
-        _inventoryArrows.SetActive(items.Count > 5);
-
         return items;
     }
 
@@ -49,6 +39,7 @@ public class BasicView : MonoBehaviour
 
         _itemsBehaviour = _evenInventoryItems.GetComponent<InventoryItems>();
         _itemsBehaviour.SetItems(items);
+        
     }
 
     private void SetOddPattern(List<InventoryItem> items)
@@ -56,7 +47,9 @@ public class BasicView : MonoBehaviour
         _oddInventoryItems.SetActive(true);
         _evenInventoryItems.SetActive(false);
 
-        _itemsBehaviour = _oddInventoryItems.GetComponent<InventoryItems>();
-        _itemsBehaviour.SetItems(items);
+//        _itemsBehaviour = _oddInventoryItems.GetComponent<InventoryItems>();
+//        _itemsBehaviour.SetItems(items);
+        
+        _oddInventoryItems.GetComponent<BasicViewItems>().SetItems(items);
     }
 }

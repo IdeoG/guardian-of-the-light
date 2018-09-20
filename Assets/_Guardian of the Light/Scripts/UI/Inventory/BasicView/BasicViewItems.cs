@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,8 +14,9 @@ public class BasicViewItems : MonoBehaviour, IBasicViewItems
 
     public int GetCurrentItemIndex()
     {
-        return _controller.CurrentItemIndex;
+        throw new NotImplementedException();
     }
+
 
     private void Awake()
     {

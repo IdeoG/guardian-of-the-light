@@ -12,7 +12,7 @@ public class InventoryItems : MonoBehaviour
     private int _inventoryPosition;
     [SerializeField] private Text _itemDescription;
     [SerializeField] private RectTransform _itemLighting;
-    private List<InventoryItemPosition> _itemsPositions;
+    private List<BasicViewItemPosition> _itemsPositions;
 
     [Header("Items pool")] [SerializeField]
     private List<RectTransform> _itemsRectTransforms;
@@ -104,17 +104,17 @@ public class InventoryItems : MonoBehaviour
         SetCurrentLighting(_inventoryPosition);
 
         var len = items.Count;
-        _itemsPositions = new List<InventoryItemPosition>();
+        _itemsPositions = new List<BasicViewItemPosition>();
 
         for (var ind = 0; ind < len; ind++)
         {
             var prefab = items[ind].Prefab2D;
 
             prefab.SetActive(true);
-            prefab.GetComponent<InventoryItemPosition>().SelfPosition = ind;
+            prefab.GetComponent<BasicViewItemPosition>().SelfPosition = ind;
             prefab.GetComponent<RectTransform>().localPosition = _itemsRectTransforms[ind].localPosition;
 
-            _itemsPositions.Add(prefab.GetComponent<InventoryItemPosition>());
+            _itemsPositions.Add(prefab.GetComponent<BasicViewItemPosition>());
         }
 
         _inventoryItems = items;

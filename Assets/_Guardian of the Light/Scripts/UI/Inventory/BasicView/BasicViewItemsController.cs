@@ -8,7 +8,6 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
 {
     #region public_vars
 
-    public int CurrentItemIndex;
 
     #endregion
 
@@ -20,35 +19,77 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
     #endregion
 
     #region private_vars
-
-    private List<InventoryItem> _items;
-    private BasicViewItemsEffects _effects;
-
+        
+    private int _itemIndex;
+    private int _baseItemIndex;
+    
     private IDisposable _leftArrowPressDown;
     private IDisposable _rightArrowPressDown;
+    
+    private BasicViewItemsEffects _effects;
+    
+    private List<InventoryItem> _items;
+    private List<InventoryItem> _baseItems;
 
     #endregion
 
 
     public void OnLeftArrowPressed()
     {
+        _baseItemIndex--;
+
+        if (_baseItemIndex == -1)
+        {
+            if (_itemIndex - 2 + _baseItemIndex > -1)
+            {
+                _itemIndex--;
+                ClearVisibleItems();
+                SetVisibleItems(_itemIndex);
+            }
+            
+            _baseItemIndex = 0;
+        }
+        
+        _effects.SetName(_baseItems[_baseItemIndex].Name);
+        _effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
+        _effects.SetArrowsVisibility(_itemIndex - 2 + _baseItemIndex > 0, _itemIndex + 2 < _items.Count - 1);
+        
     }
 
     public void OnRightArrowPressed()
     {
+        _baseItemIndex++;
+        
+        if (_baseItemIndex == 5)
+        {
+            if (_itemIndex + 2 < _items.Count - 1)
+            {
+                _itemIndex++;
+                ClearVisibleItems();
+                SetVisibleItems(_itemIndex);
+            }
+            
+            _baseItemIndex = 4;
+        }
+        
+        _effects.SetName(_baseItems[_baseItemIndex].Name);
+        _effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
+        _effects.SetArrowsVisibility(_itemIndex - 2 + _baseItemIndex > 0, _itemIndex + 2 < _items.Count - 1);
     }
 
     public void UpdateItems(List<InventoryItem> items)
     {
-        CurrentItemIndex = 0;
-
         _items = items;
-        _effects.SetName(_items[CurrentItemIndex].Name);
-        _effects.SetLightingPosition(_placeholders[CurrentItemIndex].position);
+
+        _baseItemIndex = 2;
+        _itemIndex = _items.Count / 2;
+            
+        _effects.SetName(_items[_baseItemIndex].Name);
+        _effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
         _effects.SetArrowsVisibility(_items.Count > 6, _items.Count > 5);
-        
+
         ClearVisibleItems();
-        SetVisibleItems();
+        SetVisibleItems(_itemIndex);
     }
 
     private void ClearVisibleItems()
@@ -59,23 +100,39 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
         }
     }
 
-    private void SetVisibleItems()
+    private void SetVisibleItems(int index)
     {
-        var len = _items.Count > 5 ? 5 : _items.Count;
-        
-        for (var index = 0; index < len; index++)
+        var placeholderOffset = 0;
+        if (_items.Count > 3)
         {
-            var prefab = _items[index].Prefab2D;
-            var itemPosition = prefab.GetComponent<BasicViewItemPosition>();
-
-            prefab.SetActive(true);
-            itemPosition.SelfPosition = index;
-            itemPosition.RectTransform.localPosition = _placeholders[index].localPosition;
-
-//            _itemsPositions.Add(prefab.GetComponent<InventoryItemPosition>());
+            _baseItems = new List<InventoryItem>
+            {
+                _items[index - 2],
+                _items[index - 1],
+                _items[index],
+                _items[index + 1],
+                _items[index + 2]
+            };
         }
+        else
+        {
+            placeholderOffset = _items.Count == 1 ? 2 : 1;
+            _baseItems = _items;
+        }
+
+        var length = _baseItems.Count;
+        for (var ind = 0; ind < length; ind++)
+        {
+            var prefab = _baseItems[ind].Prefab2D;
+            var itemPosition = prefab.GetComponent<BasicViewItemPosition>();
+            
+            prefab.SetActive(true);
+            itemPosition.SelfPosition = ind + placeholderOffset;
+            itemPosition.RectTransform.localPosition = _placeholders[ind + placeholderOffset].localPosition;
+        }
+        
     }
-    
+
     private void OnEnable()
     {
         _leftArrowPressDown = InputSystem.Instance.KeyLeftArrowPressedDown

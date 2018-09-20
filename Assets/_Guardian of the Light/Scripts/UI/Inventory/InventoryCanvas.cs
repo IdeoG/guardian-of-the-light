@@ -50,12 +50,13 @@ public class InventoryCanvas : MonoBehaviour
 
     private void ShowInspectView()
     {
-        var item = _basicView.GetComponent<BasicView>().GetCurrentItem();
+        // FIXME: Не работает просмотр объекта 
+//        var item = _basicView.GetComponent<BasicView>().GetCurrentItem();
 
         _basicView.GetComponent<FadeEffect>().FadeOut();
         _inspectView.GetComponent<FadeEffect>().FadeIn();
 
-        _inspectView.GetComponent<InspectView>().SetItem(item);
+//        _inspectView.GetComponent<InspectView>().SetItem(item);
         _inspectView.GetComponent<InspectView>().PlayOnEnableAnimation();
         
         _keyInspectItemPressedDown?.Dispose();
