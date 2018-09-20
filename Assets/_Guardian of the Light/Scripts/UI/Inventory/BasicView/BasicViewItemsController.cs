@@ -6,11 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(BasicViewItemsEffects))]
 public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
 {
-    #region public_vars
-
-
-    #endregion
-
     #region private_inspector_vars
 
     [SerializeField] private Transform _prefabs2D;
@@ -33,7 +28,7 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
 
     #endregion
 
-
+    
     public void OnLeftArrowPressed()
     {
         _baseItemIndex--;
@@ -92,6 +87,11 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
         SetVisibleItems(_itemIndex);
     }
 
+    public InventoryItem GetCurrentItem()
+    {
+        return _baseItems[_baseItemIndex];
+    }
+    
     private void ClearVisibleItems()
     {
         for (var index = 0; index < _prefabs2D.childCount; index++)
@@ -156,4 +156,5 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
     {
         _effects = GetComponent<BasicViewItemsEffects>();
     }
+
 }

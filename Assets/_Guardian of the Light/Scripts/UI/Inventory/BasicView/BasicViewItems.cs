@@ -12,11 +12,10 @@ public class BasicViewItems : MonoBehaviour, IBasicViewItems
         _controller.UpdateItems(items);
     }
 
-    public int GetCurrentItemIndex()
+    public InventoryItem GetCurrentItem()
     {
-        throw new NotImplementedException();
+        return _controller.GetCurrentItem();
     }
-
 
     private void Awake()
     {
