@@ -23,5 +23,5 @@ public class BasicViewItemsEffects : MonoBehaviour, IBasicViewItemsEffects
         _leftArrow.SetActive(isLeftArrowVisible);
         _rightArrow.SetActive(isRightArrowVisible);
     }
-
+    
 }

@@ -56,4 +56,5 @@ public class BasicView : MonoBehaviour
     {
         return _oddInventoryItems.GetComponent<BasicViewItems>().GetCurrentItem();
     }
+    
 }

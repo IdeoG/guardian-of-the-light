@@ -23,6 +23,19 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
     private IDisposable _rightArrowPressDown;
     
     private BasicViewItemsEffects _effects;
+
+    private BasicViewItemsEffects Effects
+    {
+        get
+        {
+            if (_effects == null)
+            {
+                _effects = GetComponent<BasicViewItemsEffects>();
+            }
+
+            return _effects;
+        }
+    }
     
     private List<InventoryItem> _items;
     private List<InventoryItem> _baseItems;
@@ -47,9 +60,9 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
             _baseItemIndex = 0;
         }
         
-        _effects.SetName(_baseItems[_baseItemIndex].Name);
-        _effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
-        _effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
+        Effects.SetName(_baseItems[_baseItemIndex].Name);
+        Effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
+        Effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
         
     }
 
@@ -70,9 +83,9 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
             _baseItemIndex = 4;
         }
         
-        _effects.SetName(_baseItems[_baseItemIndex].Name);
-        _effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
-        _effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
+        Effects.SetName(_baseItems[_baseItemIndex].Name);
+        Effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
+        Effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
     }
 
     public void UpdateItems(List<InventoryItem> items)
@@ -86,9 +99,9 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
             UpdateBaseItems(_itemIndex);
         }
             
-        _effects.SetName((_baseItems)[_baseItemIndex].Name);
-        _effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
-        _effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
+        Effects.SetName((_baseItems)[_baseItemIndex].Name);
+        Effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
+        Effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
 
         ClearVisibleItems();
         SetVisibleItems();
@@ -161,11 +174,6 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
         _rightArrowPressDown.Dispose();
 
         ClearVisibleItems();
-    }
-
-    private void Awake()
-    {
-        _effects = GetComponent<BasicViewItemsEffects>();
     }
 
 }

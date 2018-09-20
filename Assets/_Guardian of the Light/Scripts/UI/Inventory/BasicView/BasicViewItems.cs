@@ -5,19 +5,27 @@ using UnityEngine;
 public class BasicViewItems : MonoBehaviour, IBasicViewItems
 {
     private BasicViewItemsController _controller;
-    
+    private BasicViewItemsController Controller
+    {
+        get
+        {
+            if (_controller == null)
+            {
+                _controller = GetComponent<BasicViewItemsController>();
+            }
+
+            return _controller;
+        }
+    }
+
     public void SetItems(List<InventoryItem> items)
     {
-        _controller.UpdateItems(items);
+        Controller.UpdateItems(items);
     }
 
     public InventoryItem GetCurrentItem()
     {
-        return _controller.GetCurrentItem();
+        return Controller.GetCurrentItem();
     }
 
-    private void Awake()
-    {
-        _controller = gameObject.GetComponent<BasicViewItemsController>();
-    }
 }
