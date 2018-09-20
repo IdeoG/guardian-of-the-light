@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +18,6 @@ public class BasicViewItems : MonoBehaviour, IBasicViewItems
 
     private void Awake()
     {
-        _controller = GetComponent<BasicViewItemsController>();
+        _controller = gameObject.GetComponent<BasicViewItemsController>();
     }
 }
