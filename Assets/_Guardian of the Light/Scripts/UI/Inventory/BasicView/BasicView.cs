@@ -6,30 +6,16 @@ public class BasicView : MonoBehaviour
     [SerializeField] private GameObject _oddInventoryItems;
     [SerializeField] private GameObject _evenInventoryItems;
 
-    private List<InventoryItem> _items;
     private InventoryItems _itemsBehaviour;
 
+    public InventoryItem GetCurrentItem()
+    {
+        return _oddInventoryItems.GetComponent<BasicViewItems>().GetCurrentItem();
+    }
+    
     private void OnEnable()
     {
-        _items = FetchInventoryItems();
-    }
-
-    private List<InventoryItem> FetchInventoryItems()
-    {
-        var items = InventorySystem.Instance.GetTookItems();
-        if (items.Count == 0)
-        {
-            transform.parent.gameObject.SetActive(false);
-            return null;
-        }
-
-
-        if (items.Count % 2 == 0 && items.Count < 5)
-            SetEvenPattern(items);
-        else
-            SetOddPattern(items);
-
-        return items;
+        FetchInventoryItems();
     }
 
     private void SetEvenPattern(List<InventoryItem> items)
@@ -51,9 +37,18 @@ public class BasicView : MonoBehaviour
         itemsBehaviour.SetItems(items);
     }
 
-    public InventoryItem GetCurrentItem()
+    private void FetchInventoryItems()
     {
-        return _oddInventoryItems.GetComponent<BasicViewItems>().GetCurrentItem();
+        var items = InventorySystem.Instance.GetTookItems();
+        if (items.Count == 0)
+        {
+            transform.parent.gameObject.SetActive(false);
+            return;
+        }
+
+        if (items.Count % 2 == 0 && items.Count < 5)
+            SetEvenPattern(items);
+        else
+            SetOddPattern(items);
     }
-    
 }
