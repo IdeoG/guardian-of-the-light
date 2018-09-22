@@ -47,7 +47,6 @@ public class BasicView : MonoBehaviour
         _oddInventoryItems.SetActive(true);
         _evenInventoryItems.SetActive(false);
 
-        var itemsController = _oddInventoryItems.GetComponent<BasicViewItemsController>();
         var itemsBehaviour = _oddInventoryItems.GetComponent<BasicViewItems>();
         itemsBehaviour.SetItems(items);
     }

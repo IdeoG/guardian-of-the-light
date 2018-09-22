@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BasicViewItemsController))]
-public class BasicViewItems : MonoBehaviour, IBasicViewItems
+public class BasicViewItems : MonoBehaviour, IInventoryItems
 {
     private BasicViewItemsController _controller;
     private BasicViewItemsController Controller

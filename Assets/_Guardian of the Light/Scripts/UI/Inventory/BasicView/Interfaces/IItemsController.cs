@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 
-public interface IBasicViewItemsController
+public interface IItemsController
 {
-    void OnLeftArrowPressed();
-    void OnRightArrowPressed();
     void UpdateItems(List<InventoryItem> items);
     InventoryItem GetCurrentItem();
 }

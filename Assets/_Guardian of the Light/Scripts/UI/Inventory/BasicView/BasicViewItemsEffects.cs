@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BasicViewItemsEffects : MonoBehaviour, IBasicViewItemsEffects
+public class BasicViewItemsEffects : MonoBehaviour, IItemsEffects
 {
     [SerializeField] private Text _description;
     [SerializeField] private RectTransform _lighting;

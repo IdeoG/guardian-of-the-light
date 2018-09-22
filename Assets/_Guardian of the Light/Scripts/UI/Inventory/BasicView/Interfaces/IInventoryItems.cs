@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-interface IBasicViewItems
+interface IInventoryItems
 {
     void SetItems(List<InventoryItem> items);
     InventoryItem GetCurrentItem();

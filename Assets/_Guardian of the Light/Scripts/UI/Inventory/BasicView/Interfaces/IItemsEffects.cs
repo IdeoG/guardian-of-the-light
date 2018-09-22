@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IBasicViewItemsEffects
+public interface IItemsEffects
 {
     void SetLightingPosition(Vector3 position);
     void SetName(string text);

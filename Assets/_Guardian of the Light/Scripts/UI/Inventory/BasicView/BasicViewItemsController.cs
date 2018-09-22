@@ -4,7 +4,7 @@ using UniRx;
 using UnityEngine;
 
 [RequireComponent(typeof(BasicViewItemsEffects))]
-public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
+public class BasicViewItemsController : MonoBehaviour, IItemsController
 {
     #region private_inspector_vars
 
@@ -42,8 +42,32 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
 
     #endregion
 
+
+    public void UpdateItems(List<InventoryItem> items)
+    {
+        _items = items;
+
+        if (_itemsCount != _items.Count)
+        {
+            _itemsCount = _items.Count;
+            _itemIndex = _itemsCount / 2;
+            UpdateBaseItems(_itemIndex);
+        }
+            
+        Effects.SetName((_baseItems)[_baseItemIndex].Name);
+        Effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
+        Effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
+
+        ClearVisibleItems();
+        SetVisibleItems();
+    }
+
+    public InventoryItem GetCurrentItem()
+    {
+        return _baseItems[_baseItemIndex];
+    }
     
-    public void OnLeftArrowPressed()
+    private void OnLeftArrowPressed()
     {
         _baseItemIndex--;
 
@@ -66,7 +90,7 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
         
     }
 
-    public void OnRightArrowPressed()
+    private void OnRightArrowPressed()
     {
         _baseItemIndex++;
         
@@ -87,26 +111,7 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
         Effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
         Effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
     }
-
-    public void UpdateItems(List<InventoryItem> items)
-    {
-        _items = items;
-
-        if (_itemsCount != _items.Count)
-        {
-            _itemsCount = _items.Count;
-            _itemIndex = _itemsCount / 2;
-            UpdateBaseItems(_itemIndex);
-        }
-            
-        Effects.SetName((_baseItems)[_baseItemIndex].Name);
-        Effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
-        Effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
-
-        ClearVisibleItems();
-        SetVisibleItems();
-    }
-
+    
     private void UpdateBaseItems(int index)
     {
         if (_items.Count > 3)
@@ -126,11 +131,6 @@ public class BasicViewItemsController : MonoBehaviour, IBasicViewItemsController
         }
     }
 
-    public InventoryItem GetCurrentItem()
-    {
-        return _baseItems[_baseItemIndex];
-    }
-    
     private void ClearVisibleItems()
     {
         for (var index = 0; index < _prefabs2D.childCount; index++)
