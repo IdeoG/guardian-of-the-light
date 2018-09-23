@@ -120,11 +120,9 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
         for (var ind = 0; ind < length; ind++)
         {
             var prefab = _baseItems[ind].Prefab2D;
-            var itemPosition = prefab.GetComponent<BasicViewItemPosition>();
 
             prefab.SetActive(true);
-            itemPosition.SelfPosition = ind + placeholderOffset;
-            itemPosition.RectTransform.localPosition = _placeholders[ind + placeholderOffset].localPosition;
+            prefab.GetComponent<RectTransform>().localPosition = _placeholders[ind + placeholderOffset].localPosition;
         }
     }
 

@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BasicView : MonoBehaviour
 {
     [SerializeField] private GameObject _oddInventoryItems;
     [SerializeField] private GameObject _evenInventoryItems;
-
-    private InventoryItems _itemsBehaviour;
 
     public InventoryItem GetCurrentItem()
     {
@@ -20,12 +19,7 @@ public class BasicView : MonoBehaviour
 
     private void SetEvenPattern(List<InventoryItem> items)
     {
-        _oddInventoryItems.SetActive(false);
-        _evenInventoryItems.SetActive(true);
-
-        _itemsBehaviour = _evenInventoryItems.GetComponent<InventoryItems>();
-        _itemsBehaviour.SetItems(items);
-        
+        throw new NotImplementedException();
     }
 
     private void SetOddPattern(List<InventoryItem> items)
