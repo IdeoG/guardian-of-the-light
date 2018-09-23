@@ -1,21 +1,25 @@
 ﻿using UnityEngine;
 
-public class Mushroom : BaseHealthAction
+public class Vegetation : BaseHealthAction
 {
     [ColorUsageAttribute(true,true)] [SerializeField] private Color _maxHealthMeshColor;
     [ColorUsageAttribute(true,true)] [SerializeField] private Color _minHealthMeshColor;
 
-    [Header("Mushroom Light")] [SerializeField] private Light _light;
-
+    [Header("Light")] 
+    [SerializeField] private Light _light;
     [SerializeField] private float _maxEmission;
     [SerializeField] private float _maxIntensity;
 
-    [Header("Mushroom Particles")] 
+    [Header("Particles")] 
     [SerializeField] private ParticleSystem _particles;
     [SerializeField] private float _reducedHealthPerTime = 0.1f;
 
-    [Header("Mushroom Mesh Color")] [SerializeField]
-    private SkinnedMeshRenderer _skinnedMesh;
+    [Header("Mesh Color")] 
+    [SerializeField] private SkinnedMeshRenderer _skinnedMesh;
+
+    [Header("Animation")] 
+    [SerializeField] private string _animationClipName;
+    
 
     protected override void OnKeyActionPressed(Health playerHealth)
     {
@@ -50,20 +54,27 @@ public class Mushroom : BaseHealthAction
     }
 
     private void SetMeshColor(float percent)
-    {
-        var color = Color.Lerp(_minHealthMeshColor, _maxHealthMeshColor, percent);
-        
-        _skinnedMesh.material.SetColor("_EmissionColor", color);
+    {   
+        _skinnedMesh.material.SetColor("_EmissionColor", Color.Lerp(_minHealthMeshColor, _maxHealthMeshColor, percent));
     }
 
     private void SetMushroomLightAndAnimation(float percent)
     {
         _light.intensity = percent * _maxIntensity;
-        Animator.Play("Mushroom", 0, 1 - percent);
+        if (Animator != null) Animator.Play(_animationClipName, 0, 1 - percent);
     }
 
     private void SetMushroomParticlesEmission(float percent)
     {
-        _particles.emissionRate = percent * _maxEmission;
+        if (_particles != null) _particles.emissionRate = percent * _maxEmission;
+    }
+
+    private void Start()
+    {
+        var percent = Health.ReactivePercent.Value;
+        
+        SetMushroomLightAndAnimation(percent);
+        SetMushroomParticlesEmission(percent);
+        SetMeshColor(percent);
     }
 }
