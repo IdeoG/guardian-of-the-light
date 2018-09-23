@@ -1,48 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 
 [RequireComponent(typeof(BasicViewItemsEffects))]
 public class BasicViewItemsController : MonoBehaviour, IItemsController
 {
-    #region private_inspector_vars
-
-    [SerializeField] private Transform _prefabs2D;
-    [SerializeField] private List<RectTransform> _placeholders;
-
-    #endregion
-
-    #region private_vars
-        
-    private int _itemIndex;
-    private int _itemsCount;
-    private int _baseItemIndex = 2;
-    
-    private IDisposable _leftArrowPressDown;
-    private IDisposable _rightArrowPressDown;
-    
-    private BasicViewItemsEffects _effects;
-
-    private BasicViewItemsEffects Effects
-    {
-        get
-        {
-            if (_effects == null)
-            {
-                _effects = GetComponent<BasicViewItemsEffects>();
-            }
-
-            return _effects;
-        }
-    }
-    
-    private List<InventoryItem> _items;
-    private List<InventoryItem> _baseItems;
-
-    #endregion
-
-
     public void UpdateItems(List<InventoryItem> items)
     {
         _items = items;
@@ -53,8 +17,8 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
             _itemIndex = _itemsCount / 2;
             UpdateBaseItems(_itemIndex);
         }
-            
-        Effects.SetName((_baseItems)[_baseItemIndex].Name);
+
+        Effects.SetName(_baseItems[_baseItemIndex].Name);
         Effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
         Effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
 
@@ -66,9 +30,12 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
     {
         return _baseItems[_baseItemIndex];
     }
-    
+
     private void OnLeftArrowPressed()
     {
+        if (_isInDebounce) return;
+        Debounce();
+        
         _baseItemIndex--;
 
         if (_baseItemIndex == -1)
@@ -80,20 +47,22 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
                 UpdateBaseItems(_itemIndex);
                 SetVisibleItems();
             }
-            
+
             _baseItemIndex = 0;
         }
-        
+
         Effects.SetName(_baseItems[_baseItemIndex].Name);
         Effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
         Effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
-        
     }
 
     private void OnRightArrowPressed()
     {
-        _baseItemIndex++;
+        if (_isInDebounce) return;
+        Debounce();
         
+        _baseItemIndex++;
+
         if (_baseItemIndex == 5)
         {
             if (_itemIndex + 2 < _items.Count - 1)
@@ -103,19 +72,27 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
                 UpdateBaseItems(_itemIndex);
                 SetVisibleItems();
             }
-            
+
             _baseItemIndex = 4;
         }
-        
+
         Effects.SetName(_baseItems[_baseItemIndex].Name);
         Effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
         Effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
+    }
+
+    private async void Debounce()
+    {
+        _isInDebounce = true;
+
+        await Task.Delay(_debounceTimeMs);
+        
+        _isInDebounce = false;
     }
     
     private void UpdateBaseItems(int index)
     {
         if (_items.Count > 3)
-        {
             _baseItems = new List<InventoryItem>
             {
                 _items[index - 2],
@@ -124,19 +101,14 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
                 _items[index + 1],
                 _items[index + 2]
             };
-        }
         else
-        {
             _baseItems = _items;
-        }
     }
 
     private void ClearVisibleItems()
     {
         for (var index = 0; index < _prefabs2D.childCount; index++)
-        {
             _prefabs2D.GetChild(index).gameObject.SetActive(false);
-        }
     }
 
     private void SetVisibleItems()
@@ -149,21 +121,20 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
         {
             var prefab = _baseItems[ind].Prefab2D;
             var itemPosition = prefab.GetComponent<BasicViewItemPosition>();
-            
+
             prefab.SetActive(true);
             itemPosition.SelfPosition = ind + placeholderOffset;
             itemPosition.RectTransform.localPosition = _placeholders[ind + placeholderOffset].localPosition;
         }
-        
     }
 
     private void OnEnable()
     {
-        _leftArrowPressDown = InputSystem.Instance.KeyLeftArrowPressedDown
+        _leftArrowPressDown = InputSystem.Instance.KeyLeftArrowPressed
             .Subscribe(_ => OnLeftArrowPressed())
             .AddTo(this);
 
-        _rightArrowPressDown = InputSystem.Instance.KeyRightArrowPressedDown
+        _rightArrowPressDown = InputSystem.Instance.KeyRightArrowPressed
             .Subscribe(_ => OnRightArrowPressed())
             .AddTo(this);
     }
@@ -175,5 +146,41 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
 
         ClearVisibleItems();
     }
+
+    #region private_inspector_vars
+
+    [SerializeField] private int _debounceTimeMs = 500;
+    [SerializeField] private Transform _prefabs2D;
+    [SerializeField] private List<RectTransform> _placeholders;
+
+    #endregion
+
+    #region private_vars
+
+    private bool _isInDebounce;
+    private int _itemIndex;
+    private int _itemsCount;
+    private int _baseItemIndex = 2;
+    
+
+    private IDisposable _leftArrowPressDown;
+    private IDisposable _rightArrowPressDown;
+
+    private BasicViewItemsEffects _effects;
+
+    private BasicViewItemsEffects Effects
+    {
+        get
+        {
+            if (_effects == null) _effects = GetComponent<BasicViewItemsEffects>();
+
+            return _effects;
+        }
+    }
+
+    private List<InventoryItem> _items;
+    private List<InventoryItem> _baseItems;
+
+    #endregion
 
 }
