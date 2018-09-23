@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Vegetation : BaseHealthAction
 {
@@ -71,10 +72,18 @@ public class Vegetation : BaseHealthAction
 
     private void Start()
     {
+        CheckSensitiveFields();
+        
         var percent = Health.ReactivePercent.Value;
         
         SetMushroomLightAndAnimation(percent);
         SetMushroomParticlesEmission(percent);
         SetMeshColor(percent);
+    }
+
+    private void CheckSensitiveFields()
+    {
+        if (Animator != null && _animationClipName.Equals("")) 
+            throw new NullReferenceException("Animation is empty for Vegetation");
     }
 }
