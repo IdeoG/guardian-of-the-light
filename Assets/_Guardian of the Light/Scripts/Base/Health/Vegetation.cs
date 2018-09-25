@@ -3,23 +3,6 @@ using UnityEngine;
 
 public class Vegetation : BaseHealthAction
 {
-    [ColorUsageAttribute(true,true)] [SerializeField] private Color _maxHealthMeshColor;
-    [ColorUsageAttribute(true,true)] [SerializeField] private Color _minHealthMeshColor;
-
-    [Header("Light")] 
-    [SerializeField] private Light _light;
-    [SerializeField] private float _maxEmission;
-    [SerializeField] private float _maxIntensity;
-
-    [Header("Particles")] 
-    [SerializeField] private ParticleSystem _particles;
-    [SerializeField] private float _reducedHealthPerTime = 0.1f;
-
-    [Header("Mesh Color")] 
-    [SerializeField] private SkinnedMeshRenderer _skinnedMesh;
-
-    [Header("Animation")] 
-    [SerializeField] private string _animationClipName;
     
 
     protected override void OnKeyActionPressed(Health playerHealth)
@@ -86,4 +69,26 @@ public class Vegetation : BaseHealthAction
         if (Animator != null && _animationClipName.Equals("")) 
             throw new NullReferenceException("Animation is empty for Vegetation");
     }
+
+    #region half private
+
+    [SerializeField] private float _reducedHealthPerTime = 0.1f;
+    [ColorUsageAttribute(false,true)] [SerializeField] private Color _maxHealthMeshColor;
+    [ColorUsageAttribute(false,true)] [SerializeField] private Color _minHealthMeshColor;
+
+    [Header("Light")] 
+    [SerializeField] private Light _light;
+    [SerializeField] private float _maxEmission;
+    [SerializeField] private float _maxIntensity;
+
+    [Header("Particles")] 
+    [SerializeField] private ParticleSystem _particles;
+
+    [Header("Mesh Color")] 
+    [SerializeField] private SkinnedMeshRenderer _skinnedMesh;
+
+    [Header("Animation")] 
+    [SerializeField] private string _animationClipName;
+    
+    #endregion
 }
