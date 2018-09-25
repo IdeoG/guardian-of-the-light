@@ -1,10 +1,9 @@
 ﻿using System;
+using UnityEditor.Experimental.UIElements;
 using UnityEngine;
 
 public class Vegetation : BaseHealthAction
 {
-    
-
     protected override void OnKeyActionPressed(Health playerHealth)
     {
         if (!Health.CanReduce() || !playerHealth.CanEnhance()) return;
@@ -38,8 +37,9 @@ public class Vegetation : BaseHealthAction
     }
 
     private void SetMeshColor(float percent)
-    {   
-        _skinnedMesh.material.SetColor("_EmissionColor", Color.Lerp(_minHealthMeshColor, _maxHealthMeshColor, percent));
+    {
+        var curvedPercent = _curve.Evaluate(percent);
+        _skinnedMesh.material.SetColor("_EmissionColor", Color.Lerp(_minHealthMeshColor, _maxHealthMeshColor, curvedPercent));
     }
 
     private void SetMushroomLightAndAnimation(float percent)
@@ -72,7 +72,11 @@ public class Vegetation : BaseHealthAction
 
     #region half private
 
+    [Header("Health")] 
     [SerializeField] private float _reducedHealthPerTime = 0.1f;
+
+    [Header("Color")] 
+    [SerializeField] private AnimationCurve _curve;
     [ColorUsageAttribute(false,true)] [SerializeField] private Color _maxHealthMeshColor;
     [ColorUsageAttribute(false,true)] [SerializeField] private Color _minHealthMeshColor;
 
