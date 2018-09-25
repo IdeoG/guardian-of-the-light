@@ -52,7 +52,7 @@ public class Vegetation : BaseHealthAction
         if (_particles == null) return;
         
         var particlesEmission = _particles.emission;
-        particlesEmission.rateOverTime = _rateOverTimeCurve.Evaluate(percent);
+        particlesEmission.rateOverTime = _maxRateOverTime * _rateOverTimeCurve.Evaluate(percent);
     }
 
     private void Start()
@@ -88,6 +88,7 @@ public class Vegetation : BaseHealthAction
 
     [Header("Particles")] 
     [SerializeField] private AnimationCurve _rateOverTimeCurve;
+    [SerializeField] private float _maxRateOverTime;
     [SerializeField] private ParticleSystem _particles;
 
     [Header("Mesh Color")] 
