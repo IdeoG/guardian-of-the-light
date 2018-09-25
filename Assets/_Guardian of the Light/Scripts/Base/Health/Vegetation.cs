@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEditor.Experimental.UIElements;
 using UnityEngine;
 
 public class Vegetation : BaseHealthAction
@@ -77,8 +76,8 @@ public class Vegetation : BaseHealthAction
 
     [Header("Color")] 
     [SerializeField] private AnimationCurve _curve;
-    [ColorUsageAttribute(false,true)] [SerializeField] private Color _maxHealthMeshColor;
-    [ColorUsageAttribute(false,true)] [SerializeField] private Color _minHealthMeshColor;
+    [ColorUsage(false,true)] [SerializeField] private Color _maxHealthMeshColor;
+    [ColorUsage(false,true)] [SerializeField] private Color _minHealthMeshColor;
 
     [Header("Light")] 
     [SerializeField] private Light _light;
