@@ -37,7 +37,7 @@ public class Vegetation : BaseHealthAction
 
     private void SetMeshColor(float percent)
     {
-        var curvedPercent = _curve.Evaluate(percent);
+        var curvedPercent = _colorCurve.Evaluate(percent);
         _skinnedMesh.material.SetColor("_EmissionColor", Color.Lerp(_minHealthMeshColor, _maxHealthMeshColor, curvedPercent));
     }
 
@@ -49,7 +49,10 @@ public class Vegetation : BaseHealthAction
 
     private void SetMushroomParticlesEmission(float percent)
     {
-        if (_particles != null) _particles.emissionRate = percent * _maxEmission;
+        if (_particles == null) return;
+        
+        var particlesEmission = _particles.emission;
+        particlesEmission.rateOverTime = _rateOverTimeCurve.Evaluate(percent);
     }
 
     private void Start()
@@ -75,16 +78,16 @@ public class Vegetation : BaseHealthAction
     [SerializeField] private float _reducedHealthPerTime = 0.1f;
 
     [Header("Color")] 
-    [SerializeField] private AnimationCurve _curve;
+    [SerializeField] private AnimationCurve _colorCurve;
     [ColorUsage(false,true)] [SerializeField] private Color _maxHealthMeshColor;
     [ColorUsage(false,true)] [SerializeField] private Color _minHealthMeshColor;
 
     [Header("Light")] 
     [SerializeField] private Light _light;
-    [SerializeField] private float _maxEmission;
     [SerializeField] private float _maxIntensity;
 
     [Header("Particles")] 
+    [SerializeField] private AnimationCurve _rateOverTimeCurve;
     [SerializeField] private ParticleSystem _particles;
 
     [Header("Mesh Color")] 
