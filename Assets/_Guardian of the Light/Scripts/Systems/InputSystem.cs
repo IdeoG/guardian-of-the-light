@@ -5,23 +5,23 @@ using UnityEngine;
 
 public class InputSystem : MonoBehaviour
 {
-    [Header("Actions")]
-    [SerializeField] private KeyCode _actionKey = KeyCode.J;
-    [SerializeField] private KeyCode _extraActionKey = KeyCode.L;
-    
-    [Header("Inventory")]
-    [SerializeField] private KeyCode _increaseSizeKey = KeyCode.J;
-    [SerializeField] private KeyCode _reduceSizeKey = KeyCode.K;
-    [SerializeField] private KeyCode _inventoryKey = KeyCode.I;
-    [SerializeField] private KeyCode _inspectViewKey = KeyCode.J;
-    [SerializeField] private KeyCode _backViewKey = KeyCode.L;
-    
-    [Header("Player Controls")]
-    [SerializeField] private KeyCode _crouchKey = KeyCode.K;
-    [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
 
-    public bool IsInInventory;
-    public static InputSystem Instance { get; private set; }
+    public static InputSystem Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<InputSystem>();
+            }
+
+            return _instance;
+        }
+    }
+
+    private static InputSystem _instance;
+
+    #region public vars
 
     public IObservable<Unit> KeyActionPressed { get; private set; }
     public IObservable<Unit> KeyExtraActionPressed { get; private set; }
@@ -44,13 +44,37 @@ public class InputSystem : MonoBehaviour
     
     public IObservable<Unit> KeyCrouchPressedDown { get; private set; }
     public IObservable<Unit> KeyJumpPressedDown { get; private set; }
+    
+    public bool IsInInventory;
+        #endregion
+    
+    #region half private vars
 
+    [Header("Actions")]
+    [SerializeField] private KeyCode _actionKey = KeyCode.J;
+    [SerializeField] private KeyCode _extraActionKey = KeyCode.L;
+    
+    [Header("Inventory")]
+    [SerializeField] private KeyCode _increaseSizeKey = KeyCode.J;
+    [SerializeField] private KeyCode _reduceSizeKey = KeyCode.K;
+    [SerializeField] private KeyCode _inventoryKey = KeyCode.I;
+    [SerializeField] private KeyCode _inspectViewKey = KeyCode.J;
+    [SerializeField] private KeyCode _backViewKey = KeyCode.L;
+    
+    [Header("Player Controls")]
+    [SerializeField] private KeyCode _crouchKey = KeyCode.K;
+    [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
+    
+    #endregion
 
 
     private void Awake()
     {
-        Instance = this;
+        ReferenceInputs();
+    }
 
+    private void ReferenceInputs()
+    {
         KeyActionPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_actionKey));
         KeyExtraActionPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_extraActionKey));
 

@@ -8,8 +8,6 @@ public class GameManagerSystem : MonoBehaviour
 
     private InventoryCanvas _inventoryCanvas;
 
-    [Header("vSyncCount")] [SerializeField]
-    private VSyncType _vSyncCount = VSyncType.EveryVSync60Fps;
 
     [Header("Player")] [SerializeField] public GameObject Player;
     public static GameManagerSystem Instance { get; private set; }
@@ -17,8 +15,6 @@ public class GameManagerSystem : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-
-        QualitySettings.vSyncCount = (int) _vSyncCount;
 
         _inventoryCanvas = _canvasInventoryView.GetComponent<InventoryCanvas>();
     }
@@ -65,11 +61,4 @@ public class GameManagerSystem : MonoBehaviour
 
         HideInventoryView();
     }
-}
-
-public enum VSyncType
-{
-    EveryVSync60Fps = 1,
-    EverySecondVSync30Fps = 2,
-    NoVSync = 0
 }

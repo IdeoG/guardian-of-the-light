@@ -49,7 +49,7 @@ public class InventoryCanvas : MonoBehaviour
     }
 
     private void ShowInspectView()
-    {
+    { 
         var item = _basicView.GetComponent<BasicView>().GetCurrentItem();
 
         _basicView.GetComponent<FadeEffect>().FadeOut();

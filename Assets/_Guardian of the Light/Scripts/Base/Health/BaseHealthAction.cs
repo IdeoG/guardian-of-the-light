@@ -2,7 +2,7 @@ using System;
 using UniRx;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator), typeof(Health), typeof(BoxCollider))]
+[RequireComponent(typeof(Health), typeof(BoxCollider))]
 public abstract class BaseHealthAction : MonoBehaviour
 {
     private const string RequiredTag = "Player";

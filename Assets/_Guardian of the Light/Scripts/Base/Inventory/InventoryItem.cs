@@ -4,9 +4,9 @@ using UnityEngine;
 [Serializable]
 public class InventoryItem
 {
-    public string Description;
-    public bool IsTook;
     public string Name;
+    [Multiline] public string Description;
     public GameObject Prefab2D;
     public GameObject Prefab3D;
+    public bool IsTook;
 }
