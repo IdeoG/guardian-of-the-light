@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using System;
+using UniRx;
 using UnityEngine;
 
 public class Health : MonoBehaviour
@@ -36,6 +37,8 @@ public class Health : MonoBehaviour
 
     private void Awake()
     {
+        if (Math.Abs(_maxValue) < 0.1f) throw new NullReferenceException();
+        
         ReactivePercent = new ReactiveProperty<float>(_value / _maxValue);
         ReactiveHealth = new ReactiveProperty<float>(_value);
     }
