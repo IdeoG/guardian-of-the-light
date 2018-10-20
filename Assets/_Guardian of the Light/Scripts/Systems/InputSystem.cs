@@ -42,7 +42,7 @@ public class InputSystem : MonoBehaviour
     public IObservable<Unit> KeyReduceSizePressed { get; private set; }
     public IObservable<Unit> KeyIncreaseSizePressed { get; private set; }
     
-    public IObservable<Unit> KeyCrouchPressedDown { get; private set; }
+    public IObservable<Unit> KeyCrouchPressed { get; private set; }
     public IObservable<Unit> KeyJumpPressedDown { get; private set; }
     
     public bool IsInInventory;
@@ -62,7 +62,7 @@ public class InputSystem : MonoBehaviour
     [SerializeField] private KeyCode _backViewKey = KeyCode.L;
     
     [Header("Player Controls")]
-    [SerializeField] private KeyCode _crouchKey = KeyCode.K;
+    [SerializeField] public KeyCode _crouchKey = KeyCode.K;
     [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
     
     #endregion
@@ -95,7 +95,7 @@ public class InputSystem : MonoBehaviour
         KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_reduceSizeKey));
         KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_increaseSizeKey));
         
-        KeyCrouchPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKey(_crouchKey));
-        KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKey(_jumpKey));
+        KeyCrouchPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_crouchKey));
+        KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_jumpKey));
     }
 }
