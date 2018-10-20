@@ -24,7 +24,7 @@ public class InspectView : MonoBehaviour
     
     [Header("Perspective Camera")]
     [SerializeField] private Transform _perspectiveCameraTransform;
-    [SerializeField] private float _basePositionZ = 3.5f;
+    [SerializeField] private float _basePositionZ = -3.5f;
     [SerializeField] private float _minScale = 1f;
     [SerializeField] private float _maxScale = 2f;
 
@@ -73,6 +73,8 @@ public class InspectView : MonoBehaviour
 
     private void OnEnable()
     {
+        _perspectiveCameraTransform.localPosition = new Vector3(0, 0, _basePositionZ);
+        
         _keyUpArrowPressed = InputSystem.Instance.KeyUpArrowPressed.Subscribe(_ => OnKeyUpArrowPressed()).AddTo(this);
         _keyDownArrowPressed = InputSystem.Instance.KeyDownArrowPressed.Subscribe(_ => OnKeyDownArrowPressed()).AddTo(this);
         _keyLeftArrowPressed = InputSystem.Instance.KeyLeftArrowPressed.Subscribe(_ => OnKeyLeftArrowPressed()).AddTo(this);
@@ -83,30 +85,30 @@ public class InspectView : MonoBehaviour
 
     private void OnKeyIncreaseSizePressed()
     {
-        if (_perspectiveCameraTransform.localPosition.z > _maxScale * _basePositionZ) return;
-
-        var localPosition = _perspectiveCameraTransform.localPosition;
-        localPosition.z += _sensitivityScale * Time.deltaTime;
-        _perspectiveCameraTransform.localPosition = localPosition;
-    }
-
-    private void OnKeyReduceSizePressed()
-    {
-        if (_perspectiveCameraTransform.localPosition.z < _minScale * _basePositionZ) return;
+        if (_perspectiveCameraTransform.localPosition.z < _maxScale * _basePositionZ) return;
 
         var localPosition = _perspectiveCameraTransform.localPosition;
         localPosition.z -= _sensitivityScale * Time.deltaTime;
         _perspectiveCameraTransform.localPosition = localPosition;
     }
 
+    private void OnKeyReduceSizePressed()
+    {
+        if (_perspectiveCameraTransform.localPosition.z > _minScale * _basePositionZ) return;
+
+        var localPosition = _perspectiveCameraTransform.localPosition;
+        localPosition.z += _sensitivityScale * Time.deltaTime;
+        _perspectiveCameraTransform.localPosition = localPosition;
+    }
+
     private void OnKeyUpArrowPressed()
     {
-        _itemTransform.Rotate(new Vector3(1f, 0, 0), -_sensitivityY * Time.deltaTime, Space.World);
+        _itemTransform.Rotate(new Vector3(1f, 0, 0), _sensitivityY * Time.deltaTime, Space.World);
     }
 
     private void OnKeyDownArrowPressed()
     {
-        _itemTransform.Rotate(new Vector3(1f, 0, 0), _sensitivityY * Time.deltaTime, Space.World);
+        _itemTransform.Rotate(new Vector3(1f, 0, 0), -_sensitivityY * Time.deltaTime, Space.World);
     }
 
     private void OnKeyLeftArrowPressed()
@@ -129,5 +131,6 @@ public class InspectView : MonoBehaviour
         _keyIncreaseSizePressed.Dispose();
 
         if (_item != null) Destroy(_item);
+        
     }
 }
