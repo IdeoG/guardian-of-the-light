@@ -22,7 +22,7 @@ public class HealthBar : MonoBehaviour
         
         _disposablePlayerHealth = playerHealth.ReactiveHealth
             .ObserveEveryValueChanged(x => x.Value)
-            .Subscribe(x => _text.text = x.ToString() );
+            .Subscribe(x => _text.text = x.ToString("0") );
     }
 
     private void OnDisable()
