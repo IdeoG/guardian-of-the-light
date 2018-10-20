@@ -42,17 +42,13 @@ public class InputSystem : MonoBehaviour
     public IObservable<Unit> KeyReduceSizePressed { get; private set; }
     public IObservable<Unit> KeyIncreaseSizePressed { get; private set; }
     
-    public IObservable<Unit> KeyCrouchPressed { get; private set; }
+    public IObservable<bool> KeyCrouchPressed { get; private set; }
     public IObservable<Unit> KeyJumpPressedDown { get; private set; }
     
     public bool IsInInventory;
         #endregion
     
     #region half private vars
-
-    [Header("Actions")]
-    [SerializeField] private KeyCode _actionKey = KeyCode.J;
-    [SerializeField] private KeyCode _extraActionKey = KeyCode.L;
     
     [Header("Inventory")]
     [SerializeField] private KeyCode _increaseSizeKey = KeyCode.J;
@@ -62,8 +58,10 @@ public class InputSystem : MonoBehaviour
     [SerializeField] private KeyCode _backViewKey = KeyCode.L;
     
     [Header("Player Controls")]
-    [SerializeField] public KeyCode _crouchKey = KeyCode.K;
+    [SerializeField] private KeyCode _crouchKey = KeyCode.K;
     [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
+    [SerializeField] private KeyCode _actionKey = KeyCode.J;
+    [SerializeField] private KeyCode _extraActionKey = KeyCode.L;
     
     #endregion
 
@@ -95,7 +93,8 @@ public class InputSystem : MonoBehaviour
         KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_reduceSizeKey));
         KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_increaseSizeKey));
         
-        KeyCrouchPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_crouchKey));
+        KeyCrouchPressed = this.UpdateAsObservable().Select(_ => Input.GetKey(_crouchKey));
         KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_jumpKey));
     }
+
 }

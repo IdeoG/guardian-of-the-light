@@ -14,13 +14,16 @@ public class ThirdPersonUserControl : MonoBehaviour
     private Vector3 m_Move;
     private bool m_Jump;
     private bool m_Crouch;
-    private KeyCode _crouchKeyCode;
 
+    private IDisposable _crouchDisposable;
     private IDisposable _jumpDisposable;
 
     private void Start()
     {
-        _crouchKeyCode = InputSystem.Instance._crouchKey;
+        _crouchDisposable = InputSystem.Instance.KeyCrouchPressed
+            .Subscribe(x => m_Crouch = x)
+            .AddTo(this);
+
         _jumpDisposable = InputSystem.Instance.KeyJumpPressedDown
             .Where(_ => !InputSystem.Instance.IsInInventory)
             .Subscribe(_ => m_Jump = true)
@@ -32,6 +35,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
     private void OnDisable()
     {
+        _crouchDisposable.Dispose();
         _jumpDisposable.Dispose();
 
         m_Character.Move(Vector3.zero, false, false);
@@ -42,7 +46,6 @@ public class ThirdPersonUserControl : MonoBehaviour
     {
         var h = CrossPlatformInputManager.GetAxis("Horizontal");
         var v = CrossPlatformInputManager.GetAxis("Vertical");
-        var crouch = Input.GetKey(_crouchKeyCode);
 
         if (m_Cam != null)
         {
@@ -58,7 +61,7 @@ public class ThirdPersonUserControl : MonoBehaviour
 
         if (!LockInput)
         {
-            m_Character.Move(m_Move, crouch, m_Jump);
+            m_Character.Move(m_Move, m_Crouch, m_Jump);
         }
         else
         {
