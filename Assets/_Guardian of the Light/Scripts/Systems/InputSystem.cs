@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class InputSystem : MonoBehaviour
 {
-
     public static InputSystem Instance
     {
         get
@@ -41,60 +40,70 @@ public class InputSystem : MonoBehaviour
 
     public IObservable<Unit> KeyReduceSizePressed { get; private set; }
     public IObservable<Unit> KeyIncreaseSizePressed { get; private set; }
-    
+
     public IObservable<bool> KeyCrouchPressed { get; private set; }
     public IObservable<Unit> KeyJumpPressedDown { get; private set; }
-    
-    public bool IsInInventory;
-        #endregion
-    
+
+    public bool IsUiActive;
+    public bool IsPlayerInCollider;
+
+    #endregion
+
     #region half private vars
-    
-    [Header("Inventory")]
-    [SerializeField] private KeyCode _increaseSizeKey = KeyCode.J;
+
+    [Header("Inventory")] [SerializeField] private KeyCode _increaseSizeKey = KeyCode.J;
     [SerializeField] private KeyCode _reduceSizeKey = KeyCode.K;
     [SerializeField] private KeyCode _inventoryKey = KeyCode.I;
     [SerializeField] private KeyCode _inspectViewKey = KeyCode.J;
     [SerializeField] private KeyCode _backViewKey = KeyCode.L;
-    
-    [Header("Player Controls")]
-    [SerializeField] private KeyCode _crouchKey = KeyCode.K;
-    [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
+
+    [Header("Player Controls")] [SerializeField]
+    private KeyCode _crouchKey = KeyCode.K;
+
+    [SerializeField] private KeyCode _jumpKey = KeyCode.L;
     [SerializeField] private KeyCode _actionKey = KeyCode.J;
     [SerializeField] private KeyCode _extraActionKey = KeyCode.L;
-    
+
     #endregion
 
 
     private void Awake()
     {
-        ReferenceInputs();
+        ReferencePlayerInputs();
+        ReferenceUiInputs();
     }
 
-    private void ReferenceInputs()
+    private void ReferencePlayerInputs()
     {
-        KeyActionPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_actionKey));
-        KeyExtraActionPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_extraActionKey));
+        KeyActionPressed = this.UpdateAsObservable().Where(_ => !IsUiActive)
+            .Where(_ => Input.GetKey(_actionKey));
+        KeyExtraActionPressed = this.UpdateAsObservable().Where(_ => !IsUiActive)
+            .Where(_ => Input.GetKey(_extraActionKey));
 
-        KeyActionPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.E));
-        
-        KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_inspectViewKey));
-        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_inventoryKey));
-        KeyBackViewPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_backViewKey));
+        KeyActionPressedDown = this.UpdateAsObservable().Where(_ => !IsUiActive)
+            .Where(_ => Input.GetKeyDown(KeyCode.E));
 
-        KeyUpArrowPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.W));
-        KeyDownArrowPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.S));
-        KeyLeftArrowPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.A));
-        KeyRightArrowPressed = this.UpdateAsObservable().Where(_ => Input.GetKey(KeyCode.D));
-
-        KeyLeftArrowPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.A));
-        KeyRightArrowPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(KeyCode.D));
-
-        KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_reduceSizeKey));
-        KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => Input.GetKey(_increaseSizeKey));
-        
-        KeyCrouchPressed = this.UpdateAsObservable().Select(_ => Input.GetKey(_crouchKey));
-        KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_jumpKey));
+        KeyCrouchPressed = this.UpdateAsObservable().Where(_ => !(IsUiActive || IsPlayerInCollider))
+            .Select(_ => Input.GetKey(_crouchKey));
+        KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => !(IsUiActive || IsPlayerInCollider))
+            .Where(_ => Input.GetKeyDown(_jumpKey));
     }
 
+    private void ReferenceUiInputs()
+    {
+        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_inventoryKey));
+        KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_inspectViewKey));
+        KeyBackViewPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_backViewKey));
+
+        KeyUpArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.W));
+        KeyDownArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.S));
+        KeyLeftArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.A));
+        KeyRightArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.D));
+
+        KeyLeftArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.A));
+        KeyRightArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.D));
+        
+        KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(_reduceSizeKey));
+        KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(_increaseSizeKey));
+    }
 }

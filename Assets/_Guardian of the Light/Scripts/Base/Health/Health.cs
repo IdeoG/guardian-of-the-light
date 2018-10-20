@@ -25,14 +25,14 @@ public class Health : MonoBehaviour
     {
         _value = Mathf.Clamp(_value - value, 0, _maxValue);
         ReactivePercent.Value = _value / _maxValue;
-        ReactivePercent.Value = _value;
+        ReactiveHealth.Value = _value;
     }
 
     public void Enhance(float value)
     {
         _value = Mathf.Clamp(_value + value, 0, _maxValue);
         ReactivePercent.Value = _value / _maxValue;
-        ReactivePercent.Value = _value;
+        ReactiveHealth.Value = _value;
     }
 
     private void Awake()

@@ -25,7 +25,6 @@ public class ThirdPersonUserControl : MonoBehaviour
             .AddTo(this);
 
         _jumpDisposable = InputSystem.Instance.KeyJumpPressedDown
-            .Where(_ => !InputSystem.Instance.IsInInventory)
             .Subscribe(_ => m_Jump = true)
             .AddTo(this);
 

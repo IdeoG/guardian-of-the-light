@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(Health), typeof(BoxCollider))]
 public abstract class BaseHealthAction : MonoBehaviour
 {
-    private const string RequiredTag = "Player";
     private IDisposable _keyActionPressed;
     private IDisposable _keyExtraActionPressed;
     protected Animator Animator;
@@ -17,31 +16,21 @@ public abstract class BaseHealthAction : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var isPlayer = other.tag.Equals(RequiredTag);
-
-        if (!isPlayer) return;
-
+        InputSystem.Instance.IsPlayerInCollider = true;
         var playerHealth = GameManagerSystem.Instance.Player.GetComponent<Health>();
 
-        _keyActionPressed = InputSystem.Instance.KeyActionPressed.Subscribe(_ =>
-            {
-                if (!InputSystem.Instance.IsInInventory) OnKeyActionPressed(playerHealth);
-            })
+        _keyActionPressed = InputSystem.Instance.KeyActionPressed
+            .Subscribe(_ => OnKeyActionPressed(playerHealth))
             .AddTo(this);
 
-        _keyExtraActionPressed = InputSystem.Instance.KeyExtraActionPressed.Subscribe(_ =>
-            {
-                if (!InputSystem.Instance.IsInInventory) OnKeyExtraActionPressed(playerHealth);
-            })
+        _keyExtraActionPressed = InputSystem.Instance.KeyExtraActionPressed
+            .Subscribe(_ => OnKeyExtraActionPressed(playerHealth) )
             .AddTo(this);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        var isPlayer = other.tag.Equals(RequiredTag);
-
-        if (!isPlayer) return;
-
+        InputSystem.Instance.IsPlayerInCollider = false;
         _keyActionPressed.Dispose();
         _keyExtraActionPressed.Dispose();
     }
