@@ -35,14 +35,12 @@ public class GameManagerSystem : MonoBehaviour
         if (InventorySystem.Instance.GetTookItems().Count == 0) return;
 
         Player.GetComponent<ThirdPersonUserControl>().LockInput = true;
-        InputSystem.Instance.IsInInventory = true;
         _inventoryCanvas.Show();
     }
 
     private void HideInventoryView()
     {
         _inventoryCanvas.Hide();
-        InputSystem.Instance.IsInInventory = false;
         Player.GetComponent<ThirdPersonUserControl>().LockInput = false;
     }
 

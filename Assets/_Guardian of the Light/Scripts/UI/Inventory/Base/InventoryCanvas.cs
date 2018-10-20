@@ -17,6 +17,7 @@ public class InventoryCanvas : MonoBehaviour
 
     public void Show()
     {
+        InputSystem.Instance.IsUiActive = true;
         gameObject.SetActive(true);
 
         _basicView.GetComponent<FadeEffect>().FadeIn();
@@ -32,6 +33,8 @@ public class InventoryCanvas : MonoBehaviour
         {
             canvasGroup.gameObject.SetActive(false);
             gameObject.SetActive(false);
+            
+            InputSystem.Instance.IsUiActive = false;
         });
     }
 

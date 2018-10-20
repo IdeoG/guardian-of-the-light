@@ -13,24 +13,15 @@ public abstract class BaseAction : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var isPlayer = other.tag.Equals(RequiredTag);
-
-        if (!isPlayer) return;
-
+        InputSystem.Instance.IsPlayerInCollider = true;
         _keyActionPressedDown = InputSystem.Instance.KeyActionPressedDown
-            .Subscribe(_ =>
-            {
-                if (!InputSystem.Instance.IsInInventory) OnKeyActionPressedDown();
-            })
+            .Subscribe(_ => OnKeyActionPressedDown() )
             .AddTo(this);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        var isPlayer = other.tag.Equals(RequiredTag);
-
-        if (!isPlayer) return;
-
+        InputSystem.Instance.IsPlayerInCollider = false;
         _keyActionPressedDown.Dispose();
     }
 
