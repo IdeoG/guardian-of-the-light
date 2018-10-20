@@ -18,7 +18,14 @@ public class ThirdPersonUserControl : MonoBehaviour
     private IDisposable _crouchDisposable;
     private IDisposable _jumpDisposable;
 
-    private void Start()
+
+    private void Awake()
+    {
+        m_Character = GetComponent<ThirdPersonCharacter>();
+        m_Cam = Camera.main.transform;
+    }
+
+    private void OnEnable()
     {
         _crouchDisposable = InputSystem.Instance.KeyCrouchPressed
             .Subscribe(x => m_Crouch = x)
@@ -27,9 +34,6 @@ public class ThirdPersonUserControl : MonoBehaviour
         _jumpDisposable = InputSystem.Instance.KeyJumpPressedDown
             .Subscribe(_ => m_Jump = true)
             .AddTo(this);
-
-        m_Character = GetComponent<ThirdPersonCharacter>();
-        m_Cam = Camera.main.transform;
     }
 
     private void OnDisable()
