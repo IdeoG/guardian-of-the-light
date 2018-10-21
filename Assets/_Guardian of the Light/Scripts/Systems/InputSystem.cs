@@ -44,6 +44,11 @@ public class InputSystem : MonoBehaviour
     public IObservable<bool> KeyCrouchPressed { get; private set; }
     public IObservable<Unit> KeyJumpPressedDown { get; private set; }
 
+    public IObservable<Unit> KeyYesHintPressedDown { get; private set; }
+    public IObservable<Unit> KeyNoPressedDown { get; private set; }
+    public IObservable<Unit> KeySkipPressedDown { get; private set; }
+    public IObservable<Unit> KeyTemporaryButtonPressedDown { get; private set; }
+    
     public bool IsUiActive;
     public bool IsPlayerInCollider;
 
@@ -51,15 +56,22 @@ public class InputSystem : MonoBehaviour
 
     #region half private vars
 
-    [Header("Inventory")] [SerializeField] private KeyCode _increaseSizeKey = KeyCode.J;
+    [Header("Hints")] 
+    [SerializeField] private KeyCode _yesHintKey;
+    [SerializeField] private KeyCode _noHintKey;
+    [SerializeField] private KeyCode _skipHintKey;
+    [SerializeField] private KeyCode _temporaryButtonHintKey;
+    
+    
+    [Header("Inventory")] 
+    [SerializeField] private KeyCode _increaseSizeKey = KeyCode.J;
     [SerializeField] private KeyCode _reduceSizeKey = KeyCode.K;
     [SerializeField] private KeyCode _inventoryKey = KeyCode.I;
     [SerializeField] private KeyCode _inspectViewKey = KeyCode.J;
     [SerializeField] private KeyCode _backViewKey = KeyCode.L;
 
-    [Header("Player Controls")] [SerializeField]
-    private KeyCode _crouchKey = KeyCode.K;
-
+    [Header("Player Controls")] 
+    [SerializeField] private KeyCode _crouchKey = KeyCode.K;
     [SerializeField] private KeyCode _jumpKey = KeyCode.L;
     [SerializeField] private KeyCode _actionKey = KeyCode.J;
     [SerializeField] private KeyCode _extraActionKey = KeyCode.L;
@@ -70,7 +82,8 @@ public class InputSystem : MonoBehaviour
     private void Awake()
     {
         ReferencePlayerInputs();
-        ReferenceUiInputs();
+        ReferenceInventoryInputs();
+        ReferenceHintInputs();
     }
 
     private void ReferencePlayerInputs()
@@ -81,7 +94,7 @@ public class InputSystem : MonoBehaviour
             .Where(_ => Input.GetKey(_extraActionKey));
 
         KeyActionPressedDown = this.UpdateAsObservable().Where(_ => !IsUiActive)
-            .Where(_ => Input.GetKeyDown(KeyCode.E));
+            .Where(_ => Input.GetKeyDown(_actionKey));
 
         KeyCrouchPressed = this.UpdateAsObservable().Where(_ => !(IsUiActive || IsPlayerInCollider))
             .Select(_ => Input.GetKey(_crouchKey));
@@ -89,9 +102,9 @@ public class InputSystem : MonoBehaviour
             .Where(_ => Input.GetKeyDown(_jumpKey));
     }
 
-    private void ReferenceUiInputs()
+    private void ReferenceInventoryInputs()
     {
-        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_inventoryKey));
+        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => !IsUiActive).Where(_ => Input.GetKeyDown(_inventoryKey));
         KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_inspectViewKey));
         KeyBackViewPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_backViewKey));
 
@@ -105,5 +118,13 @@ public class InputSystem : MonoBehaviour
         
         KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(_reduceSizeKey));
         KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(_increaseSizeKey));
+    }
+
+    private void ReferenceHintInputs()
+    {
+        KeyYesHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_yesHintKey));
+        KeyNoPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_noHintKey));
+        KeySkipPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_skipHintKey));
+        KeyTemporaryButtonPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_temporaryButtonHintKey));
     }
 }
