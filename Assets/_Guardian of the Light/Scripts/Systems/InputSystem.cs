@@ -94,7 +94,7 @@ public class InputSystem : MonoBehaviour
             .Where(_ => Input.GetKey(_extraActionKey));
 
         KeyActionPressedDown = this.UpdateAsObservable().Where(_ => !IsUiActive)
-            .Where(_ => Input.GetKeyDown(KeyCode.E));
+            .Where(_ => Input.GetKeyDown(_actionKey));
 
         KeyCrouchPressed = this.UpdateAsObservable().Where(_ => !(IsUiActive || IsPlayerInCollider))
             .Select(_ => Input.GetKey(_crouchKey));
