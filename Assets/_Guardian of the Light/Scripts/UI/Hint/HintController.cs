@@ -1,5 +1,5 @@
 using UnityEngine;
-using _Guardian_of_the_Light.Scripts.Inventory;
+using _Guardian_of_the_Light.Scripts.Base.Inventory;
 using _Guardian_of_the_Light.Scripts.UI.Hint.interfaces;
 
 namespace _Guardian_of_the_Light.Scripts.UI.Hint
@@ -12,7 +12,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         private InventorySystem _inventory;
         private ThirdPersonUserControl _playerControls;
         
-        private void Awake()
+        private void Start()
         {
             _inventory = InventorySystem.Instance;
             _manager = FindObjectOfType<HintManager>();
@@ -21,12 +21,12 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
 
         public void OnEmptyExpired()
         {
-            throw new System.NotImplementedException();
+            _playerControls.LockInput = false;
         }
 
         public void OnSkipPressed()
         {
-            throw new System.NotImplementedException();
+            _playerControls.LockInput = false;
         }
 
         public void OnHintExpired()
@@ -42,7 +42,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         public void OnYesPressed()
         {
             _playerControls.LockInput = false;
-            _inventory.GetItemById(_entity.id).IsTook = true;
+            _inventory.GetItemById(_entity.Id).IsTook = true;
             Destroy(_entity.gameObject);
         }
 

@@ -1,4 +1,4 @@
-using _Guardian_of_the_Light.Scripts.Inventory;
+using _Guardian_of_the_Light.Scripts.Base.Inventory;
 
 namespace _Guardian_of_the_Light.Scripts.UI.Hint.interfaces
 {
