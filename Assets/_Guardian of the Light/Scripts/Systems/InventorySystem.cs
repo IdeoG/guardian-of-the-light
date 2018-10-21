@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class InventorySystem : MonoBehaviour
@@ -29,9 +30,18 @@ public class InventorySystem : MonoBehaviour
 
     public InventoryItem GetItemByName(string itemName)
     {
-        for (var i = 0; i < _items.Count; i++)
-            if (itemName == _items[i].Name)
-                return _items[i];
+        foreach (var item in _items)
+            if (itemName == item.Name)
+                return item;
+
+        return null;
+    }
+
+    public InventoryItem GetItemById(int itemId)
+    {
+        foreach (var item in _items)
+            if (itemId == item.Id)
+                return item;
 
         return null;
     }
