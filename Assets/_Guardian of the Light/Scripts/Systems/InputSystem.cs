@@ -104,7 +104,7 @@ public class InputSystem : MonoBehaviour
 
     private void ReferenceInventoryInputs()
     {
-        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_inventoryKey));
+        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => !IsUiActive).Where(_ => Input.GetKeyDown(_inventoryKey));
         KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_inspectViewKey));
         KeyBackViewPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_backViewKey));
 
