@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 using _Guardian_of_the_Light.Scripts.UI.Hint.interfaces;
 
 namespace _Guardian_of_the_Light.Scripts.UI.Hint
@@ -16,6 +17,11 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         [SerializeField] private GameObject _emptyHintPanel;
         [SerializeField] private GameObject _temporaryButtonHintPanel;
 
+        [Header("Extra Texts")]
+        [SerializeField] private Text _yesNoHintText;
+        [SerializeField] private Text _skipHintText;
+        [SerializeField] private Text _emptyHintText;
+        
         private IDisposable _keyYesPressedDown;
         private IDisposable _keyNoPressedDown;
         private IDisposable _keySkipPressedDown;
@@ -32,14 +38,13 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             switch (type)
             {
                 case HintType.YesNo:
-                    ShowYesNoHintPanel();
+                    ShowYesNoHintPanel(text);
                     break;
                 case HintType.Empty:
-                    _emptyHintPanel.SetActive(true);
-                    DelayedHideEmptyHintPanel();
+                    ShowEmptyHintPanel(text);
                     break;
                 case HintType.Skip:
-                    ShowSkipHintPanel();
+                    ShowSkipHintPanel(text);
                     break;
                 case HintType.TemporaryButton:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -47,7 +52,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
-
+        
         public void ShowHint(HintType type, KeyCode keyCode)
         {
             switch (type)
@@ -65,9 +70,10 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             }
         }
 
-        private void ShowSkipHintPanel()
+        private void ShowSkipHintPanel(string text)
         {
             _skipHintPanel.SetActive(true);
+            _skipHintText.text = text;
 
             _keySkipPressedDown = InputSystem.Instance.KeySkipPressedDown
                 .Subscribe(_ =>
@@ -79,17 +85,17 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                 }).AddTo(this);
         }
 
-        private async void DelayedHideEmptyHintPanel()
+        private void ShowEmptyHintPanel(string text)
         {
-            await Task.Delay(EmptyHintActiveTimeMs);
-            
-            _iEmptyHint.OnEmptyExpired();
-            _emptyHintPanel.SetActive(false);
+            _emptyHintPanel.SetActive(true);
+            _emptyHintText.text = text;
+            DelayedHideEmptyHintPanel();
         }
 
-        private void ShowYesNoHintPanel()
+        private void ShowYesNoHintPanel(string text)
         {
             _yesNoHintPanel.SetActive(true);
+            _yesNoHintText.text = text;
 
             _keyYesPressedDown = InputSystem.Instance.KeyYesHintPressedDown
                 .Subscribe(_ =>
@@ -112,6 +118,14 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                 }).AddTo(this);
         }
 
+        private async void DelayedHideEmptyHintPanel()
+        {
+            await Task.Delay(EmptyHintActiveTimeMs);
+            
+            _iEmptyHint.OnEmptyExpired();
+            _emptyHintPanel.SetActive(false);
+        }
+        
         private void Awake()
         {
             var controller = FindObjectOfType<HintController>().GetComponent<HintController>();
