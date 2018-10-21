@@ -11,11 +11,3 @@ public class InventoryItem
     public GameObject Prefab3D;
     public bool IsTook;
 }
-
-namespace _Guardian_of_the_Light.Scripts.Inventory
-{
-    public class InventoryEntity : MonoBehaviour
-    {
-        public int id;
-    }
-}
