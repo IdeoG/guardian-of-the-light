@@ -75,7 +75,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _skipHintPanel.SetActive(true);
             _skipHintText.text = text;
 
-            _keySkipPressedDown = InputSystem.Instance.KeySkipPressedDown
+            _keySkipPressedDown = InputSystem.Instance.KeySkipHintPressedDown
                 .Subscribe(_ =>
                 {
                     _iSkipHint.OnSkipPressed();
@@ -107,7 +107,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                     _keyYesPressedDown.Dispose();
                 }).AddTo(this);
 
-            _keyNoPressedDown = InputSystem.Instance.KeyYesHintPressedDown
+            _keyNoPressedDown = InputSystem.Instance.KeyNoHintPressedDown
                 .Subscribe(_ =>
                 {
                     _iYesNoHint.OnNoPressed();

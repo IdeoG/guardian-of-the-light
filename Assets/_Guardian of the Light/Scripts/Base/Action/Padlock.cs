@@ -1,14 +1,16 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider), typeof(Animator))]
+[RequireComponent(typeof(Animator))]
 public class Padlock : BaseAction
 {
     [SerializeField] private string _keyName;
     [SerializeField] private GameObject _lockedDoor;
 
+    private Animator _animator;
+
     private void PlayOnDestroyAnimation()
     {
-        Animator.enabled = true;
+        _animator.enabled = true;
 
         _lockedDoor.GetComponent<BoxCollider>().enabled = true;
         gameObject.GetComponent<BoxCollider>().enabled = false;
@@ -24,8 +26,8 @@ public class Padlock : BaseAction
     private void Awake()
     {
         _lockedDoor.GetComponent<BoxCollider>().enabled = false;
-        Animator = GetComponent<Animator>();
-        Animator.enabled = false;
+        _animator = GetComponent<Animator>();
+        _animator.enabled = false;
     }
 
     protected override void OnKeyActionPressedDown()
@@ -35,6 +37,6 @@ public class Padlock : BaseAction
         if (!isContainsKey) return;
         
         PlayOnDestroyAnimation();
-        
     }
+    
 }

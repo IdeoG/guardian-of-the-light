@@ -2,12 +2,11 @@
 using UniRx;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider), typeof(Animator))]
+[RequireComponent(typeof(BoxCollider))]
 public abstract class BaseAction : MonoBehaviour
 {
     private const string RequiredTag = "Player";
     private IDisposable _keyActionPressedDown;
-    protected Animator Animator;
 
     protected abstract void OnKeyActionPressedDown();
 
@@ -23,12 +22,5 @@ public abstract class BaseAction : MonoBehaviour
     {
         InputSystem.Instance.IsPlayerInCollider = false;
         _keyActionPressedDown.Dispose();
-    }
-
-    private void Awake()
-    {
-        Animator = GetComponent<Animator>();
-
-        gameObject.GetComponent<BoxCollider>().isTrigger = true;
     }
 }

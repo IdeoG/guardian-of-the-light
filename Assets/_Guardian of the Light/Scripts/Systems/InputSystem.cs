@@ -45,8 +45,8 @@ public class InputSystem : MonoBehaviour
     public IObservable<Unit> KeyJumpPressedDown { get; private set; }
 
     public IObservable<Unit> KeyYesHintPressedDown { get; private set; }
-    public IObservable<Unit> KeyNoPressedDown { get; private set; }
-    public IObservable<Unit> KeySkipPressedDown { get; private set; }
+    public IObservable<Unit> KeyNoHintPressedDown { get; private set; }
+    public IObservable<Unit> KeySkipHintPressedDown { get; private set; }
     public IObservable<Unit> KeyTemporaryButtonPressedDown { get; private set; }
     
     public bool IsUiActive;
@@ -123,8 +123,8 @@ public class InputSystem : MonoBehaviour
     private void ReferenceHintInputs()
     {
         KeyYesHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_yesHintKey));
-        KeyNoPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_noHintKey));
-        KeySkipPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_skipHintKey));
+        KeyNoHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_noHintKey));
+        KeySkipHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_skipHintKey));
         KeyTemporaryButtonPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_temporaryButtonHintKey));
     }
 }

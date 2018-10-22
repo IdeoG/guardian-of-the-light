@@ -5,7 +5,7 @@ using _Guardian_of_the_Light.Scripts.UI.Hint.interfaces;
 namespace _Guardian_of_the_Light.Scripts.UI.Hint
 {
     [RequireComponent(typeof(InventoryEntity))]
-    public class UiHint : BaseAction
+    public abstract class UiHint : BaseAction, IUiHint
     {
         [SerializeField] private HintType _hintType;
         [SerializeField] private string _hintText;
@@ -13,6 +13,8 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         private IHintController _controller;
         private InventoryEntity _entity;
 
+        public abstract void DestroyItem();
+        
         protected override void OnKeyActionPressedDown()
         {
             _controller.OnShowHintButtonPressed(_hintType, _hintText, _entity);
