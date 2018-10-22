@@ -47,7 +47,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                     foreach (var cristal in _panelCristals)
                     {
                         cristal.material.SetColor("_Color0", 
-                            Color.Lerp(_minRoofCristalColor, _maxRoofCristalColor, 1 - _panelCristalСolorCurve.Evaluate(percent)));
+                            Color.Lerp(_minPanelCristalColor, _maxPanelCristalColor, 1 - _panelCristalСolorCurve.Evaluate(percent)));
                     }
                 }
 
@@ -57,7 +57,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                     foreach (var cristal in _roofCristals)
                     {
                         cristal.material.SetColor("_EmissionColor", 
-                            Color.Lerp(_minPanelCristalColor, _maxPanelCristalColor, 1 - _roofCristalСolorCurve.Evaluate(percent)));
+                            Color.Lerp(_minRoofCristalColor, _maxRoofCristalColor, 1 - _roofCristalСolorCurve.Evaluate(percent)));
                     }
 
                     foreach (var roofLight in _roofLights)
