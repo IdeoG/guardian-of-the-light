@@ -51,6 +51,7 @@ public class InputSystem : MonoBehaviour
     
     public bool IsUiActive;
     public bool IsPlayerInCollider;
+    public bool IsAnimationPlaying;
 
     #endregion
 
@@ -88,23 +89,23 @@ public class InputSystem : MonoBehaviour
 
     private void ReferencePlayerInputs()
     {
-        KeyActionPressed = this.UpdateAsObservable().Where(_ => !IsUiActive)
+        KeyActionPressed = this.UpdateAsObservable().Where(_ => !IsUiActive && !IsAnimationPlaying)
             .Where(_ => Input.GetKey(_actionKey));
-        KeyExtraActionPressed = this.UpdateAsObservable().Where(_ => !IsUiActive)
+        KeyExtraActionPressed = this.UpdateAsObservable().Where(_ => !IsUiActive && !IsAnimationPlaying)
             .Where(_ => Input.GetKey(_extraActionKey));
 
-        KeyActionPressedDown = this.UpdateAsObservable().Where(_ => !IsUiActive)
+        KeyActionPressedDown = this.UpdateAsObservable().Where(_ => !IsUiActive && !IsAnimationPlaying)
             .Where(_ => Input.GetKeyDown(_actionKey));
 
-        KeyCrouchPressed = this.UpdateAsObservable().Where(_ => !(IsUiActive || IsPlayerInCollider))
+        KeyCrouchPressed = this.UpdateAsObservable().Where(_ => !(IsUiActive || IsPlayerInCollider) && !IsAnimationPlaying)
             .Select(_ => Input.GetKey(_crouchKey));
-        KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => !(IsUiActive || IsPlayerInCollider))
+        KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => !(IsUiActive || IsPlayerInCollider) && !IsAnimationPlaying)
             .Where(_ => Input.GetKeyDown(_jumpKey));
     }
 
     private void ReferenceInventoryInputs()
     {
-        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => !IsUiActive).Where(_ => Input.GetKeyDown(_inventoryKey));
+        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => !IsUiActive && !IsAnimationPlaying).Where(_ => Input.GetKeyDown(_inventoryKey));
         KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_inspectViewKey));
         KeyBackViewPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_backViewKey));
 

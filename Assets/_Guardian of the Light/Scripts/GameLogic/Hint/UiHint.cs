@@ -1,19 +1,23 @@
 using UnityEngine;
 using _Guardian_of_the_Light.Scripts.Base.Inventory;
+using _Guardian_of_the_Light.Scripts.UI.Hint;
 using _Guardian_of_the_Light.Scripts.UI.Hint.interfaces;
 
-namespace _Guardian_of_the_Light.Scripts.UI.Hint
+namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
 {
     [RequireComponent(typeof(InventoryEntity))]
-    public abstract class UiHint : BaseAction, IUiHint
+    public class UiHint : BaseAction, IUiHint
     {
         [SerializeField] private HintType _hintType;
-        [SerializeField] private string _hintText;
+        [TextArea] [SerializeField] private string _hintText;
             
         private IHintController _controller;
         private InventoryEntity _entity;
 
-        public abstract void DestroyItem();
+        public virtual void DestroyItem()
+        {
+            Destroy(gameObject);
+        }
         
         protected override void OnKeyActionPressedDown()
         {

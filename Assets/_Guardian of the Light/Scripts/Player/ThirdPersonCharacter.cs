@@ -7,7 +7,7 @@ using UnityEngine;
 public class ThirdPersonCharacter : MonoBehaviour
 {
     private const float GravityMultiplier = 2f;
-    private float m_GroundCheckDistance = 10f;
+    public float m_GroundCheckDistance = 10f;
     private const float JumpPower = 5f;
     [SerializeField] private float m_AnimSpeedMultiplier = 1.5f;
     [SerializeField] private float m_MoveSpeedMultiplier = 2.1f;
