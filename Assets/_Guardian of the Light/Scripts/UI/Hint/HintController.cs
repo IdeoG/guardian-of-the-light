@@ -48,7 +48,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         {
             _input.IsUiActive = false;
             _playerControls.LockInput = false;
-            _inventory.GetItemById(_entity.Id).IsTook = true;
+            if (_entity.Id != 0) _inventory.GetItemById(_entity.Id).IsTook = true;
             _entity.gameObject.GetComponent<IUiHint>().DestroyItem();
         }
 
