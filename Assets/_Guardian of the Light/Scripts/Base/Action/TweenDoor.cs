@@ -26,9 +26,9 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
                 if (!collider.isTrigger) continue;
                 
                 collider.enabled = false;
-                OnTriggerExit(null);
-                return;
             }
+            
+            OnTriggerExit(null);
         }
     }
 }
