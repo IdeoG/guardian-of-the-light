@@ -51,6 +51,7 @@ public class InputSystem : MonoBehaviour
     
     public bool IsUiActive;
     public bool IsPlayerInCollider;
+    public bool IsAnimationPlaying;
 
     #endregion
 
@@ -88,23 +89,18 @@ public class InputSystem : MonoBehaviour
 
     private void ReferencePlayerInputs()
     {
-        KeyActionPressed = this.UpdateAsObservable().Where(_ => !IsUiActive)
-            .Where(_ => Input.GetKey(_actionKey));
-        KeyExtraActionPressed = this.UpdateAsObservable().Where(_ => !IsUiActive)
-            .Where(_ => Input.GetKey(_extraActionKey));
+        KeyActionPressed = this.UpdateAsObservable().Where(_ => CanMove()).Where(_ => Input.GetKey(_actionKey));
+        KeyExtraActionPressed = this.UpdateAsObservable().Where(_ => CanMove()).Where(_ => Input.GetKey(_extraActionKey));
 
-        KeyActionPressedDown = this.UpdateAsObservable().Where(_ => !IsUiActive)
-            .Where(_ => Input.GetKeyDown(_actionKey));
+        KeyActionPressedDown = this.UpdateAsObservable().Where(_ => CanMove()).Where(_ => Input.GetKeyDown(_actionKey));
 
-        KeyCrouchPressed = this.UpdateAsObservable().Where(_ => !(IsUiActive || IsPlayerInCollider))
-            .Select(_ => Input.GetKey(_crouchKey));
-        KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => !(IsUiActive || IsPlayerInCollider))
-            .Where(_ => Input.GetKeyDown(_jumpKey));
+        KeyCrouchPressed = this.UpdateAsObservable().Where(_ => CanJumpAndCrouch()).Select(_ => Input.GetKey(_crouchKey));
+        KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => CanJumpAndCrouch()).Where(_ => Input.GetKeyDown(_jumpKey));
     }
 
     private void ReferenceInventoryInputs()
     {
-        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => !IsUiActive).Where(_ => Input.GetKeyDown(_inventoryKey));
+        KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => CanOpenInventory()).Where(_ => Input.GetKeyDown(_inventoryKey));
         KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_inspectViewKey));
         KeyBackViewPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_backViewKey));
 
@@ -126,5 +122,20 @@ public class InputSystem : MonoBehaviour
         KeyNoHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_noHintKey));
         KeySkipHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_skipHintKey));
         KeyTemporaryButtonPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_temporaryButtonHintKey));
+    }
+
+    private bool CanMove()
+    {
+        return !IsUiActive && !IsAnimationPlaying;
+    }
+
+    private bool CanJumpAndCrouch()
+    {
+        return (IsUiActive || IsPlayerInCollider) && !IsAnimationPlaying;
+    }
+
+    private bool CanOpenInventory()
+    {
+        return !IsUiActive && !IsAnimationPlaying;
     }
 }

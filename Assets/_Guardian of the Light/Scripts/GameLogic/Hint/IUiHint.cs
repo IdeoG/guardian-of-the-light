@@ -1,4 +1,4 @@
-namespace _Guardian_of_the_Light.Scripts.UI.Hint
+namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
 {
     public interface IUiHint
     {
