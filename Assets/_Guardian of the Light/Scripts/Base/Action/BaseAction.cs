@@ -18,7 +18,7 @@ public abstract class BaseAction : MonoBehaviour
             .AddTo(this);
     }
 
-    private void OnTriggerExit(Collider other)
+    protected void OnTriggerExit(Collider other)
     {
         InputSystem.Instance.IsPlayerInCollider = false;
         _keyActionPressedDown.Dispose();
