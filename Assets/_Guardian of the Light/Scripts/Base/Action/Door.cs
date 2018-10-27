@@ -24,7 +24,15 @@ public class Door : BaseAction
         InputSystem.Instance.IsAnimationPlaying = true;
         GameManagerSystem.Instance.Player.GetComponent<ThirdPersonUserControl>().LockInput = true;
 
-        GetComponent<BoxCollider>().enabled = false;
+        var colliders = GetComponents<Collider>();
+        foreach (var collider in colliders)
+        {
+            if (!collider.isTrigger) continue;
+                
+            collider.enabled = false;
+        }
+        
+        OnTriggerExit(null);
     }
     
     private void Awake()
