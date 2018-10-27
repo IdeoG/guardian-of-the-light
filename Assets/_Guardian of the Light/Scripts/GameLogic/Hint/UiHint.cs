@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Assertions;
 using _Guardian_of_the_Light.Scripts.Base.Inventory;
 using _Guardian_of_the_Light.Scripts.UI.Hint;
 using _Guardian_of_the_Light.Scripts.UI.Hint.interfaces;
@@ -24,10 +25,10 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
             _controller.OnShowHintButtonPressed(_hintType, _hintText, _entity);
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             _entity = GetComponent<InventoryEntity>();
-            _controller = FindObjectOfType<HintController>().GetComponent<HintController>();
+            _controller = FindObjectOfType<HintController>().GetComponent<HintController>();          
         }
     }
 }

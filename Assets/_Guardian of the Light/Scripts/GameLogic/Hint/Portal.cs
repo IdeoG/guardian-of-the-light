@@ -1,43 +1,40 @@
 using System.Collections;
 using UniRx;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using _Guardian_of_the_Light.Scripts.UI.Vignette;
 
 namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
 {
     public class Portal : UiHint
-    {
+    {   
+        [SerializeField] private int _spawnPointNumber;
+        [SerializeField] private string _sceneName;
+        
+        private Vignette _vignette;
+
         public override void DestroyItem()
         {
             Observable.FromCoroutine(HideVignette)
                 .SelectMany(LoadScene)
-                .SelectMany(ShowVignette)
                 .Subscribe();
         }
     
         private IEnumerator HideVignette() 
         {
-            Debug.Log("HideVignette");
-            yield return null;
+            yield return _vignette.Collapse();
         }
 
         private IEnumerator LoadScene()
         {
-            Debug.Log("LoadScene");
-//            SceneBundleSystem.SpawnPointNumber = _spawnPointNumber;
-//
-//            SceneManager.LoadSceneAsync(_sceneName)
-//                .AsAsyncOperationObservable()
-//                .Do(x => Debug.Log($"Current progress = {x.progress}%"))
-//                .Subscribe(x => Debug.Log($"Is Done = {x.isDone}%"));
-            
-            yield return null;
+            SceneBundleSystem.SpawnPointNumber = _spawnPointNumber;   
+            yield return SceneManager.LoadSceneAsync(_sceneName);
         }
 
-        private IEnumerator ShowVignette()
+        protected override void Awake()
         {
-            Debug.Log("ShowVignette");
-            yield return null;
+            base.Awake();
+            _vignette = FindObjectOfType<Vignette>().GetComponent<Vignette>();
         }
-        
     }
 }
