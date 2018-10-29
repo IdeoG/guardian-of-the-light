@@ -1,4 +1,4 @@
-using System.Collections;
+using DG.Tweening;
 using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,20 +15,18 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
 
         public override void DestroyItem()
         {
-            Observable.FromCoroutine(HideVignette)
-                .SelectMany(LoadScene)
-                .Subscribe();
+            _vignette.Collapse()
+                .OnComplete(() => LoadScene());
         }
     
-        private IEnumerator HideVignette() 
-        {
-            yield return _vignette.Collapse();
-        }
-
-        private IEnumerator LoadScene()
+        private void LoadScene()
         {
             SceneBundleSystem.SpawnPointNumber = _spawnPointNumber;   
-            yield return SceneManager.LoadSceneAsync(_sceneName);
+            SceneManager.LoadSceneAsync(_sceneName)
+                .AsObservable()
+                .DoOnCompleted(() => _vignette.Expand())
+                .Subscribe(operation => Debug.Log($"Portal: operation.progress -> {operation.progress}"));
+
         }
 
         protected override void Awake()
