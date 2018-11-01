@@ -132,7 +132,7 @@ public class InputSystem : MonoBehaviour
 
     private bool CanJumpAndCrouch()
     {
-        return (IsUiActive || IsPlayerInCollider) && !IsAnimationPlaying;
+        return !IsUiActive && !IsPlayerInCollider && !IsAnimationPlaying;
     }
 
     private bool CanOpenInventory()

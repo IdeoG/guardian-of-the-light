@@ -5,6 +5,10 @@ public class PortalSystem : MonoBehaviour
 {
     [Header("Available location portals.")] [SerializeField]
     private List<Transform> _portals;
+    /**
+     * 0 - self position
+     * 1..10 - static positions
+     */
 
     private void Start()
     {
