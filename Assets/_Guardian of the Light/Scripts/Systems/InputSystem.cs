@@ -5,23 +5,20 @@ using UnityEngine;
 
 public class InputSystem : MonoBehaviour
 {
+
+
+    #region public vars
+    
     public static InputSystem Instance
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<InputSystem>();
-            }
-
+            if (_instance == null) _instance = FindObjectOfType<InputSystem>();
+            
             return _instance;
         }
     }
-
-    private static InputSystem _instance;
-
-    #region public vars
-
+    
     public IObservable<Unit> KeyActionPressed { get; private set; }
     public IObservable<Unit> KeyExtraActionPressed { get; private set; }
 
@@ -47,6 +44,8 @@ public class InputSystem : MonoBehaviour
     public IObservable<Unit> KeyYesHintPressedDown { get; private set; }
     public IObservable<Unit> KeyNoHintPressedDown { get; private set; }
     public IObservable<Unit> KeySkipHintPressedDown { get; private set; }
+    public IObservable<Unit> KeyConfirmHintPressedDown { get; private set; }
+    public IObservable<Unit> KeyExitHintPressedDown { get; private set; }
     public IObservable<Unit> KeyTemporaryButtonPressedDown { get; private set; }
     
     public bool IsUiActive;
@@ -61,8 +60,9 @@ public class InputSystem : MonoBehaviour
     [SerializeField] private KeyCode _yesHintKey;
     [SerializeField] private KeyCode _noHintKey;
     [SerializeField] private KeyCode _skipHintKey;
+    [SerializeField] private KeyCode _confirmHintKey;
+    [SerializeField] private KeyCode _exitHintKey;
     [SerializeField] private KeyCode _temporaryButtonHintKey;
-    
     
     [Header("Inventory")] 
     [SerializeField] private KeyCode _increaseSizeKey = KeyCode.J;
@@ -79,7 +79,9 @@ public class InputSystem : MonoBehaviour
 
     #endregion
 
+    private static InputSystem _instance;
 
+    
     private void Awake()
     {
         ReferencePlayerInputs();
@@ -122,6 +124,8 @@ public class InputSystem : MonoBehaviour
         KeyYesHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_yesHintKey));
         KeyNoHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_noHintKey));
         KeySkipHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_skipHintKey));
+        KeyConfirmHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_confirmHintKey));
+        KeyExitHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_exitHintKey));
         KeyTemporaryButtonPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_temporaryButtonHintKey));
     }
 

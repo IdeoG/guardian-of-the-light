@@ -32,6 +32,11 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         private IDisposable _keyNoPressedDown;
         private IDisposable _keySkipPressedDown;
         private IDisposable _keyTemporaryButtonPressedDown;
+        
+        private IDisposable _keyConfirmPressedDown;
+        private IDisposable _keyExitPressedDown;
+        private IDisposable _keyUpPressedDown;
+        private IDisposable _keyDownPressedDown;
 
         private IYesNoHint _iYesNoHint;
         private IEmptyHint _iEmptyHint;
