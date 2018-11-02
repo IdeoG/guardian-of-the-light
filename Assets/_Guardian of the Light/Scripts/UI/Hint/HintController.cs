@@ -6,7 +6,8 @@ using _Guardian_of_the_Light.Scripts.UI.Hint.interfaces;
 namespace _Guardian_of_the_Light.Scripts.UI.Hint
 {
     public class HintController : MonoBehaviour, IHintController,
-        IEmptyHint, ISkipHint, ITemporaryButtonHint, IYesNoHint
+        IEmptyHint, ISkipHint, ITemporaryButtonHint, IYesNoHint,
+        IMultipleChoiceHint
     {
         private InputSystem _input;
         private HintManager _manager;
@@ -14,12 +15,12 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         private InventorySystem _inventory;
         private ThirdPersonUserControl _playerControls;
         
-        private void Start()
+        public void OnShowHintButtonPressed(HintType type, string text, InventoryEntity entity)
         {
-            _inventory = InventorySystem.Instance;
-            _input = InputSystem.Instance;
-            _manager = FindObjectOfType<HintManager>();
-            _playerControls = GameManagerSystem.Instance.Player.GetComponent<ThirdPersonUserControl>();
+            _entity = entity;
+            _manager.ShowHint(type, text);
+            _input.IsUiActive = true;
+            _playerControls.LockInput = true;
         }
 
         public void OnEmptyExpired()
@@ -32,6 +33,16 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         {
             _input.IsUiActive = false;
             _playerControls.LockInput = false;
+        }
+
+        public void OnConfirmSwitchUpPressed()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnConfirmSwitchDownPressed()
+        {
+            throw new System.NotImplementedException();
         }
 
         public void OnHintExpired()
@@ -48,6 +59,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         {
             _input.IsUiActive = false;
             _playerControls.LockInput = false;
+            
             if (_entity.Id != 0) _inventory.GetItemById(_entity.Id).IsTook = true;
             _entity.gameObject.GetComponent<IUiHint>().DestroyItem();
         }
@@ -58,12 +70,18 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _playerControls.LockInput = false;
         }
 
-        public void OnShowHintButtonPressed(HintType type, string text, InventoryEntity entity)
+        public void OnExitPressed()
         {
-            _entity = entity;
-            _manager.ShowHint(type, text);
-            _input.IsUiActive = true;
-            _playerControls.LockInput = true;
+            _input.IsUiActive = false;
+            _playerControls.LockInput = false;
+        }
+        
+        private void Start()
+        {
+            _inventory = InventorySystem.Instance;
+            _input = InputSystem.Instance;
+            _manager = FindObjectOfType<HintManager>();
+            _playerControls = GameManagerSystem.Instance.Player.GetComponent<ThirdPersonUserControl>();
         }
     }
 }

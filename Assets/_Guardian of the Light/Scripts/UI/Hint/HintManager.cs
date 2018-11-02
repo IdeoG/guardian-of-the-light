@@ -12,18 +12,22 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
     {
         [SerializeField] private int EmptyHintActiveTimeMs;
 
-        [Header("Panels")] [SerializeField] private GameObject _yesNoHintPanel;
+        [Header("Panels")] 
+        [SerializeField] private GameObject _yesNoHintPanel;
         [SerializeField] private GameObject _skipHintPanel;
         [SerializeField] private GameObject _emptyHintPanel;
         [SerializeField] private GameObject _multipleChoicePanel;
         [SerializeField] private GameObject _temporaryButtonHintPanel;
 
-        [Header("Extra Texts")] [SerializeField]
-        private Text _yesNoHintText;
-
+        [Header("Extra Texts")] 
+        [SerializeField] private Text _yesNoHintText;
         [SerializeField] private Text _skipHintText;
         [SerializeField] private Text _emptyHintText;
+        [SerializeField] private List<Text> _multipleChoiceHintText;
 
+        [Header("Extra Tools")]
+        [SerializeField] private List<GameObject> _multipleChoiceCursor;
+        
         private IDisposable _keyYesPressedDown;
         private IDisposable _keyNoPressedDown;
         private IDisposable _keySkipPressedDown;
@@ -33,6 +37,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         private IEmptyHint _iEmptyHint;
         private ISkipHint _iSkipHint;
         private ITemporaryButtonHint _iTemporaryButtonHint;
+        private IMultipleChoiceHint _iMultipleChoiceHint;
 
 
         public void ShowHint(HintType type, string text)
@@ -78,7 +83,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
 
         private void ShowMultipleChoiceHintPanel(List<string> texts)
         {
-            throw new NotImplementedException();
+            
         }
 
         private void ShowSkipHintPanel(string text)
@@ -145,6 +150,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _iEmptyHint = controller;
             _iSkipHint = controller;
             _iTemporaryButtonHint = controller;
+            _iMultipleChoiceHint = controller;
         }
     }
 }
