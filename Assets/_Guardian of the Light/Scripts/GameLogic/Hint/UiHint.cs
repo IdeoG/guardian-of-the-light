@@ -12,7 +12,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
         [SerializeField] protected HintType _hintType;
         [TextArea] [SerializeField] protected string _hintText;
             
-        private IHintController _controller;
+        protected IHintController _controller;
         private InventoryEntity _entity;
 
         public virtual void DestroyItem()

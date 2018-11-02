@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using _Guardian_of_the_Light.Scripts.Base.Inventory;
 using _Guardian_of_the_Light.Scripts.GameLogic.Hint;
@@ -19,6 +20,13 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         {
             _entity = entity;
             _manager.ShowHint(type, text);
+            _input.IsUiActive = true;
+            _playerControls.LockInput = true;
+        }
+
+        public void OnShowHintButtonPressed(HintType type, List<string> texts)
+        {
+            _manager.ShowHint(type, texts);
             _input.IsUiActive = true;
             _playerControls.LockInput = true;
         }

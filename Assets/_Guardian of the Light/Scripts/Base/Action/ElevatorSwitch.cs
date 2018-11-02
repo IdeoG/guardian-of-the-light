@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using _Guardian_of_the_Light.Scripts.GameLogic.Hint;
 using _Guardian_of_the_Light.Scripts.UI.Hint;
@@ -21,9 +22,9 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
                     _hintType = HintType.Skip;
                     break;
                 case ElevatorSwitchState.Ready:
-                    _hintText = _readyHintText;
                     _hintType = HintType.MultipleChoice;
-                    break;
+                    _controller.OnShowHintButtonPressed(_hintType, _readyHintText);
+                    return;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -49,9 +50,9 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
             base.Awake();
         }
 
-        [SerializeField] private string _noCristalHintText;
-        [SerializeField] private string _noGearHintText;
-        [SerializeField] private string _readyHintText;
+        [TextArea] [SerializeField] private string _noCristalHintText;
+        [TextArea] [SerializeField] private string _noGearHintText;
+        [TextArea] [SerializeField] private List<string> _readyHintText;
         
         private const int CristalId = 3;
         private const int GearId = 1;

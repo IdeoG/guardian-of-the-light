@@ -83,7 +83,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
 
         private void ShowMultipleChoiceHintPanel(List<string> texts)
         {
-            
+            throw new NotImplementedException();
         }
 
         private void ShowSkipHintPanel(string text)
