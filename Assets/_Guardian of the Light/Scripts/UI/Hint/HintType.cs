@@ -5,6 +5,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         YesNo,
         Empty,
         Skip,
-        TemporaryButton
+        TemporaryButton,
+        MultipleChoice
     }
 }

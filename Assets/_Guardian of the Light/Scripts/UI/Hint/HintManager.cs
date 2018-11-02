@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UniRx;
 using UnityEngine;
@@ -10,18 +11,19 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
     public class HintManager : MonoBehaviour, IHintManager
     {
         [SerializeField] private int EmptyHintActiveTimeMs;
-        
-        [Header("Panels")]
-        [SerializeField] private GameObject _yesNoHintPanel;
+
+        [Header("Panels")] [SerializeField] private GameObject _yesNoHintPanel;
         [SerializeField] private GameObject _skipHintPanel;
         [SerializeField] private GameObject _emptyHintPanel;
+        [SerializeField] private GameObject _multipleChoicePanel;
         [SerializeField] private GameObject _temporaryButtonHintPanel;
 
-        [Header("Extra Texts")]
-        [SerializeField] private Text _yesNoHintText;
+        [Header("Extra Texts")] [SerializeField]
+        private Text _yesNoHintText;
+
         [SerializeField] private Text _skipHintText;
         [SerializeField] private Text _emptyHintText;
-        
+
         private IDisposable _keyYesPressedDown;
         private IDisposable _keyNoPressedDown;
         private IDisposable _keySkipPressedDown;
@@ -31,8 +33,8 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         private IEmptyHint _iEmptyHint;
         private ISkipHint _iSkipHint;
         private ITemporaryButtonHint _iTemporaryButtonHint;
-        
-        
+
+
         public void ShowHint(HintType type, string text)
         {
             switch (type)
@@ -46,28 +48,37 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                 case HintType.Skip:
                     ShowSkipHintPanel(text);
                     break;
-                case HintType.TemporaryButton:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
-        
+
         public void ShowHint(HintType type, KeyCode keyCode)
         {
             switch (type)
             {
-                case HintType.YesNo:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                case HintType.Empty:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                case HintType.Skip:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 case HintType.TemporaryButton:
                     throw new NotImplementedException(nameof(type));
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+        }
+
+        public void ShowHint(HintType type, List<string> texts)
+        {
+            switch (type)
+            {
+                case HintType.MultipleChoice:
+                    ShowMultipleChoiceHintPanel(texts);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        private void ShowMultipleChoiceHintPanel(List<string> texts)
+        {
+            throw new NotImplementedException();
         }
 
         private void ShowSkipHintPanel(string text)
@@ -121,15 +132,15 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         private async void DelayedHideEmptyHintPanel()
         {
             await Task.Delay(EmptyHintActiveTimeMs);
-            
+
             _iEmptyHint.OnEmptyExpired();
             _emptyHintPanel.SetActive(false);
         }
-        
+
         private void Awake()
         {
             var controller = FindObjectOfType<HintController>().GetComponent<HintController>();
-            
+
             _iYesNoHint = controller;
             _iEmptyHint = controller;
             _iSkipHint = controller;

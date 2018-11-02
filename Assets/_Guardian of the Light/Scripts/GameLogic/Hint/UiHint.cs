@@ -9,8 +9,8 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
     [RequireComponent(typeof(InventoryEntity))]
     public class UiHint : BaseAction, IUiHint
     {
-        [SerializeField] private HintType _hintType;
-        [TextArea] [SerializeField] private string _hintText;
+        [SerializeField] protected HintType _hintType;
+        [TextArea] [SerializeField] protected string _hintText;
             
         private IHintController _controller;
         private InventoryEntity _entity;
