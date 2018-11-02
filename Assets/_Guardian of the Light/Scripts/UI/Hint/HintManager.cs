@@ -10,7 +10,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
 {
     public class HintManager : MonoBehaviour, IHintManager
     {
-        [SerializeField] private int EmptyHintActiveTimeMs;
+        [SerializeField] private int _emptyHintActiveTimeMs;
 
         [Header("Panels")] 
         [SerializeField] private GameObject _yesNoHintPanel;
@@ -88,6 +88,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
 
         private void ShowMultipleChoiceHintPanel(List<string> texts)
         {
+            
             throw new NotImplementedException();
         }
 
@@ -141,7 +142,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
 
         private async void DelayedHideEmptyHintPanel()
         {
-            await Task.Delay(EmptyHintActiveTimeMs);
+            await Task.Delay(_emptyHintActiveTimeMs);
 
             _iEmptyHint.OnEmptyExpired();
             _emptyHintPanel.SetActive(false);

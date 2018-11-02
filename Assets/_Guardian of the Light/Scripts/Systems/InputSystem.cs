@@ -86,7 +86,7 @@ public class InputSystem : MonoBehaviour
     {
         ReferencePlayerInputs();
         ReferenceInventoryInputs();
-        ReferenceHintInputs();
+        ReferenceHintsInputs();
     }
 
     private void ReferencePlayerInputs()
@@ -119,7 +119,7 @@ public class InputSystem : MonoBehaviour
         KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(_increaseSizeKey));
     }
 
-    private void ReferenceHintInputs()
+    private void ReferenceHintsInputs()
     {
         KeyYesHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_yesHintKey));
         KeyNoHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_noHintKey));
