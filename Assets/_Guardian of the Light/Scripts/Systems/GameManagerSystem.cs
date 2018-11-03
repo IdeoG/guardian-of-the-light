@@ -5,13 +5,14 @@ using _Guardian_of_the_Light.Scripts.Systems;
 
 public class GameManagerSystem : MonoBehaviour
 {
-    [Header("Canvases")] [SerializeField] private GameObject _canvasInventoryView;
+    [Header("Canvases")] 
+    [SerializeField] private GameObject _canvasInventoryView;
 
-    private InventoryCanvas _inventoryCanvas;
-
-
-    [Header("Player")] [SerializeField] public GameObject Player;
+    [Header("Player")] 
+    [SerializeField] public GameObject Player;
+    
     public static GameManagerSystem Instance { get; private set; }
+    private InventoryCanvas _inventoryCanvas;
 
     private void Awake()
     {
