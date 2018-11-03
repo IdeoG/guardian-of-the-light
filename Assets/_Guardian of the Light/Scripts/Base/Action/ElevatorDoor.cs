@@ -25,14 +25,13 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
                 trigger.OnStateUpdateAsObservable()
                     .Subscribe(info =>
                         {
+                            if (info.LayerIndex != 0) 
+                                return;
+                            
                             if (_closingDoorStateHash.Equals(info.StateInfo.shortNameHash) && Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2)
-                            {
                                 OnDoorStateExit();
-                            }
                             else if (_openingDoorStateHash.Equals(info.StateInfo.shortNameHash) && Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2)
-                            {
                                 OnDoorStateExit();
-                            }
                         },
                         () => Debug.Log($"ElevatorDoor: OnStateUpdateAsObservable -> onCompleted"));
             }
