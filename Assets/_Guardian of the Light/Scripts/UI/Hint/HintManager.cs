@@ -111,7 +111,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             }
             
             _multipleChoiceCursor[_currentChoice].SetActive(true);
-            _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 0.5f);
+            _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 1f);
             
             _keyExitPressedDown = InputSystem.Instance.KeyExitHintPressedDown
                 .Subscribe(_ =>

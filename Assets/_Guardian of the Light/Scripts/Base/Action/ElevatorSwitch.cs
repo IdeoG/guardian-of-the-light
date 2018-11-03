@@ -150,16 +150,13 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
                 trigger.OnStateUpdateAsObservable()
                     .Subscribe(info =>
                         {
-                            var isDoorClosingCompleted =
-                                _closingDoorStateHash.Equals(info.StateInfo.shortNameHash) &&
+                            var isDoorClosingCompleted = _closingDoorStateHash.Equals(info.StateInfo.shortNameHash) &&
                                 Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2 && _isAnimationRunning;
 
-                            var isDoorOpeningCompleted =
-                                _openingDoorStateHash.Equals(info.StateInfo.shortNameHash) &&
+                            var isDoorOpeningCompleted = _openingDoorStateHash.Equals(info.StateInfo.shortNameHash) &&
                                 Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2 && _isAnimationRunning;
 
-                            var isElevatorLiftCompleted =
-                                _movingToLevel2.Equals(info.StateInfo.shortNameHash) &&
+                            var isElevatorLiftCompleted = _movingToLevel2.Equals(info.StateInfo.shortNameHash) &&
                                 Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2;
 
                             var isElevatorDropCompleted =
