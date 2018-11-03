@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using _Guardian_of_the_Light.Scripts.Base.Inventory;
 using _Guardian_of_the_Light.Scripts.GameLogic.Hint;
+using _Guardian_of_the_Light.Scripts.Player;
+using _Guardian_of_the_Light.Scripts.Systems;
 using _Guardian_of_the_Light.Scripts.UI.Hint.interfaces;
 
 namespace _Guardian_of_the_Light.Scripts.UI.Hint

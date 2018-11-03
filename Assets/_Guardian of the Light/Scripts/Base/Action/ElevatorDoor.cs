@@ -2,6 +2,8 @@ using System;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using _Guardian_of_the_Light.Scripts.Player;
+using _Guardian_of_the_Light.Scripts.Systems;
 
 namespace _Guardian_of_the_Light.Scripts.Base.Action
 {

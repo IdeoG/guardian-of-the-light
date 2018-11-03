@@ -4,6 +4,7 @@ using DG.Tweening;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
+using _Guardian_of_the_Light.Scripts.Systems;
 
 public class InspectView : MonoBehaviour
 {

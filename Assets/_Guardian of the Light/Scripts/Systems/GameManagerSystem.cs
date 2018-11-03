@@ -1,6 +1,7 @@
 ﻿using UniRx;
 using UnityEngine;
-using UnityStandardAssets.Characters.ThirdPerson;
+using _Guardian_of_the_Light.Scripts.Player;
+using _Guardian_of_the_Light.Scripts.Systems;
 
 public class GameManagerSystem : MonoBehaviour
 {

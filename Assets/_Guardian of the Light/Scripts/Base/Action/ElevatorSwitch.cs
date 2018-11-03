@@ -5,6 +5,8 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 using _Guardian_of_the_Light.Scripts.GameLogic.Hint;
+using _Guardian_of_the_Light.Scripts.Player;
+using _Guardian_of_the_Light.Scripts.Systems;
 using _Guardian_of_the_Light.Scripts.UI.Hint;
 
 namespace _Guardian_of_the_Light.Scripts.Base.Action
@@ -136,7 +138,7 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
         protected override void Awake()
         {
             base.Awake();
-
+            
             _animator = transform.parent.GetComponentInParent<Animator>();
             _input = InputSystem.Instance;
             _playerControls = GameManagerSystem.Instance.Player.GetComponent<ThirdPersonUserControl>();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UniRx;
 using UnityEngine;
+using _Guardian_of_the_Light.Scripts.Systems;
 
 [RequireComponent(typeof(BasicViewItemsEffects))]
 public class BasicViewItemsController : MonoBehaviour, IItemsController

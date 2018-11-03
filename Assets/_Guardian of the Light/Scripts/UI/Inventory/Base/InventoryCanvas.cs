@@ -2,6 +2,7 @@
 using DG.Tweening;
 using UniRx;
 using UnityEngine;
+using _Guardian_of_the_Light.Scripts.Systems;
 
 public class InventoryCanvas : MonoBehaviour
 {

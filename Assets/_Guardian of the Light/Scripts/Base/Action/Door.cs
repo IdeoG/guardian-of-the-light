@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using _Guardian_of_the_Light.Scripts.Player;
+using _Guardian_of_the_Light.Scripts.Systems;
 
 [RequireComponent(typeof(Animator))]
 public class Door : BaseAction
