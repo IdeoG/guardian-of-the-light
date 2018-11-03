@@ -12,6 +12,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
     {
         private InputSystem _input;
         private HintManager _manager;
+        private GameObject _gameLogicObject;
         private InventoryEntity _entity;
         private InventorySystem _inventory;
         private ThirdPersonUserControl _playerControls;
@@ -24,9 +25,9 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _playerControls.LockInput = true;
         }
 
-        public void OnShowHintButtonPressed(HintType type, List<string> texts, InventoryEntity entity)
+        public void OnShowHintButtonPressed(HintType type, List<string> texts, GameObject gameLogicObject)
         {
-            _entity = entity;
+            _gameLogicObject = gameLogicObject;
             _manager.ShowHint(type, texts);
             _input.IsUiActive = true;
             _playerControls.LockInput = true;
@@ -49,7 +50,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _input.IsUiActive = false;
             _playerControls.LockInput = false;
             
-            _entity.gameObject.GetComponent<IUiHint>().OnItemChosen(position);
+            _gameLogicObject.GetComponent<IUiHint>().OnItemChosen(position);
         }
 
         public void OnHintExpired()
@@ -67,7 +68,8 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _input.IsUiActive = false;
             _playerControls.LockInput = false;
             
-            if (_entity.Id != 0) _inventory.GetItemById(_entity.Id).IsTook = true;
+            if (_entity.Id != 0) 
+                _inventory.GetItemById(_entity.Id).IsTook = true;
             _entity.gameObject.GetComponent<IUiHint>().DestroyItem();
         }
 

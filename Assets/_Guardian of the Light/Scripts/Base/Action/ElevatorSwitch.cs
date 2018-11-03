@@ -10,7 +10,28 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
     {
         public override void OnItemChosen(int position)
         {
-            throw new NotImplementedException();
+            if (_elevatorLevel == 1 && position == 1)
+                _controller.OnShowHintButtonPressed(HintType.Empty, _badSwitchDownHintText, null);
+            else if (_elevatorLevel == 2 && position == 0)
+                _controller.OnShowHintButtonPressed(HintType.Empty, _badSwitchUpHintText, null);
+            else if (_elevatorLevel == 1)
+                LiftElevator();
+            else if (_elevatorLevel == 2)
+                DropElevator();
+            else
+                throw new ArgumentOutOfRangeException();
+        }
+
+        private void DropElevator()
+        {
+            _elevatorLevel--;
+            _animator.SetInteger("Level", _elevatorLevel);
+        }
+
+        private void LiftElevator()
+        {
+            _elevatorLevel++;
+            _animator.SetInteger("Level", _elevatorLevel);
         }
 
         protected override void OnKeyActionPressedDown()
@@ -27,7 +48,7 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
                     break;
                 case ElevatorSwitchState.Ready:
                     _hintType = HintType.MultipleChoice;
-                    _controller.OnShowHintButtonPressed(_hintType, _readyHintText, _entity);
+                    _controller.OnShowHintButtonPressed(_hintType, _readyHintText, gameObject);
                     return;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -35,7 +56,6 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
             
             base.OnKeyActionPressedDown();
         }
-        
         
         private ElevatorSwitchState GetMechanismState()
         {
@@ -49,14 +69,21 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
             return ElevatorSwitchState.Ready;
         }
 
-        protected void Awake()
+        protected override void Awake()
         {
             base.Awake();
+            
+            _animator = transform.parent.GetComponentInParent<Animator>();
         }
 
         [TextArea] [SerializeField] private string _noCristalHintText;
         [TextArea] [SerializeField] private string _noGearHintText;
+        [TextArea] [SerializeField] private string _badSwitchDownHintText;
+        [TextArea] [SerializeField] private string _badSwitchUpHintText;
         [TextArea] [SerializeField] private List<string> _readyHintText;
+
+        private int _elevatorLevel = 1;
+        private Animator _animator;
         
         private const int CristalId = 3;
         private const int GearId = 1;

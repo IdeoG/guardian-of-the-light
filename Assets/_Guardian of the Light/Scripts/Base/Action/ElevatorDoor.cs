@@ -17,7 +17,7 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
 
         private void Awake()
         {
-            _animator = GetComponentInParent<Animator>();
+            _animator = transform.parent.GetComponentInParent<Animator>();
             var triggers = _animator.GetBehaviours<ObservableStateMachineTrigger>();
 
             foreach (var trigger in triggers)

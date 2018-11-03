@@ -24,7 +24,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         [SerializeField] private Text _yesNoHintText;
         [SerializeField] private Text _skipHintText;
         [SerializeField] private Text _emptyHintText;
-        [SerializeField] private List<Text> _multipleChoiceHintText;
+        [SerializeField] private List<Text> _multipleChoiceText;
 
         [Header("Extra Tools")]
         [SerializeField] private List<GameObject> _multipleChoiceCursor;
@@ -97,17 +97,20 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             foreach (var cursor in _multipleChoiceCursor)
                 cursor.SetActive(false);
             
-            foreach (var text in _multipleChoiceHintText)
+            foreach (var text in _multipleChoiceText)
                 text.gameObject.SetActive(false);
-            
+
+            _currentChoice = 0;
             _choicesCount = texts.Count;
             for (var ind = 0; ind < _choicesCount; ++ind)
             {
-                _multipleChoiceHintText[ind].gameObject.SetActive(true);
-                _multipleChoiceHintText[ind].text = texts[ind];
+                _multipleChoiceText[ind].gameObject.SetActive(true);
+                _multipleChoiceText[ind].text = texts[ind];
+                _multipleChoiceText[ind].color = _multipleChoiceText[ind].color.With(a: 0.5f);
             }
             
-            _multipleChoiceCursor[0].SetActive(true);
+            _multipleChoiceCursor[_currentChoice].SetActive(true);
+            _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 0.5f);
             
             _keyExitPressedDown = InputSystem.Instance.KeyExitHintPressedDown
                 .Subscribe(_ =>
@@ -139,24 +142,24 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                     if (_currentChoice == 0) return;
                     
                     _multipleChoiceCursor[_currentChoice].SetActive(false);
-                    _multipleChoiceHintText[_currentChoice].color = _multipleChoiceHintText[_currentChoice].color.With(a: 0.5f);
+                    _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 0.5f);
                     _currentChoice--;
                     
                     _multipleChoiceCursor[_currentChoice].SetActive(true);
-                    _multipleChoiceHintText[_currentChoice].color = _multipleChoiceHintText[_currentChoice].color.With(a: 1f);
+                    _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 1f);
                 }).AddTo(this);
             
-            _keyUpPressedDown = InputSystem.Instance.KeyDownArrowPressed
+            _keyDownPressedDown = InputSystem.Instance.KeyDownArrowPressed
                 .Subscribe(_ =>
                 {
                     if (_currentChoice == _choicesCount - 1) return;
                     
                     _multipleChoiceCursor[_currentChoice].SetActive(false);
-                    _multipleChoiceHintText[_currentChoice].color = _multipleChoiceHintText[_currentChoice].color.With(a: 0.5f);
+                    _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 0.5f);
                     _currentChoice++;
                     
                     _multipleChoiceCursor[_currentChoice].SetActive(true);
-                    _multipleChoiceHintText[_currentChoice].color = _multipleChoiceHintText[_currentChoice].color.With(a: 1f);
+                    _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 1f);
                 }).AddTo(this);
         }
 
