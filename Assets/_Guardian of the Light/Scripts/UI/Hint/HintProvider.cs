@@ -6,7 +6,7 @@ using _Guardian_of_the_Light.Scripts.UI.Hint.interfaces;
 
 namespace _Guardian_of_the_Light.Scripts.UI.Hint
 {
-    public class HintController : MonoBehaviour, IHintController,
+    public class HintProvider : MonoBehaviour, IHintController,
         IEmptyHint, ISkipHint, ITemporaryButtonHint, IYesNoHint,
         IMultipleChoiceHint
     {
@@ -24,8 +24,9 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _playerControls.LockInput = true;
         }
 
-        public void OnShowHintButtonPressed(HintType type, List<string> texts)
+        public void OnShowHintButtonPressed(HintType type, List<string> texts, InventoryEntity entity)
         {
+            _entity = entity;
             _manager.ShowHint(type, texts);
             _input.IsUiActive = true;
             _playerControls.LockInput = true;
@@ -43,14 +44,12 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _playerControls.LockInput = false;
         }
 
-        public void OnConfirmSwitchUpPressed()
+        public void OnConfirmPressed(int position)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnConfirmSwitchDownPressed()
-        {
-            throw new System.NotImplementedException();
+            _input.IsUiActive = false;
+            _playerControls.LockInput = false;
+            
+            _entity.gameObject.GetComponent<IUiHint>().OnItemChosen(position);
         }
 
         public void OnHintExpired()

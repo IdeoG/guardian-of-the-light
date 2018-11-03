@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-using UnityEngine.Assertions;
 using _Guardian_of_the_Light.Scripts.Base.Inventory;
 using _Guardian_of_the_Light.Scripts.UI.Hint;
 using _Guardian_of_the_Light.Scripts.UI.Hint.interfaces;
@@ -13,11 +13,16 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
         [TextArea] [SerializeField] protected string _hintText;
             
         protected IHintController _controller;
-        private InventoryEntity _entity;
+        protected InventoryEntity _entity;
 
         public virtual void DestroyItem()
         {
             Destroy(gameObject);
+        }
+
+        public virtual void OnItemChosen(int position)
+        {
+            throw new NotImplementedException();
         }
         
         protected override void OnKeyActionPressedDown()
@@ -28,7 +33,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
         protected virtual void Awake()
         {
             _entity = GetComponent<InventoryEntity>();
-            _controller = FindObjectOfType<HintController>().GetComponent<HintController>();          
+            _controller = FindObjectOfType<HintProvider>().GetComponent<HintProvider>();          
         }
     }
 }

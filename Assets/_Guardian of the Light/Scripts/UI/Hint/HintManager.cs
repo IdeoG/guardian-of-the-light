@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
+using _Guardian_of_the_Light.Scripts.Extensions;
 using _Guardian_of_the_Light.Scripts.UI.Hint.interfaces;
 
 namespace _Guardian_of_the_Light.Scripts.UI.Hint
@@ -43,6 +44,9 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         private ISkipHint _iSkipHint;
         private ITemporaryButtonHint _iTemporaryButtonHint;
         private IMultipleChoiceHint _iMultipleChoiceHint;
+
+        private int _choicesCount;
+        private int _currentChoice;
 
 
         public void ShowHint(HintType type, string text)
@@ -88,8 +92,72 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
 
         private void ShowMultipleChoiceHintPanel(List<string> texts)
         {
+            _multipleChoicePanel.SetActive(true);
             
-            throw new NotImplementedException();
+            foreach (var cursor in _multipleChoiceCursor)
+                cursor.SetActive(false);
+            
+            foreach (var text in _multipleChoiceHintText)
+                text.gameObject.SetActive(false);
+            
+            _choicesCount = texts.Count;
+            for (var ind = 0; ind < _choicesCount; ++ind)
+            {
+                _multipleChoiceHintText[ind].gameObject.SetActive(true);
+                _multipleChoiceHintText[ind].text = texts[ind];
+            }
+            
+            _multipleChoiceCursor[0].SetActive(true);
+            
+            _keyExitPressedDown = InputSystem.Instance.KeyExitHintPressedDown
+                .Subscribe(_ =>
+                {
+                    _iMultipleChoiceHint.OnExitPressed();
+                    _multipleChoicePanel.SetActive(false);
+                    
+                    _keyExitPressedDown.Dispose();
+                    _keyConfirmPressedDown.Dispose();
+                    _keyUpPressedDown.Dispose();
+                    _keyDownPressedDown.Dispose();
+                }).AddTo(this);
+            
+            _keyConfirmPressedDown = InputSystem.Instance.KeyConfirmHintPressedDown
+                .Subscribe(_ =>
+                {
+                    _iMultipleChoiceHint.OnConfirmPressed(_currentChoice);
+                    _multipleChoicePanel.SetActive(false);
+                    
+                    _keyExitPressedDown.Dispose();
+                    _keyConfirmPressedDown.Dispose();
+                    _keyUpPressedDown.Dispose();
+                    _keyDownPressedDown.Dispose();
+                }).AddTo(this);
+            
+            _keyUpPressedDown = InputSystem.Instance.KeyUpArrowPressed
+                .Subscribe(_ =>
+                {
+                    if (_currentChoice == 0) return;
+                    
+                    _multipleChoiceCursor[_currentChoice].SetActive(false);
+                    _multipleChoiceHintText[_currentChoice].color = _multipleChoiceHintText[_currentChoice].color.With(a: 0.5f);
+                    _currentChoice--;
+                    
+                    _multipleChoiceCursor[_currentChoice].SetActive(true);
+                    _multipleChoiceHintText[_currentChoice].color = _multipleChoiceHintText[_currentChoice].color.With(a: 1f);
+                }).AddTo(this);
+            
+            _keyUpPressedDown = InputSystem.Instance.KeyDownArrowPressed
+                .Subscribe(_ =>
+                {
+                    if (_currentChoice == _choicesCount - 1) return;
+                    
+                    _multipleChoiceCursor[_currentChoice].SetActive(false);
+                    _multipleChoiceHintText[_currentChoice].color = _multipleChoiceHintText[_currentChoice].color.With(a: 0.5f);
+                    _currentChoice++;
+                    
+                    _multipleChoiceCursor[_currentChoice].SetActive(true);
+                    _multipleChoiceHintText[_currentChoice].color = _multipleChoiceHintText[_currentChoice].color.With(a: 1f);
+                }).AddTo(this);
         }
 
         private void ShowSkipHintPanel(string text)
@@ -150,7 +218,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
 
         private void Awake()
         {
-            var controller = FindObjectOfType<HintController>().GetComponent<HintController>();
+            var controller = FindObjectOfType<HintProvider>().GetComponent<HintProvider>();
 
             _iYesNoHint = controller;
             _iEmptyHint = controller;

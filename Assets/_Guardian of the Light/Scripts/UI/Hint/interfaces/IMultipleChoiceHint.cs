@@ -4,7 +4,6 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint.interfaces
     {
         void OnExitPressed();
         void OnSkipPressed();
-        void OnConfirmSwitchUpPressed();
-        void OnConfirmSwitchDownPressed();
+        void OnConfirmPressed(int position);
     }
 }

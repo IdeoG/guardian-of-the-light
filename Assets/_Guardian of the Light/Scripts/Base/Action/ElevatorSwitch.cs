@@ -8,7 +8,11 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
 {
     public class ElevatorSwitch : UiHint
     {
-        
+        public override void OnItemChosen(int position)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void OnKeyActionPressedDown()
         {
             switch (GetMechanismState())
@@ -23,7 +27,7 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
                     break;
                 case ElevatorSwitchState.Ready:
                     _hintType = HintType.MultipleChoice;
-                    _controller.OnShowHintButtonPressed(_hintType, _readyHintText);
+                    _controller.OnShowHintButtonPressed(_hintType, _readyHintText, _entity);
                     return;
                 default:
                     throw new ArgumentOutOfRangeException();
