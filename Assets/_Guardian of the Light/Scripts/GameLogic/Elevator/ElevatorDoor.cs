@@ -12,7 +12,6 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         protected override void OnKeyActionPressedDown()
         {
             InputSystem.Instance.IsAnimationPlaying = true;
-            GameManagerSystem.Instance.Player.GetComponent<ThirdPersonUserControl>().LockInput = true;
             
             _animator.SetBool("OpenDoor", !_animator.GetBool("OpenDoor"));
         }
@@ -41,8 +40,8 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 
         private void OnDoorStateExit()
         {
+            Debug.Log($"{MTime.Now} ElevatorDoor: OnDoorStateExit -> content");
             InputSystem.Instance.IsAnimationPlaying = false;
-            GameManagerSystem.Instance.Player.GetComponent<ThirdPersonUserControl>().LockInput = false;
         }
 
         private Animator _animator;

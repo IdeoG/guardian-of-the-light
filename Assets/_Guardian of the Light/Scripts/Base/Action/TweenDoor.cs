@@ -13,13 +13,11 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
         protected override void OnKeyActionPressedDown()
         {
             InputSystem.Instance.IsAnimationPlaying = true;
-            GameManagerSystem.Instance.Player.GetComponent<ThirdPersonUserControl>().LockInput = true;
             
             transform.DOLocalRotate(_angle, _duration)
                 .OnComplete(() =>
                 {
                     InputSystem.Instance.IsAnimationPlaying = false;
-                    GameManagerSystem.Instance.Player.GetComponent<ThirdPersonUserControl>().LockInput = false;
                 });
             
             var colliders = GetComponents<Collider>();

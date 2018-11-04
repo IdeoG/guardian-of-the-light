@@ -24,7 +24,6 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _entity = entity;
             _manager.ShowHint(type, text);
             _input.IsUiActive = true;
-            _playerControls.LockInput = true;
         }
 
         public void OnShowHintButtonPressed(HintType type, List<string> texts, GameObject gameLogicObject)
@@ -32,25 +31,21 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _gameLogicObject = gameLogicObject;
             _manager.ShowHint(type, texts);
             _input.IsUiActive = true;
-            _playerControls.LockInput = true;
         }
 
         public void OnEmptyExpired()
         {
             _input.IsUiActive = false;
-            _playerControls.LockInput = false;
         }
 
         public void OnSkipPressed()
         {
             _input.IsUiActive = false;
-            _playerControls.LockInput = false;
         }
 
         public void OnConfirmPressed(int position)
         {
             _input.IsUiActive = false;
-            _playerControls.LockInput = false;
             
             _gameLogicObject.GetComponent<IUiHint>().OnItemChosen(position);
         }
@@ -68,7 +63,6 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         public void OnYesPressed()
         {
             _input.IsUiActive = false;
-            _playerControls.LockInput = false;
             
             if (_entity.Id != 0) 
                 _inventory.GetItemById(_entity.Id).IsTook = true;
@@ -78,13 +72,11 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         public void OnNoPressed()
         {
             _input.IsUiActive = false;
-            _playerControls.LockInput = false;
         }
 
         public void OnExitPressed()
         {
             _input.IsUiActive = false;
-            _playerControls.LockInput = false;
         }
         
         private void Start()

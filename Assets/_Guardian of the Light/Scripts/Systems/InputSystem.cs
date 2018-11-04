@@ -131,7 +131,7 @@ namespace _Guardian_of_the_Light.Scripts.Systems
             KeyTemporaryButtonPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_temporaryButtonHintKey));
         }
 
-        private bool CanMove()
+        public bool CanMove()
         {
             return !IsUiActive && !IsAnimationPlaying;
         }

@@ -54,7 +54,6 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         {
             _isAnimationRunning = true;
             _input.IsAnimationPlaying = true;
-            _playerControls.LockInput = true;
 
             _switch.DOLocalRotate(Vector3.left * 45, 1.5f)
                 .OnComplete(() =>
@@ -62,7 +61,6 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
                     _elevatorLevel++;
                     
                     _input.IsAnimationPlaying = false;
-                    _playerControls.LockInput = false;
 
                     _animator.SetBool("OpenDoor", false);
                 });
@@ -72,7 +70,6 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         {
             _isAnimationRunning = true;
             _input.IsAnimationPlaying = true;
-            _playerControls.LockInput = true;
             
             _switch.DOLocalRotate(Vector3.left * -45, 1.5f)
                 .OnComplete(() =>
@@ -80,7 +77,6 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
                     _elevatorLevel--;
 
                     _input.IsAnimationPlaying = false;
-                    _playerControls.LockInput = false;
                     
                     _animator.SetBool("OpenDoor", false);
                 });
@@ -93,18 +89,14 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 
         private void OnElevatorDropPartCompleted()
         {
-            Debug.Log($"ElevatorSwitch: OnElevatorLiftPartCompleted -> content");
             SwitchCameraToDolly();
             _input.IsAnimationPlaying = true;
-            _playerControls.LockInput = true;
         }
 
         private void OnElevatorLiftPartCompleted()
         {
-            Debug.Log($"ElevatorSwitch: OnElevatorLiftPartCompleted -> content");
             SwitchCameraToDolly();
             _input.IsAnimationPlaying = true;
-            _playerControls.LockInput = true;
         }
 
         private void OnDropElevatorCompleted()
@@ -126,7 +118,6 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
                 {
                     _isAnimationRunning = false;
                     _input.IsAnimationPlaying = false;
-                    _playerControls.LockInput = false;
                 });
         }
         
@@ -238,10 +229,4 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         private readonly int _closingDoorStateHash = Animator.StringToHash("Closing Door");
     }
 
-    internal enum ElevatorSwitchState
-    {
-        NoCristal,
-        NoGear,
-        Ready
-    }
 }
