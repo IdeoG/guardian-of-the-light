@@ -1,8 +1,8 @@
-using System;
 using DG.Tweening;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using _Guardian_of_the_Light.Scripts.Extensions;
 using _Guardian_of_the_Light.Scripts.Systems;
 
 namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
@@ -50,7 +50,6 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
                     .OnComplete(() =>
                     {
                         _isElevatorRunning = false;
-                        _input.IsAnimationPlaying = false;
                     });
             }
         }
@@ -65,23 +64,25 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 
         private void OnElevatorLiftAnimationPartCompleted()
         {
-            SwitchCameraToDolly();
             _input.IsAnimationPlaying = true;
+            SwitchCameraToDolly();
         }
 
         private void OnElevatorDropAnimationPartCompleted()
         {
-            SwitchCameraToDolly();
             _input.IsAnimationPlaying = true;
+            SwitchCameraToDolly();
         }
 
         private void OnElevatorLiftAnimationCompleted()
         {
+            _input.IsAnimationPlaying = false;
             _animator.SetBool("OpenDoor", true);
         }
 
         private void OnElevatorDropAnimationCompleted()
         {
+            _input.IsAnimationPlaying = false;
             _animator.SetBool("OpenDoor", true);
         }
 
@@ -105,51 +106,62 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         private void InitializeAnimationTriggers()
         {
             var triggers = _animator.GetBehaviours<ObservableStateMachineTrigger>();
-
+            
             foreach (var trigger in triggers)
-            {
+            {    
                 trigger.OnStateUpdateAsObservable()
+                    .Where(info => info.LayerIndex == 0)
                     .Subscribe(info =>
                     {
+                        var normalizedTime = info.StateInfo.normalizedTime;
+                        
                         var isDoorClosingAnimationCompleted = _closingDoorStateHash.Equals(info.StateInfo.shortNameHash) &&
-                            Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2;
+                                                              1.0f.IsBetweenBounds(_cachedNormalizedTime0, normalizedTime);
 
                         var isDoorOpeningAnimationCompleted = _openingDoorStateHash.Equals(info.StateInfo.shortNameHash) &&
-                            Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2;
+                                                              1.0f.IsBetweenBounds(_cachedNormalizedTime0, normalizedTime);
                             
-                        var isElevatorLiftAnimationCompleted = _movingToLevel2.Equals(info.StateInfo.shortNameHash) &&
-                            Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2;
-
-                        var isElevatorDropAnimationCompleted = _movingToLevel1.Equals(info.StateInfo.shortNameHash) &&
-                            Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2;
-
-                        var isElevatorLiftAnimationPartCompleted = _movingToLevel2.Equals(info.StateInfo.shortNameHash) &&
-                            Math.Abs(info.StateInfo.normalizedTime - _normalizedSwitchTime) < 1e-2;
-                            
-                        var isElevatorDropAnimationPartCompleted = _movingToLevel1.Equals(info.StateInfo.shortNameHash) &&
-                            Math.Abs(info.StateInfo.normalizedTime - _normalizedSwitchTime) < 1e-2;
+                       _cachedNormalizedTime0 = normalizedTime;
                         
-                        switch (info.LayerIndex)
-                        {
-                            case 0:
-                                if (isDoorClosingAnimationCompleted)
-                                    OnDoorClosingAnimationCompleted();
-                                if (isDoorOpeningAnimationCompleted)
-                                    OnDoorOpeningAnimationCompleted();
-                                break;
-                            case 1:
-                                if (isElevatorDropAnimationCompleted)
-                                    OnElevatorDropAnimationCompleted();
-                                if (isElevatorLiftAnimationCompleted)
-                                    OnElevatorLiftAnimationCompleted();
-                                if (isElevatorDropAnimationPartCompleted)
-                                    OnElevatorDropAnimationPartCompleted();
-                                if (isElevatorLiftAnimationPartCompleted)
-                                    OnElevatorLiftAnimationPartCompleted();
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
+                        if (isDoorClosingAnimationCompleted)
+                            OnDoorClosingAnimationCompleted();
+                        if (isDoorOpeningAnimationCompleted)
+                            OnDoorOpeningAnimationCompleted();
+                            
+                    });
+                
+                trigger.OnStateUpdateAsObservable()
+                    .Where(info => info.LayerIndex == 1)
+                    .Subscribe(info =>
+                    {
+                        var normalizedTime = info.StateInfo.normalizedTime;
+                            
+                        var isElevatorLiftAnimationCompleted = 
+                            _movingToLevel2.Equals(info.StateInfo.shortNameHash) &&
+                            1.0f.IsBetweenBounds(_cachedNormalizedTime1, normalizedTime);
+                        
+                        var isElevatorDropAnimationCompleted = 
+                            _movingToLevel1.Equals(info.StateInfo.shortNameHash) &&
+                            1.0f.IsBetweenBounds(_cachedNormalizedTime1, normalizedTime);
+                        
+                        var isElevatorLiftAnimationPartCompleted = 
+                            _movingToLevel2.Equals(info.StateInfo.shortNameHash) &&
+                            _normalizedSwitchTime.IsBetweenBounds(_cachedNormalizedTime1, normalizedTime); 
+                        
+                        var isElevatorDropAnimationPartCompleted = 
+                            _movingToLevel1.Equals(info.StateInfo.shortNameHash) &&
+                            _normalizedSwitchTime.IsBetweenBounds(_cachedNormalizedTime1, normalizedTime);
+
+                        _cachedNormalizedTime1 = normalizedTime;
+                        
+                        if (isElevatorDropAnimationCompleted)
+                            OnElevatorDropAnimationCompleted();
+                        if (isElevatorLiftAnimationCompleted)
+                            OnElevatorLiftAnimationCompleted();
+                        if (isElevatorDropAnimationPartCompleted)
+                            OnElevatorDropAnimationPartCompleted();
+                        if (isElevatorLiftAnimationPartCompleted)
+                            OnElevatorLiftAnimationPartCompleted();
                             
                     });
             }
@@ -188,6 +200,9 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         private Animator _animator;
         private InputSystem _input;
         private bool _isElevatorRunning;
+        private float _cachedNormalizedTime0;
+        private float _cachedNormalizedTime1;
+        private float _cachedNormalizedTime2;
         
         private readonly int _movingToLevel1 = Animator.StringToHash("Moving to Level 1");
         private readonly int _movingToLevel2 = Animator.StringToHash("Moving to Level 2");
@@ -204,4 +219,5 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         NoGear,
         Ready
     }
+    
 }

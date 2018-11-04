@@ -16,7 +16,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 
         private void Awake()
         {
-            _animator = transform.parent.GetComponentInParent<Animator>();
+            _animator = GetComponentInParent<Animator>();
         }
     }
 }
