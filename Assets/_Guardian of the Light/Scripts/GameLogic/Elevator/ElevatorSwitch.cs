@@ -27,79 +27,6 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
                 throw new ArgumentOutOfRangeException();
         }
 
-        private void DropElevator()
-        {
-            _isAnimationRunning = true;
-            _input.IsAnimationPlaying = true;
-            _playerControls.LockInput = true;
-            
-            _switch.DOLocalRotate(Vector3.left * -45, 1.5f)
-                .OnComplete(() =>
-                {
-                    _elevatorLevel--;
-
-                    SwitchCameraToDolly();
-                    _animator.SetBool("OpenDoor", false);
-                });
-        }
-
-        private void LiftElevator()
-        {
-            _isAnimationRunning = true;
-            _input.IsAnimationPlaying = true;
-            _playerControls.LockInput = true;
-
-            _switch.DOLocalRotate(Vector3.left * 45, 1.5f)
-                .OnComplete(() =>
-                {
-                    _elevatorLevel++;
-
-                    SwitchCameraToDolly();
-                    _animator.SetBool("OpenDoor", false);
-                });
-        }
-
-        private void SwitchCameraToDolly()
-        {
-            _trackedDollyCamera.SetActive(true);
-            _virtualCamera.SetActive(false);
-        }
-
-        private void SwitchCameraToVirtual()
-        {
-            _virtualCamera.SetActive(true);
-            _trackedDollyCamera.SetActive(false);
-        }
-
-        private void OnCloseDoorStateExit()
-        {
-            _animator.SetInteger("Level", _elevatorLevel);
-        }
-
-        private void OnOpenDoorStateExit()
-        {
-            SwitchCameraToVirtual();
-
-            _switch.DOLocalRotate(Vector3.zero, 1.5f)
-                .OnComplete(() =>
-                {
-                    _isAnimationRunning = false;
-                    _input.IsAnimationPlaying = false;
-                    _playerControls.LockInput = false;
-                });
-        }
-
-        private void OnDropElevatorCompleted()
-        {
-            _animator.SetBool("OpenDoor", true);
-        }
-
-        private void OnLiftElevatorCompleted()
-        {
-            _animator.SetBool("OpenDoor", true);
-        }
-
-
         protected override void OnKeyActionPressedDown()
         {
             switch (GetMechanismState())
@@ -122,7 +49,99 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
 
             base.OnKeyActionPressedDown();
         }
+        
+        private void LiftElevator()
+        {
+            _isAnimationRunning = true;
+            _input.IsAnimationPlaying = true;
+            _playerControls.LockInput = true;
 
+            _switch.DOLocalRotate(Vector3.left * 45, 1.5f)
+                .OnComplete(() =>
+                {
+                    _elevatorLevel++;
+                    
+                    _input.IsAnimationPlaying = false;
+                    _playerControls.LockInput = false;
+
+                    _animator.SetBool("OpenDoor", false);
+                });
+        }
+        
+        private void DropElevator()
+        {
+            _isAnimationRunning = true;
+            _input.IsAnimationPlaying = true;
+            _playerControls.LockInput = true;
+            
+            _switch.DOLocalRotate(Vector3.left * -45, 1.5f)
+                .OnComplete(() =>
+                {
+                    _elevatorLevel--;
+
+                    _input.IsAnimationPlaying = false;
+                    _playerControls.LockInput = false;
+                    
+                    _animator.SetBool("OpenDoor", false);
+                });
+        }
+
+        private void OnCloseDoorStateExit()
+        {
+            _animator.SetInteger("Level", _elevatorLevel);
+        }
+
+        private void OnElevatorDropPartCompleted()
+        {
+            Debug.Log($"ElevatorSwitch: OnElevatorLiftPartCompleted -> content");
+            SwitchCameraToDolly();
+            _input.IsAnimationPlaying = true;
+            _playerControls.LockInput = true;
+        }
+
+        private void OnElevatorLiftPartCompleted()
+        {
+            Debug.Log($"ElevatorSwitch: OnElevatorLiftPartCompleted -> content");
+            SwitchCameraToDolly();
+            _input.IsAnimationPlaying = true;
+            _playerControls.LockInput = true;
+        }
+
+        private void OnDropElevatorCompleted()
+        {
+            _animator.SetBool("OpenDoor", true);
+        }
+
+        private void OnLiftElevatorCompleted()
+        {
+            _animator.SetBool("OpenDoor", true);
+        }
+
+        private void OnOpenDoorStateExit()
+        {
+            SwitchCameraToVirtual();
+
+            _switch.DOLocalRotate(Vector3.zero, 1.5f)
+                .OnComplete(() =>
+                {
+                    _isAnimationRunning = false;
+                    _input.IsAnimationPlaying = false;
+                    _playerControls.LockInput = false;
+                });
+        }
+        
+        private void SwitchCameraToDolly()
+        {
+            _trackedDollyCamera.SetActive(true);
+            _virtualCamera.SetActive(false);
+        }
+
+        private void SwitchCameraToVirtual()
+        {
+            _virtualCamera.SetActive(true);
+            _trackedDollyCamera.SetActive(false);
+        }
+        
         private ElevatorSwitchState GetMechanismState()
         {
             var inventory = InventorySystem.Instance;
@@ -149,7 +168,7 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
             {
                 trigger.OnStateUpdateAsObservable()
                     .Subscribe(info =>
-                        {
+                        {   
                             var isDoorClosingCompleted = _closingDoorStateHash.Equals(info.StateInfo.shortNameHash) &&
                                 Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2 && _isAnimationRunning;
 
@@ -159,10 +178,15 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
                             var isElevatorLiftCompleted = _movingToLevel2.Equals(info.StateInfo.shortNameHash) &&
                                 Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2;
 
-                            var isElevatorDropCompleted =
-                                _movingToLevel1.Equals(info.StateInfo.shortNameHash) &&
+                            var isElevatorDropCompleted = _movingToLevel1.Equals(info.StateInfo.shortNameHash) &&
                                 Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2;
 
+                            var isElevatorLiftPartCompleted = _movingToLevel2.Equals(info.StateInfo.shortNameHash) &&
+                                Math.Abs(info.StateInfo.normalizedTime - _normalizedSwitchTime) < 1e-2;
+                            
+                            var isElevatorDropPartCompleted = _movingToLevel1.Equals(info.StateInfo.shortNameHash) &&
+                                Math.Abs(info.StateInfo.normalizedTime - _normalizedSwitchTime) < 1e-2;
+                            
                             if (isDoorClosingCompleted)
                                 OnCloseDoorStateExit();
                             else if (isDoorOpeningCompleted)
@@ -172,14 +196,21 @@ namespace _Guardian_of_the_Light.Scripts.Base.Action
                                 OnLiftElevatorCompleted();
                             else if (isElevatorDropCompleted)
                                 OnDropElevatorCompleted();
+
+                            if (isElevatorLiftPartCompleted)
+                                OnElevatorLiftPartCompleted();
+                            else if (isElevatorDropPartCompleted)
+                                OnElevatorDropPartCompleted();
                         },
                         () => Debug.Log($"ElevatorDoor: OnStateUpdateAsObservable -> onCompleted"));
             }
         }
 
+
         [Header("Cameras")] 
         [SerializeField] private GameObject _trackedDollyCamera;
         [SerializeField] private GameObject _virtualCamera;
+        [SerializeField] private float _normalizedSwitchTime = 0.75f;
 
         [Header("Switch Instance")] 
         [SerializeField] private Transform _switch;
