@@ -9,7 +9,7 @@ using _Guardian_of_the_Light.Scripts.Player;
 using _Guardian_of_the_Light.Scripts.Systems;
 using _Guardian_of_the_Light.Scripts.UI.Hint;
 
-namespace _Guardian_of_the_Light.Scripts.Base.Action
+namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 {
     public class ElevatorSwitch : UiHint
     {

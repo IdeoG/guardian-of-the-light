@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using _Guardian_of_the_Light.Scripts.GameLogic.Hint;
 
-namespace _Guardian_of_the_Light.Scripts.UI.Hint
+namespace _Guardian_of_the_Light.Scripts.GameLogic.Sawmill
 {
     public class SawmillCristal : UiHint
     {
