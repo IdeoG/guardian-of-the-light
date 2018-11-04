@@ -9,7 +9,7 @@ namespace _Guardian_of_the_Light.Scripts.Player
     [RequireComponent(typeof(ThirdPersonCharacter))]
     public class ThirdPersonUserControl : MonoBehaviour
     {
-        public static bool LockInput => InputSystem.Instance.CanMove();
+        private static bool LockInput => !InputSystem.Instance.CanMove();
 
         private ThirdPersonCharacter m_Character;
         private Transform m_Cam;

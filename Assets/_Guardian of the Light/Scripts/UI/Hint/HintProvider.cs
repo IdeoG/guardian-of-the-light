@@ -17,7 +17,6 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         private GameObject _gameLogicObject;
         private InventoryEntity _entity;
         private InventorySystem _inventory;
-        private ThirdPersonUserControl _playerControls;
         
         public void OnShowHintButtonPressed(HintType type, string text, InventoryEntity entity)
         {
@@ -84,7 +83,6 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _inventory = InventorySystem.Instance;
             _input = InputSystem.Instance;
             _manager = FindObjectOfType<HintManager>();
-            _playerControls = GameManagerSystem.Instance.Player.GetComponent<ThirdPersonUserControl>();
         }
     }
 }
