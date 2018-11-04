@@ -1,91 +1,93 @@
 using System;
-using System.Collections.Generic;
 using DG.Tweening;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using _Guardian_of_the_Light.Scripts.Systems;
 
 namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 {
     public class ElevatorController : MonoBehaviour
     {
-        private bool _isElevatorRunning;
-
-        #region public
-
         
+        public void LiftElevator()
+        {
+            _isElevatorRunning = true;
+            _input.IsAnimationPlaying = true;
 
-        #endregion
-        #region serializable_fields
-
-        [Header("Cameras")] 
-        [SerializeField] private GameObject _trackedDollyCamera;
-        [SerializeField] private GameObject _virtualCamera;
-        [SerializeField] private float _normalizedSwitchTime = 0.75f;
-
-        [Header("Switch Instance")] 
-        [SerializeField] private Transform _switch;
-
-        #endregion
-        #region private_vars
-
-        private Animator _animator;
+            _switch.DOLocalRotate(Vector3.left * 45, 1.5f)
+                .OnComplete(() =>
+                {
+                    ElevatorLevel++;
+                    _input.IsAnimationPlaying = false;
+                    _animator.SetBool("OpenDoor", false);
+                });
+        }
         
-        private const int CristalId = 3;
-        private const int GearId = 1;
-        private readonly int _movingToLevel1 = Animator.StringToHash("Moving to Level 1");
-        private readonly int _movingToLevel2 = Animator.StringToHash("Moving to Level 2");
-        private readonly int _openingDoorStateHash = Animator.StringToHash("Opening Door");
-        private readonly int _closingDoorStateHash = Animator.StringToHash("Closing Door");
-        
-        #endregion
-        
-        
-        private void OnDoorOpeningAnimationCompleted() {
-            Debug.Log($"{MTime.Now} ElevatorController: OnDoorOpened -> content");
+        public void DropElevator()
+        {
+            _isElevatorRunning = true;
+            _input.IsAnimationPlaying = true;
             
+            _switch.DOLocalRotate(Vector3.left * -45, 1.5f)
+                .OnComplete(() =>
+                {
+                    ElevatorLevel--;
+                    _input.IsAnimationPlaying = false;
+                    _animator.SetBool("OpenDoor", false);
+                });
+        }
+        
+        private void OnDoorOpeningAnimationCompleted()
+        {
+            if (!_isElevatorRunning)
+                _input.IsAnimationPlaying = false;
+            else
+            {
+                SwitchCameraToVirtual();
+
+                _switch.DOLocalRotate(Vector3.zero, 1.5f)
+                    .OnComplete(() =>
+                    {
+                        _isElevatorRunning = false;
+                        _input.IsAnimationPlaying = false;
+                    });
+            }
         }
 
         private void OnDoorClosingAnimationCompleted()
         {
-            Debug.Log($"{MTime.Now} ElevatorController: OnDoorClosed -> content");
+            if (!_isElevatorRunning)
+                _input.IsAnimationPlaying = false;
+            else
+                _animator.SetInteger("Level", ElevatorLevel);
         }
 
         private void OnElevatorLiftAnimationPartCompleted()
         {
-            Debug.Log($"{MTime.Now} ElevatorController: OnElevatorLiftAnimationPartCompleted -> content");
+            SwitchCameraToDolly();
+            _input.IsAnimationPlaying = true;
         }
 
         private void OnElevatorDropAnimationPartCompleted()
         {
-            Debug.Log($"{MTime.Now} ElevatorController: OnElevatorDropAnimationPartCompleted -> content");
+            SwitchCameraToDolly();
+            _input.IsAnimationPlaying = true;
         }
 
         private void OnElevatorLiftAnimationCompleted()
         {
-            Debug.Log($"{MTime.Now} ElevatorController: OnElevatorLiftAnimationCompleted -> content");
+            _animator.SetBool("OpenDoor", true);
         }
 
         private void OnElevatorDropAnimationCompleted()
         {
-            Debug.Log($"{MTime.Now} ElevatorController: OnElevatorDropAnimationCompleted -> content");
+            _animator.SetBool("OpenDoor", true);
         }
 
         private void OnBrokenMechanismAnimationCompleted()
         {
-            Debug.Log($"{MTime.Now} ElevatorController: OnBrokenMechanismAnimationCompleted -> content");
-        }
-        
-        private ElevatorSwitchState GetMechanismState()
-        {
-            var inventory = InventorySystem.Instance;
-            var isCristalTook = inventory.GetItemById(CristalId).IsTook;
-            var isGearTook = inventory.GetItemById(GearId).IsTook;
-
-            if (!isCristalTook) return ElevatorSwitchState.NoCristal;
-            if (!isGearTook) return ElevatorSwitchState.NoGear;
-
-            return ElevatorSwitchState.Ready;
+            
         }
       
         private void SwitchCameraToDolly()
@@ -156,9 +158,44 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         private void Awake()
         {
             _animator = GetComponentInParent<Animator>();
+            _input = InputSystem.Instance;
             
             InitializeAnimationTriggers();
         }
+        
+        
+
+        #region public
+
+        public int ElevatorLevel = 1;
+
+        #endregion
+        #region serializable_fields
+
+        [Header("Cameras")] 
+        [SerializeField] private GameObject _trackedDollyCamera;
+        [SerializeField] private GameObject _virtualCamera;
+        [SerializeField] private float _normalizedSwitchTime = 0.75f;
+
+        [Header("GameObject Instances")] 
+        [SerializeField] private Transform _switch;
+        [SerializeField] private GameObject _gear;
+        [SerializeField] private GameObject _cristal;
+
+        #endregion
+        #region private_vars
+
+        private Animator _animator;
+        private InputSystem _input;
+        private bool _isElevatorRunning;
+        
+        private readonly int _movingToLevel1 = Animator.StringToHash("Moving to Level 1");
+        private readonly int _movingToLevel2 = Animator.StringToHash("Moving to Level 2");
+        private readonly int _openingDoorStateHash = Animator.StringToHash("Opening Door");
+        private readonly int _closingDoorStateHash = Animator.StringToHash("Closing Door");
+        
+        #endregion
+
     }
     
     internal enum ElevatorSwitchState

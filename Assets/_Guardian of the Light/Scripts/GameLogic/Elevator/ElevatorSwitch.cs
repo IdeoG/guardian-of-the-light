@@ -15,21 +15,21 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
     {
         public override void OnItemChosen(int position)
         {
-            if (_elevatorLevel == 1 && position == 1)
+            if (_elevatorController.ElevatorLevel == 1 && position == 1)
                 _controller.OnShowHintButtonPressed(HintType.Empty, _badSwitchDownHintText, null);
-            else if (_elevatorLevel == 2 && position == 0)
+            else if (_elevatorController.ElevatorLevel == 2 && position == 0)
                 _controller.OnShowHintButtonPressed(HintType.Empty, _badSwitchUpHintText, null);
-            else if (_elevatorLevel == 1)
-                LiftElevator();
-            else if (_elevatorLevel == 2)
-                DropElevator();
+            else if (_elevatorController.ElevatorLevel == 1)
+                _elevatorController.LiftElevator();
+            else if (_elevatorController.ElevatorLevel == 2)
+                _elevatorController.DropElevator();
             else
                 throw new ArgumentOutOfRangeException();
         }
 
         protected override void OnKeyActionPressedDown()
         {
-            switch (GetMechanismState())
+            switch (GetElevatorSwitchState())
             {
                 case ElevatorSwitchState.NoCristal:
                     _hintText = _noCristalHintText;
@@ -50,90 +50,8 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
             base.OnKeyActionPressedDown();
         }
         
-        private void LiftElevator()
-        {
-            _isAnimationRunning = true;
-            _input.IsAnimationPlaying = true;
-
-            _switch.DOLocalRotate(Vector3.left * 45, 1.5f)
-                .OnComplete(() =>
-                {
-                    _elevatorLevel++;
-                    
-                    _input.IsAnimationPlaying = false;
-
-                    _animator.SetBool("OpenDoor", false);
-                });
-        }
         
-        private void DropElevator()
-        {
-            _isAnimationRunning = true;
-            _input.IsAnimationPlaying = true;
-            
-            _switch.DOLocalRotate(Vector3.left * -45, 1.5f)
-                .OnComplete(() =>
-                {
-                    _elevatorLevel--;
-
-                    _input.IsAnimationPlaying = false;
-                    
-                    _animator.SetBool("OpenDoor", false);
-                });
-        }
-
-        private void OnCloseDoorStateExit()
-        {
-            _animator.SetInteger("Level", _elevatorLevel);
-        }
-
-        private void OnElevatorDropPartCompleted()
-        {
-            SwitchCameraToDolly();
-            _input.IsAnimationPlaying = true;
-        }
-
-        private void OnElevatorLiftPartCompleted()
-        {
-            SwitchCameraToDolly();
-            _input.IsAnimationPlaying = true;
-        }
-
-        private void OnDropElevatorCompleted()
-        {
-            _animator.SetBool("OpenDoor", true);
-        }
-
-        private void OnLiftElevatorCompleted()
-        {
-            _animator.SetBool("OpenDoor", true);
-        }
-
-        private void OnOpenDoorStateExit()
-        {
-            SwitchCameraToVirtual();
-
-            _switch.DOLocalRotate(Vector3.zero, 1.5f)
-                .OnComplete(() =>
-                {
-                    _isAnimationRunning = false;
-                    _input.IsAnimationPlaying = false;
-                });
-        }
-        
-        private void SwitchCameraToDolly()
-        {
-            _trackedDollyCamera.SetActive(true);
-            _virtualCamera.SetActive(false);
-        }
-
-        private void SwitchCameraToVirtual()
-        {
-            _virtualCamera.SetActive(true);
-            _trackedDollyCamera.SetActive(false);
-        }
-        
-        private ElevatorSwitchState GetMechanismState()
+        private ElevatorSwitchState GetElevatorSwitchState()
         {
             var inventory = InventorySystem.Instance;
             var isCristalTook = inventory.GetItemById(CristalId).IsTook;
@@ -149,62 +67,9 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         {
             base.Awake();
             
-            _animator = transform.parent.GetComponentInParent<Animator>();
-            _input = InputSystem.Instance;
-            _playerControls = GameManagerSystem.Instance.Player.GetComponent<ThirdPersonUserControl>();
-
-            var triggers = _animator.GetBehaviours<ObservableStateMachineTrigger>();
-
-            foreach (var trigger in triggers)
-            {
-                trigger.OnStateUpdateAsObservable()
-                    .Subscribe(info =>
-                        {   
-                            var isDoorClosingCompleted = _closingDoorStateHash.Equals(info.StateInfo.shortNameHash) &&
-                                Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2 && _isAnimationRunning;
-
-                            var isDoorOpeningCompleted = _openingDoorStateHash.Equals(info.StateInfo.shortNameHash) &&
-                                Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2 && _isAnimationRunning;
-
-                            var isElevatorLiftCompleted = _movingToLevel2.Equals(info.StateInfo.shortNameHash) &&
-                                Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2;
-
-                            var isElevatorDropCompleted = _movingToLevel1.Equals(info.StateInfo.shortNameHash) &&
-                                Math.Abs(info.StateInfo.normalizedTime - 1.0f) < 1e-2;
-
-                            var isElevatorLiftPartCompleted = _movingToLevel2.Equals(info.StateInfo.shortNameHash) &&
-                                Math.Abs(info.StateInfo.normalizedTime - _normalizedSwitchTime) < 1e-2;
-                            
-                            var isElevatorDropPartCompleted = _movingToLevel1.Equals(info.StateInfo.shortNameHash) &&
-                                Math.Abs(info.StateInfo.normalizedTime - _normalizedSwitchTime) < 1e-2;
-                            
-                            if (isDoorClosingCompleted)
-                                OnCloseDoorStateExit();
-                            else if (isDoorOpeningCompleted)
-                                OnOpenDoorStateExit();
-
-                            if (isElevatorLiftCompleted)
-                                OnLiftElevatorCompleted();
-                            else if (isElevatorDropCompleted)
-                                OnDropElevatorCompleted();
-
-                            if (isElevatorLiftPartCompleted)
-                                OnElevatorLiftPartCompleted();
-                            else if (isElevatorDropPartCompleted)
-                                OnElevatorDropPartCompleted();
-                        },
-                        () => Debug.Log($"ElevatorDoor: OnStateUpdateAsObservable -> onCompleted"));
-            }
+            _elevatorController = GetComponentInParent<ElevatorController>();
         }
 
-
-        [Header("Cameras")] 
-        [SerializeField] private GameObject _trackedDollyCamera;
-        [SerializeField] private GameObject _virtualCamera;
-        [SerializeField] private float _normalizedSwitchTime = 0.75f;
-
-        [Header("Switch Instance")] 
-        [SerializeField] private Transform _switch;
 
         [Header("Main hint texts")] 
         [TextArea] [SerializeField] private string _noCristalHintText;
@@ -215,18 +80,10 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         [SerializeField] private string _badSwitchDownHintText;
         [SerializeField] private string _badSwitchUpHintText;
 
-        private bool _isAnimationRunning;
-        private int _elevatorLevel = 1;
-        private Animator _animator;
-        private InputSystem _input;
-        private ThirdPersonUserControl _playerControls;
+        private ElevatorController _elevatorController;
 
         private const int CristalId = 3;
         private const int GearId = 1;
-        private readonly int _movingToLevel1 = Animator.StringToHash("Moving to Level 1");
-        private readonly int _movingToLevel2 = Animator.StringToHash("Moving to Level 2");
-        private readonly int _openingDoorStateHash = Animator.StringToHash("Opening Door");
-        private readonly int _closingDoorStateHash = Animator.StringToHash("Closing Door");
     }
 
 }
