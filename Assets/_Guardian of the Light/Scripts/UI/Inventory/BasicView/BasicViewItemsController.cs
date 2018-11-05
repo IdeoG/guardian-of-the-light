@@ -82,6 +82,15 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
         Effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
         Effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
     }
+    
+    private void OnKeyUsePressedDown()
+    {
+        var character = GameManagerSystem.Instance.Player.GetComponent<ThirdPersonCharacter>().CollidedGameObject;
+        if (character != null)
+        {
+            character.GetComponent<IInventoryUseAction>().OnInventoryUseAction(_baseItems[_baseItemIndex].Id);
+        }
+    }
 
     private async void Debounce()
     {
@@ -141,15 +150,6 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
         _keyUsePressDown = InputSystem.Instance.KeyUsePressedDown
             .Subscribe(_ => OnKeyUsePressedDown())
             .AddTo(this);
-    }
-
-    private void OnKeyUsePressedDown()
-    {
-        var character = GameManagerSystem.Instance.Player.GetComponent<ThirdPersonCharacter>().CollidedGameObject;
-        if (character != null)
-        {
-            character.GetComponent<IInventoryUseAction>().OnInventoryUseAction();
-        }
     }
 
     private void OnDisable()

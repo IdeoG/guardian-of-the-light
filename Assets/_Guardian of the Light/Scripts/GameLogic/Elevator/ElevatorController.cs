@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using UniRx;
 using UniRx.Triggers;
@@ -189,6 +188,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
                     .Where(info => info.LayerIndex == 2)
                     .Where(info => _playingBrokenMechanism.Equals(info.StateInfo.shortNameHash))
                     .Subscribe(_ => OnBrokenMechanismAnimationCompleted());
+                
             }
         }
 

@@ -63,10 +63,14 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
             SwitchToClearShotCamera();
         }
 
-        public void OnInventoryUseAction()
+        public bool OnInventoryUseAction(int itemId)
         {
+            if (ElevatorCristalId != itemId)
+                return false;
+            
             _cristal.SetActive(true);
             _elevatorController.IsCristalPlacedInSwitch = true;
+            return true;
         }
         
         private void SwitchToInspectCamera()
@@ -124,6 +128,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 
         private ElevatorController _elevatorController;
         private bool _isFirstTry = true;
+        private const int ElevatorCristalId = 3;
 
         #endregion
 
