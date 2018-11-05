@@ -39,9 +39,22 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
                 });
         }
 
-        public void PlayBrokenMechanismAnimation()
+        public void PlayBrokenMechanismSwitchUpAnimation()
         {
-            throw new NotImplementedException();
+            _switch.DOLocalRotate(Vector3.left * 45, 1.5f)
+                .OnComplete(() =>
+                {
+                    _animator.SetTrigger("PlayMechanism");
+                });
+        }
+        
+        public void PlayBrokenMechanismSwitchDownAnimation()
+        {
+            _switch.DOLocalRotate(Vector3.left * -45, 1.5f)
+                .OnComplete(() =>
+                {
+                    _animator.SetTrigger("PlayMechanism");
+                });
         }
         
         private void OnDoorOpeningAnimationCompleted()
@@ -94,7 +107,8 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 
         private void OnBrokenMechanismAnimationCompleted()
         {
-            throw new NotImplementedException();
+            Debug.Log($"{MTime.Now} ElevatorController: OnBrokenMechanismAnimationCompleted -> content");
+            _switch.DOLocalRotate(Vector3.zero, 1.5f);
         }
       
         private void SwitchCameraToDolly()
@@ -170,6 +184,11 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
                             OnElevatorLiftAnimationPartCompleted();
                             
                     });
+                
+                trigger.OnStateExitAsObservable()
+                    .Where(info => info.LayerIndex == 2)
+                    .Where(info => _playingBrokenMechanism.Equals(info.StateInfo.shortNameHash))
+                    .Subscribe(_ => OnBrokenMechanismAnimationCompleted());
             }
         }
 
@@ -216,6 +235,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         private readonly int _movingToLevel2 = Animator.StringToHash("Moving to Level 2");
         private readonly int _openingDoorStateHash = Animator.StringToHash("Opening Door");
         private readonly int _closingDoorStateHash = Animator.StringToHash("Closing Door");
+        private readonly int _playingBrokenMechanism = Animator.StringToHash("Playing Broken Mechanism");
         
         #endregion
 

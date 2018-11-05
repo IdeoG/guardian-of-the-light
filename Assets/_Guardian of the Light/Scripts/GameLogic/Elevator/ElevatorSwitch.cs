@@ -30,10 +30,10 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 
             if (_elevatorController.IsCristalPlacedInSwitch && !_elevatorController.IsGearPlacedInMechanism)
             {
-                if (position != 2)
-                {
-                    _elevatorController.PlayBrokenMechanismAnimation();
-                }
+                if (position == 0)
+                    _elevatorController.PlayBrokenMechanismSwitchUpAnimation();
+                else if (position == 1)
+                    _elevatorController.PlayBrokenMechanismSwitchDownAnimation();
                 else
                 {
                     PlacePlayerNearCristal();
