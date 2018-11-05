@@ -30,16 +30,16 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 
             if (_elevatorController.IsCristalPlacedInSwitch && !_elevatorController.IsGearPlacedInMechanism)
             {
-                if (position == 0)
-                    _elevatorController.PlayBrokenMechanismSwitchUpAnimation();
-                else if (position == 1)
-                    _elevatorController.PlayBrokenMechanismSwitchDownAnimation();
-                else
+                switch (position)
                 {
-                    PlacePlayerNearCristal();
-                    SwitchToInspectCamera();
-                    
-                    _controller.OnShowHintButtonPressed(HintType.Skip, _inspectSwitchText, gameObject);
+                    case 0:
+                        _elevatorController.PlayBrokenMechanismSwitchUpAnimation();
+                        break;
+                    case 1:
+                        _elevatorController.PlayBrokenMechanismSwitchDownAnimation();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
 
@@ -94,7 +94,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         protected override void OnKeyActionPressedDown()
         {
             _controller.OnShowHintButtonPressed(HintType.MultipleChoice, 
-                _isFirstTry ? _readyHintText.Take(2).ToList() : _readyHintText, gameObject);
+                _isFirstTry || !IsElevatorBroken ? _readyHintText.Take(2).ToList() : _readyHintText, gameObject);
         }
         
         
@@ -130,6 +130,9 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         private bool _isFirstTry = true;
         private const int ElevatorCristalId = 3;
 
+        private bool IsElevatorBroken =>
+            !_elevatorController.IsCristalPlacedInSwitch || !_elevatorController.IsGearPlacedInMechanism;
+        
         #endregion
 
     }
