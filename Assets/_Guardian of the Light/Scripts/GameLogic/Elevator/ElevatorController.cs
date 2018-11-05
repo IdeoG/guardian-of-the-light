@@ -243,17 +243,9 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         private readonly int _openingDoorStateHash = Animator.StringToHash("Opening Door");
         private readonly int _closingDoorStateHash = Animator.StringToHash("Closing Door");
         private readonly int _playingBrokenMechanism = Animator.StringToHash("Playing Broken Mechanism");
-        private readonly int _playingMechanism = Animator.StringToHash("Playing Mechanism");
         
         #endregion
 
-    }
-    
-    internal enum ElevatorSwitchState
-    {
-        NoCristal,
-        NoGear,
-        Ready
     }
     
 }
