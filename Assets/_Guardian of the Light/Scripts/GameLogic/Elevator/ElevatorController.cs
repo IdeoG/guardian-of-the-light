@@ -47,19 +47,13 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         public void PlayBrokenMechanismSwitchUpAnimation()
         {
             _switch.DOLocalRotate(Vector3.left * 45, 1.5f)
-                .OnComplete(() =>
-                {
-                    _animator.SetTrigger("PlayMechanism");
-                });
+                .OnComplete(() => _animator.SetTrigger("PlayMechanism") );
         }
         
         public void PlayBrokenMechanismSwitchDownAnimation()
         {
             _switch.DOLocalRotate(Vector3.left * -45, 1.5f)
-                .OnComplete(() =>
-                {
-                    _animator.SetTrigger("PlayMechanism");
-                });
+                .OnComplete(() =>  _animator.SetTrigger("PlayMechanism") );
         }
         
         private void OnDoorOpeningAnimationCompleted()
@@ -74,7 +68,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
                 _switch.DOLocalRotate(Vector3.zero, 1.5f)
                     .OnComplete(() =>
                     {
-                        _animator.SetTrigger("StopMechanism");
+                        _animator.Play("Mechanism Idle", 2);
                         _isElevatorRunning = false;
                     });
             }
