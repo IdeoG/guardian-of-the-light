@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class ThirdPersonCharacter : MonoBehaviour
 {
+    public GameObject CollidedGameObject;
+    
     private const float GravityMultiplier = 2f;
     private const float JumpPower = 5f;
     [SerializeField] private  float m_GroundCheckDistance = 10f;
@@ -174,5 +176,15 @@ public class ThirdPersonCharacter : MonoBehaviour
             m_GroundNormal = Vector3.up;
             m_Animator.applyRootMotion = false;
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        CollidedGameObject = other.gameObject;
+    }
+    
+    private void OnTriggerExit(Collider other)
+    {
+        CollidedGameObject = null;
     }
 }

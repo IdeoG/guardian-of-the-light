@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UniRx;
 using UnityEngine;
+using _Guardian_of_the_Light.Scripts.Base.Inventory;
+using _Guardian_of_the_Light.Scripts.Systems;
 
 [RequireComponent(typeof(BasicViewItemsEffects))]
 public class BasicViewItemsController : MonoBehaviour, IItemsController
@@ -80,6 +82,15 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
         Effects.SetLightingPosition(_placeholders[_baseItemIndex].position);
         Effects.SetArrowsVisibility(_itemIndex - 2 > 0, _itemIndex + 2 < _items.Count - 1);
     }
+    
+    private void OnKeyUsePressedDown()
+    {
+        var character = GameManagerSystem.Instance.Player.GetComponent<ThirdPersonCharacter>().CollidedGameObject;
+        if (character != null)
+        {
+            character.GetComponent<IInventoryUseAction>().OnInventoryUseAction(_baseItems[_baseItemIndex].Id);
+        }
+    }
 
     private async void Debounce()
     {
@@ -135,12 +146,17 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
         _rightArrowPressDown = InputSystem.Instance.KeyRightArrowPressed
             .Subscribe(_ => OnRightArrowPressed())
             .AddTo(this);
+        
+        _keyUsePressDown = InputSystem.Instance.KeyUsePressedDown
+            .Subscribe(_ => OnKeyUsePressedDown())
+            .AddTo(this);
     }
 
     private void OnDisable()
     {
         _leftArrowPressDown.Dispose();
         _rightArrowPressDown.Dispose();
+        _keyUsePressDown.Dispose();
 
         ClearVisibleItems();
     }
@@ -163,6 +179,7 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
 
     private IDisposable _leftArrowPressDown;
     private IDisposable _rightArrowPressDown;
+    private IDisposable _keyUsePressDown;
 
     private BasicViewItemsEffects _effects;
 

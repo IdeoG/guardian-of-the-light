@@ -24,8 +24,9 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
             SceneBundleSystem.SpawnPointNumber = _spawnPointNumber;   
             SceneManager.LoadSceneAsync(_sceneName)
                 .AsObservable()
-                .DoOnCompleted(() => _vignette.Expand())
-                .Subscribe(operation => Debug.Log($"Portal: operation.progress -> {operation.progress}"));
+                .Subscribe(
+                    operation => Debug.Log($"Portal: operation.progress -> {operation.progress}"),
+                    () => _vignette.Expand());
 
         }
 

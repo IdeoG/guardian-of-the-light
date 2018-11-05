@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-using UnityEngine.Assertions;
 using _Guardian_of_the_Light.Scripts.Base.Inventory;
 using _Guardian_of_the_Light.Scripts.UI.Hint;
 using _Guardian_of_the_Light.Scripts.UI.Hint.interfaces;
@@ -9,26 +9,39 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
     [RequireComponent(typeof(InventoryEntity))]
     public class UiHint : BaseAction, IUiHint
     {
-        [SerializeField] private HintType _hintType;
-        [TextArea] [SerializeField] private string _hintText;
+        [SerializeField] protected HintType _hintType;
+        [TextArea] [SerializeField] protected string _hintText;
             
-        private IHintController _controller;
-        private InventoryEntity _entity;
+        protected IHintController _controller;
+        protected InventoryEntity _entity;
 
         public virtual void DestroyItem()
         {
             Destroy(gameObject);
         }
-        
+
+        public virtual void OnItemChosen(int position)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void OnSkipChosen()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void OnKeyActionPressedDown()
         {
-            _controller.OnShowHintButtonPressed(_hintType, _hintText, _entity);
+            if (_hintType == HintType.YesNo)
+                _controller.OnShowHintButtonPressed(_hintType, _hintText, _entity);
+            else
+                _controller.OnShowHintButtonPressed(_hintType, _hintText, gameObject);
         }
 
         protected virtual void Awake()
         {
             _entity = GetComponent<InventoryEntity>();
-            _controller = FindObjectOfType<HintController>().GetComponent<HintController>();          
+            _controller = FindObjectOfType<HintProvider>().GetComponent<HintProvider>();          
         }
     }
 }

@@ -1,22 +1,27 @@
 ﻿using UniRx;
 using UnityEngine;
-using UnityStandardAssets.Characters.ThirdPerson;
+using _Guardian_of_the_Light.Scripts.Player;
+using _Guardian_of_the_Light.Scripts.Systems;
 
 public class GameManagerSystem : MonoBehaviour
 {
-    [Header("Canvases")] [SerializeField] private GameObject _canvasInventoryView;
-
-    private InventoryCanvas _inventoryCanvas;
-
-
-    [Header("Player")] [SerializeField] public GameObject Player;
     public static GameManagerSystem Instance { get; private set; }
+    
+    [Header("Canvases")] 
+    [SerializeField] private GameObject _canvasInventoryView;
 
+    [Header("Player")] 
+    [SerializeField] public GameObject Player;
+    
+    private InventoryCanvas _inventoryCanvas;  
+    private InputSystem _inputSystem;  
+    
     private void Awake()
     {
         Instance = this;
 
         _inventoryCanvas = _canvasInventoryView.GetComponent<InventoryCanvas>();
+        _inputSystem = InputSystem.Instance;
     }
 
     private void Start()
@@ -33,15 +38,15 @@ public class GameManagerSystem : MonoBehaviour
     private void ShowInventoryView()
     {
         if (InventorySystem.Instance.GetTookItems().Count == 0) return;
-
-        Player.GetComponent<ThirdPersonUserControl>().LockInput = true;
+        
+        _inputSystem.IsUiActive = true;
         _inventoryCanvas.Show();
     }
 
     private void HideInventoryView()
     {
         _inventoryCanvas.Hide();
-        Player.GetComponent<ThirdPersonUserControl>().LockInput = false;
+        _inputSystem.IsUiActive = false;
     }
 
     private void OnKeyInventoryPressedDown()
@@ -59,4 +64,5 @@ public class GameManagerSystem : MonoBehaviour
 
         HideInventoryView();
     }
+    
 }

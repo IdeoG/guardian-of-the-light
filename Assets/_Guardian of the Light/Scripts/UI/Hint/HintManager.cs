@@ -1,38 +1,53 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
+using _Guardian_of_the_Light.Scripts.Extensions;
+using _Guardian_of_the_Light.Scripts.Systems;
 using _Guardian_of_the_Light.Scripts.UI.Hint.interfaces;
 
 namespace _Guardian_of_the_Light.Scripts.UI.Hint
 {
     public class HintManager : MonoBehaviour, IHintManager
     {
-        [SerializeField] private int EmptyHintActiveTimeMs;
-        
-        [Header("Panels")]
+        [SerializeField] private int _emptyHintActiveTimeMs;
+
+        [Header("Panels")] 
         [SerializeField] private GameObject _yesNoHintPanel;
         [SerializeField] private GameObject _skipHintPanel;
         [SerializeField] private GameObject _emptyHintPanel;
-        [SerializeField] private GameObject _temporaryButtonHintPanel;
+        [SerializeField] private GameObject _multipleChoicePanel;
 
-        [Header("Extra Texts")]
+        [Header("Extra Texts")] 
         [SerializeField] private Text _yesNoHintText;
         [SerializeField] private Text _skipHintText;
         [SerializeField] private Text _emptyHintText;
+        [SerializeField] private List<Text> _multipleChoiceText;
+
+        [Header("Extra Tools")]
+        [SerializeField] private List<GameObject> _multipleChoiceCursor;
         
         private IDisposable _keyYesPressedDown;
         private IDisposable _keyNoPressedDown;
         private IDisposable _keySkipPressedDown;
         private IDisposable _keyTemporaryButtonPressedDown;
+        
+        private IDisposable _keyConfirmPressedDown;
+        private IDisposable _keyExitPressedDown;
+        private IDisposable _keyUpPressedDown;
+        private IDisposable _keyDownPressedDown;
 
         private IYesNoHint _iYesNoHint;
         private IEmptyHint _iEmptyHint;
         private ISkipHint _iSkipHint;
-        private ITemporaryButtonHint _iTemporaryButtonHint;
-        
-        
+        private IMultipleChoiceHint _iMultipleChoiceHint;
+
+        private int _choicesCount;
+        private int _currentChoice;
+
+
         public void ShowHint(HintType type, string text)
         {
             switch (type)
@@ -46,28 +61,105 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                 case HintType.Skip:
                     ShowSkipHintPanel(text);
                     break;
-                case HintType.TemporaryButton:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
-        
+
         public void ShowHint(HintType type, KeyCode keyCode)
         {
             switch (type)
             {
-                case HintType.YesNo:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                case HintType.Empty:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                case HintType.Skip:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 case HintType.TemporaryButton:
                     throw new NotImplementedException(nameof(type));
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+        }
+
+        public void ShowHint(HintType type, List<string> texts)
+        {
+            switch (type)
+            {
+                case HintType.MultipleChoice:
+                    ShowMultipleChoiceHintPanel(texts);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        private void ShowMultipleChoiceHintPanel(List<string> texts)
+        {
+            _multipleChoicePanel.SetActive(true);
+            
+            foreach (var cursor in _multipleChoiceCursor)
+                cursor.SetActive(false);
+            
+            foreach (var text in _multipleChoiceText)
+                text.gameObject.SetActive(false);
+
+            _currentChoice = 0;
+            _choicesCount = texts.Count;
+            for (var ind = 0; ind < _choicesCount; ++ind)
+            {
+                _multipleChoiceText[ind].gameObject.SetActive(true);
+                _multipleChoiceText[ind].text = texts[ind];
+                _multipleChoiceText[ind].color = _multipleChoiceText[ind].color.With(a: 0.5f);
+            }
+            
+            _multipleChoiceCursor[_currentChoice].SetActive(true);
+            _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 1f);
+            
+            _keyExitPressedDown = InputSystem.Instance.KeyExitHintPressedDown
+                .Subscribe(_ =>
+                {
+                    _iMultipleChoiceHint.OnExitPressed();
+                    _multipleChoicePanel.SetActive(false);
+                    
+                    _keyExitPressedDown.Dispose();
+                    _keyConfirmPressedDown.Dispose();
+                    _keyUpPressedDown.Dispose();
+                    _keyDownPressedDown.Dispose();
+                }).AddTo(this);
+            
+            _keyConfirmPressedDown = InputSystem.Instance.KeyConfirmHintPressedDown
+                .Subscribe(_ =>
+                {
+                    _iMultipleChoiceHint.OnConfirmPressed(_currentChoice);
+                    _multipleChoicePanel.SetActive(false);
+                    
+                    _keyExitPressedDown.Dispose();
+                    _keyConfirmPressedDown.Dispose();
+                    _keyUpPressedDown.Dispose();
+                    _keyDownPressedDown.Dispose();
+                }).AddTo(this);
+            
+            _keyUpPressedDown = InputSystem.Instance.KeyUpArrowPressedDown
+                .Subscribe(_ =>
+                {
+                    if (_currentChoice == 0) return;
+                    
+                    _multipleChoiceCursor[_currentChoice].SetActive(false);
+                    _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 0.5f);
+                    _currentChoice--;
+                    
+                    _multipleChoiceCursor[_currentChoice].SetActive(true);
+                    _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 1f);
+                }).AddTo(this);
+            
+            _keyDownPressedDown = InputSystem.Instance.KeyDownArrowPressedDown
+                .Subscribe(_ =>
+                {
+                    if (_currentChoice == _choicesCount - 1) return;
+                    
+                    _multipleChoiceCursor[_currentChoice].SetActive(false);
+                    _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 0.5f);
+                    _currentChoice++;
+                    
+                    _multipleChoiceCursor[_currentChoice].SetActive(true);
+                    _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 1f);
+                }).AddTo(this);
         }
 
         private void ShowSkipHintPanel(string text)
@@ -120,20 +212,20 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
 
         private async void DelayedHideEmptyHintPanel()
         {
-            await Task.Delay(EmptyHintActiveTimeMs);
-            
+            await Task.Delay(_emptyHintActiveTimeMs);
+
             _iEmptyHint.OnEmptyExpired();
             _emptyHintPanel.SetActive(false);
         }
-        
+
         private void Awake()
         {
-            var controller = FindObjectOfType<HintController>().GetComponent<HintController>();
-            
+            var controller = FindObjectOfType<HintProvider>().GetComponent<HintProvider>();
+
             _iYesNoHint = controller;
             _iEmptyHint = controller;
             _iSkipHint = controller;
-            _iTemporaryButtonHint = controller;
+            _iMultipleChoiceHint = controller;
         }
     }
 }

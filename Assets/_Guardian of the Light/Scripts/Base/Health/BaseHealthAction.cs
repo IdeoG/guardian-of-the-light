@@ -1,6 +1,7 @@
 using System;
 using UniRx;
 using UnityEngine;
+using _Guardian_of_the_Light.Scripts.Systems;
 
 [RequireComponent(typeof(Health), typeof(BoxCollider))]
 public abstract class BaseHealthAction : MonoBehaviour

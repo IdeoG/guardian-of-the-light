@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using _Guardian_of_the_Light.Scripts.Player;
+using _Guardian_of_the_Light.Scripts.Systems;
 
 [RequireComponent(typeof(Animator))]
 public class Door : BaseAction
@@ -8,7 +10,6 @@ public class Door : BaseAction
     public void OnAnimationFinished()
     {
         InputSystem.Instance.IsAnimationPlaying = false;
-        GameManagerSystem.Instance.Player.GetComponent<ThirdPersonUserControl>().LockInput = false;
     }
     
     protected override void OnKeyActionPressedDown()
@@ -22,7 +23,6 @@ public class Door : BaseAction
         _animator.SetBool("isOpenDoor", !doorState);
 
         InputSystem.Instance.IsAnimationPlaying = true;
-        GameManagerSystem.Instance.Player.GetComponent<ThirdPersonUserControl>().LockInput = true;
 
         var colliders = GetComponents<Collider>();
         foreach (var collider in colliders)
