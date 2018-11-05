@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UniRx;
 using UniRx.Triggers;
@@ -36,6 +37,11 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
                     _input.IsAnimationPlaying = false;
                     _animator.SetBool("OpenDoor", false);
                 });
+        }
+
+        public void PlayBrokenMechanismAnimation()
+        {
+            throw new NotImplementedException();
         }
         
         private void OnDoorOpeningAnimationCompleted()
@@ -88,7 +94,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 
         private void OnBrokenMechanismAnimationCompleted()
         {
-            
+            throw new NotImplementedException();
         }
       
         private void SwitchCameraToDolly()
@@ -180,6 +186,8 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         #region public
 
         public int ElevatorLevel = 1;
+        public bool IsGearPlacedInMechanism;
+        public bool IsCristalPlacedInSwitch;
 
         #endregion
         #region serializable_fields
@@ -193,7 +201,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         [SerializeField] private Transform _switch;
         [SerializeField] private GameObject _gear;
         [SerializeField] private GameObject _cristal;
-
+        
         #endregion
         #region private_vars
 

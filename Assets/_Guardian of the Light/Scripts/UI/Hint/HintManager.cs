@@ -19,7 +19,6 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         [SerializeField] private GameObject _skipHintPanel;
         [SerializeField] private GameObject _emptyHintPanel;
         [SerializeField] private GameObject _multipleChoicePanel;
-        [SerializeField] private GameObject _temporaryButtonHintPanel;
 
         [Header("Extra Texts")] 
         [SerializeField] private Text _yesNoHintText;
@@ -43,7 +42,6 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         private IYesNoHint _iYesNoHint;
         private IEmptyHint _iEmptyHint;
         private ISkipHint _iSkipHint;
-        private ITemporaryButtonHint _iTemporaryButtonHint;
         private IMultipleChoiceHint _iMultipleChoiceHint;
 
         private int _choicesCount;
@@ -137,7 +135,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                     _keyDownPressedDown.Dispose();
                 }).AddTo(this);
             
-            _keyUpPressedDown = InputSystem.Instance.KeyUpArrowPressed
+            _keyUpPressedDown = InputSystem.Instance.KeyUpArrowPressedDown
                 .Subscribe(_ =>
                 {
                     if (_currentChoice == 0) return;
@@ -150,7 +148,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                     _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 1f);
                 }).AddTo(this);
             
-            _keyDownPressedDown = InputSystem.Instance.KeyDownArrowPressed
+            _keyDownPressedDown = InputSystem.Instance.KeyDownArrowPressedDown
                 .Subscribe(_ =>
                 {
                     if (_currentChoice == _choicesCount - 1) return;
@@ -227,7 +225,6 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _iYesNoHint = controller;
             _iEmptyHint = controller;
             _iSkipHint = controller;
-            _iTemporaryButtonHint = controller;
             _iMultipleChoiceHint = controller;
         }
     }

@@ -34,6 +34,8 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         public IObservable<Unit> KeyLeftArrowPressed { get; private set; }
         public IObservable<Unit> KeyRightArrowPressed { get; private set; }
 
+        public IObservable<Unit> KeyUpArrowPressedDown { get; private set; }
+        public IObservable<Unit> KeyDownArrowPressedDown { get; private set; }
         public IObservable<Unit> KeyLeftArrowPressedDown { get; private set; }
         public IObservable<Unit> KeyRightArrowPressedDown { get; private set; }
 
@@ -114,6 +116,8 @@ namespace _Guardian_of_the_Light.Scripts.Systems
             KeyLeftArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.A));
             KeyRightArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.D));
 
+            KeyUpArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.W));
+            KeyDownArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.S));
             KeyLeftArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.A));
             KeyRightArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.D));
         

@@ -25,6 +25,13 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
             _input.IsUiActive = true;
         }
 
+        public void OnShowHintButtonPressed(HintType type, string text, GameObject gameLogicObject)
+        {   
+            _gameLogicObject = gameLogicObject;
+            _manager.ShowHint(type, text);
+            _input.IsUiActive = true;
+        }
+
         public void OnShowHintButtonPressed(HintType type, List<string> texts, GameObject gameLogicObject)
         {
             _gameLogicObject = gameLogicObject;
@@ -40,6 +47,8 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
         public void OnSkipPressed()
         {
             _input.IsUiActive = false;
+            
+            _gameLogicObject.GetComponent<IUiHint>().OnSkipChosen();
         }
 
         public void OnConfirmPressed(int position)

@@ -24,7 +24,12 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
         {
             throw new NotImplementedException();
         }
-        
+
+        public virtual void OnSkipChosen()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void OnKeyActionPressedDown()
         {
             _controller.OnShowHintButtonPressed(_hintType, _hintText, _entity);

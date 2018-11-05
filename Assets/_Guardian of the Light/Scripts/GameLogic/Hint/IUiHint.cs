@@ -4,5 +4,6 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
     {
         void DestroyItem();
         void OnItemChosen(int position);
+        void OnSkipChosen();
     }
 }
