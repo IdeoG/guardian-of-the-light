@@ -32,7 +32,10 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Hint
 
         protected override void OnKeyActionPressedDown()
         {
-            _controller.OnShowHintButtonPressed(_hintType, _hintText, _entity);
+            if (_hintType == HintType.YesNo)
+                _controller.OnShowHintButtonPressed(_hintType, _hintText, _entity);
+            else
+                _controller.OnShowHintButtonPressed(_hintType, _hintText, gameObject);
         }
 
         protected virtual void Awake()

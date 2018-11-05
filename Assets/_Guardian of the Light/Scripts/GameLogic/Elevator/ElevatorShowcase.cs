@@ -7,6 +7,11 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
     public class ElevatorShowcase : UiHint, IInventoryUseAction
     {
         [SerializeField] private GameObject _gear;
+        [SerializeField] private Transform _playerTransform;
+        
+        [Header("Cameras")]
+        [SerializeField] private GameObject _clearShotCamera;
+        [SerializeField] private GameObject _showcaseCamera;
 
         private const int ElevatorGearId = 1;
         
@@ -23,6 +28,36 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
             GetComponent<BoxCollider>().enabled = false;
             
             return true;
+        }
+
+        public override void OnSkipChosen()
+        {
+            SwitchToClearShotCamera();
+        }
+        protected override void OnKeyActionPressedDown()
+        {
+            base.OnKeyActionPressedDown();
+            
+            PlacePlayerNearCristal();
+            SwitchToShowcaseCamera();
+        }
+
+        private void SwitchToShowcaseCamera()
+        {
+            _showcaseCamera.SetActive(true);
+            _clearShotCamera.SetActive(false);
+        }
+
+        private void SwitchToClearShotCamera()
+        {
+            _clearShotCamera.SetActive(true);
+            _showcaseCamera.SetActive(false);
+        }
+
+        private void PlacePlayerNearCristal()
+        {
+            GameManagerSystem.Instance.Player.transform.position = _playerTransform.position;
+            GameManagerSystem.Instance.Player.transform.rotation = _playerTransform.rotation;
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 using _Guardian_of_the_Light.Scripts.Base.Inventory;
 using _Guardian_of_the_Light.Scripts.GameLogic.Hint;
@@ -17,7 +18,10 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
                 if (position != 2)
                 {
                     _isFirstTry = false;
-                    _controller.OnShowHintButtonPressed(HintType.Empty, _noLuckText, gameObject);
+                    _switch.DOLocalRotate(Vector3.left * (position == 0 ? 45 : -45), 1.5f)
+                        .OnComplete(() => 
+                            _switch.DOLocalRotate(Vector3.zero, 1.5f)
+                                   .OnComplete(() => _controller.OnShowHintButtonPressed(HintType.Empty, _noLuckText, gameObject)));
                 }
                 else
                 {
@@ -60,12 +64,13 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         
         public override void OnSkipChosen()
         {
+            _isSwitchInspected = true;
             SwitchToClearShotCamera();
         }
 
         public bool OnInventoryUseAction(int itemId)
         {
-            if (ElevatorCristalId != itemId)
+            if (ElevatorCristalId != itemId || !_isSwitchInspected) 
                 return false;
             
             _cristal.SetActive(true);
@@ -94,7 +99,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         protected override void OnKeyActionPressedDown()
         {
             _controller.OnShowHintButtonPressed(HintType.MultipleChoice, 
-                _isFirstTry || !IsElevatorBroken ? _readyHintText.Take(2).ToList() : _readyHintText, gameObject);
+                _isFirstTry || IsCristalPlacedInSwitch ? _readyHintText.Take(2).ToList() : _readyHintText, gameObject);
         }
         
         
@@ -120,6 +125,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         [Header("Other Stuff")]
         [SerializeField] private Transform _playerTransform;
         [SerializeField] private GameObject _cristal;
+        [SerializeField] private Transform _switch;
         [SerializeField] private string _badSwitchUpHintText;
         [SerializeField] private string _badSwitchDownHintText;
       
@@ -128,10 +134,10 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 
         private ElevatorController _elevatorController;
         private bool _isFirstTry = true;
+        private bool _isSwitchInspected;
         private const int ElevatorCristalId = 3;
 
-        private bool IsElevatorBroken =>
-            !_elevatorController.IsCristalPlacedInSwitch || !_elevatorController.IsGearPlacedInMechanism;
+        private bool IsCristalPlacedInSwitch => _elevatorController.IsCristalPlacedInSwitch;
         
         #endregion
 
