@@ -28,6 +28,7 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         public IObservable<Unit> KeyInspectPressedDown { get; private set; }
         public IObservable<Unit> KeyInventoryPressedDown { get; private set; }
         public IObservable<Unit> KeyBackViewPressedDown { get; private set; }
+        public IObservable<Unit> KeyUsePressedDown { get; private set; }
 
         public IObservable<Unit> KeyUpArrowPressed { get; private set; }
         public IObservable<Unit> KeyDownArrowPressed { get; private set; }
@@ -74,6 +75,7 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         [SerializeField] private KeyCode _inventoryKey = KeyCode.I;
         [SerializeField] private KeyCode _inspectViewKey = KeyCode.J;
         [SerializeField] private KeyCode _backViewKey = KeyCode.L;
+        [SerializeField] private KeyCode _useKey = KeyCode.L;
 
         [Header("Player Controls")] 
         [SerializeField] private KeyCode _crouchKey = KeyCode.K;
@@ -110,6 +112,8 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         
             KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_inspectViewKey));
             KeyBackViewPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_backViewKey));
+            
+            KeyUsePressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_useKey));
 
             KeyUpArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.W));
             KeyDownArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.S));

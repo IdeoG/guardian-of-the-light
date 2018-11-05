@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using _Guardian_of_the_Light.Scripts.Base.Inventory;
 using _Guardian_of_the_Light.Scripts.GameLogic.Hint;
 using _Guardian_of_the_Light.Scripts.UI.Hint;
 
 namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 {
-    public class ElevatorSwitch : UiHint
+    public class ElevatorSwitch : UiHint, IInventoryUseAction
     {
         public override void OnItemChosen(int position)
         {
@@ -62,6 +63,12 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
             SwitchToClearShotCamera();
         }
 
+        public void OnInventoryUseAction()
+        {
+            _cristal.SetActive(true);
+            _elevatorController.IsCristalPlacedInSwitch = true;
+        }
+        
         private void SwitchToInspectCamera()
         {
             _inspectCamera.SetActive(true);
@@ -119,6 +126,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         private bool _isFirstTry = true;
 
         #endregion
+
     }
 
 }
