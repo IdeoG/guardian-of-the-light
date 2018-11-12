@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace _Guardian_of_the_Light.Scripts.GameLogic.Sawmill
+namespace _Guardian_of_the_Light.Scripts.Base.Action
 {
     public class Switch : BaseAction
     {
