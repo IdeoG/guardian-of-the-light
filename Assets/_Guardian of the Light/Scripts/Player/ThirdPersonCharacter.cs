@@ -47,7 +47,8 @@ public class ThirdPersonCharacter : MonoBehaviour
 
     public void Move(Vector3 move, bool crouch, bool jump)
     {
-        if (Math.Abs(move.magnitude - 1f) > 0.01f) move.Normalize();
+        if (Math.Abs(move.magnitude - 1f) > 0.01f) 
+            move.Normalize();
         
         move = transform.InverseTransformDirection(move);
         move = Vector3.ProjectOnPlane(move, m_GroundNormal);
@@ -164,7 +165,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     private void CheckGroundStatus()
     {
         RaycastHit hitInfo;
-        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out hitInfo, m_GroundCheckDistance))
+        if (Physics.Raycast(transform.position + Vector3.up * 0.2f, Vector3.down, out hitInfo, m_GroundCheckDistance))
         {
             m_IsGrounded = true;
             m_GroundNormal = hitInfo.normal;
