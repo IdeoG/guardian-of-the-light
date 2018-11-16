@@ -150,7 +150,7 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                 }).AddTo(this);
             
             _keyDownPressedDown = InputSystem.Instance.KeyDownArrowPressed
-                .Throttle(TimeSpan.FromMilliseconds(50))
+                .Throttle(TimeSpan.FromMilliseconds(100))
                 .Subscribe(_ =>
                 {
                     if (_currentChoice == _choicesCount - 1) return;
