@@ -132,10 +132,10 @@ namespace _Guardian_of_the_Light.Scripts.Systems
             
             KeyUsePressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _useKey.GetKeyDown());
 
-            KeyUpArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.W));
-            KeyDownArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.S));
-            KeyLeftArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _leftItemKey.GetKey());
-            KeyRightArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _rightItemKey.GetKey());
+            KeyUpArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetAxis("Vertical") > 0.2f);
+            KeyDownArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetAxis("Vertical") < -0.2f);
+            KeyLeftArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetAxis("Horizontal") < -0.2f);
+            KeyRightArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetAxis("Horizontal") > 0.2f);
 
             KeyUpArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.W));
             KeyDownArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.S));
