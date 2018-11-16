@@ -47,6 +47,9 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         public IObservable<bool> KeyCrouchPressed { get; private set; }
         public IObservable<Unit> KeyJumpPressedDown { get; private set; }
         public IObservable<float> KeyRunPressedDown { get; private set; }
+        
+        public IObservable<float> HorizontalAxis { get; private set; }
+        public IObservable<float> VerticalAxis { get; private set; }
 
         public IObservable<Unit> KeyYesHintPressedDown { get; private set; }
         public IObservable<Unit> KeyNoHintPressedDown { get; private set; }
@@ -115,6 +118,9 @@ namespace _Guardian_of_the_Light.Scripts.Systems
             KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => CanJumpAndCrouch()).Where(_ => _jumpKey.GetKeyDown());
             
             KeyRunPressedDown = this.UpdateAsObservable().Where(_ => CanMove()).Select(_ => Input.GetAxis("PlayerRun"));
+            
+            HorizontalAxis = this.UpdateAsObservable().Select(_ => Input.GetAxis("Horizontal"));
+            VerticalAxis = this.UpdateAsObservable().Select(_ => Input.GetAxis("Vertical"));
         }
 
         private void ReferenceInventoryInputs()

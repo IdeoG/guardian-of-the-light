@@ -36,6 +36,9 @@ public class InspectView : MonoBehaviour
     private IDisposable _keyReduceSizePressed;
     private IDisposable _keyRightArrowPressed;
     private IDisposable _keyUpArrowPressed;
+    
+    private IDisposable _verticalAxis;
+    private IDisposable _horizontalAxis;
 
     private Vector3 _itemEulerRotation = Vector3.forward;
     
@@ -72,18 +75,6 @@ public class InspectView : MonoBehaviour
         _itemTransform.localScale = Vector3.zero;
     }
 
-    private void OnEnable()
-    {
-        _perspectiveCameraTransform.localPosition = new Vector3(0, 0, _basePositionZ);
-        
-        _keyUpArrowPressed = InputSystem.Instance.KeyUpArrowPressed.Subscribe(_ => OnKeyUpArrowPressed()).AddTo(this);
-        _keyDownArrowPressed = InputSystem.Instance.KeyDownArrowPressed.Subscribe(_ => OnKeyDownArrowPressed()).AddTo(this);
-        _keyLeftArrowPressed = InputSystem.Instance.KeyLeftArrowPressed.Subscribe(_ => OnKeyLeftArrowPressed()).AddTo(this);
-        _keyRightArrowPressed = InputSystem.Instance.KeyRightArrowPressed.Subscribe(_ => OnKeyRightArrowPressed()).AddTo(this);
-        _keyReduceSizePressed = InputSystem.Instance.KeyReduceSizePressed.Subscribe(_ => OnKeyReduceSizePressed()).AddTo(this);
-        _keyIncreaseSizePressed = InputSystem.Instance.KeyIncreaseSizePressed.Subscribe(_ => OnKeyIncreaseSizePressed()).AddTo(this);
-    }
-
     private void OnKeyIncreaseSizePressed()
     {
         if (_perspectiveCameraTransform.localPosition.z < _maxScale * _basePositionZ) return;
@@ -101,35 +92,34 @@ public class InspectView : MonoBehaviour
         localPosition.z += _sensitivityScale * Time.deltaTime;
         _perspectiveCameraTransform.localPosition = localPosition;
     }
-
-    private void OnKeyUpArrowPressed()
+    private void OnEnable()
     {
-        _itemTransform.Rotate(new Vector3(1f, 0, 0), _sensitivityY * Time.deltaTime, Space.World);
+        _perspectiveCameraTransform.localPosition = new Vector3(0, 0, _basePositionZ);
+        
+        _keyReduceSizePressed = InputSystem.Instance.KeyReduceSizePressed.Subscribe(_ => OnKeyReduceSizePressed()).AddTo(this);
+        _keyIncreaseSizePressed = InputSystem.Instance.KeyIncreaseSizePressed.Subscribe(_ => OnKeyIncreaseSizePressed()).AddTo(this);
+        
+        _verticalAxis = InputSystem.Instance.VerticalAxis.Subscribe(OnVerticalAxisChanged);
+        _horizontalAxis = InputSystem.Instance.HorizontalAxis.Subscribe(OnHorizontalAxisChanged);
     }
 
-    private void OnKeyDownArrowPressed()
+    private void OnHorizontalAxisChanged(float x)
     {
-        _itemTransform.Rotate(new Vector3(1f, 0, 0), -_sensitivityY * Time.deltaTime, Space.World);
+        _itemTransform.Rotate(new Vector3(0, -x, 0), _sensitivityX * Time.deltaTime, Space.World);
     }
 
-    private void OnKeyLeftArrowPressed()
+    private void OnVerticalAxisChanged(float y)
     {
-        _itemTransform.Rotate(new Vector3(0, 1f, 0), _sensitivityX * Time.deltaTime, Space.World);
-    }
-
-    private void OnKeyRightArrowPressed()
-    {
-        _itemTransform.Rotate(new Vector3(0, 1f, 0), -_sensitivityX * Time.deltaTime, Space.World);
+        _itemTransform.Rotate(new Vector3(y, 0, 0), _sensitivityY * Time.deltaTime, Space.World);
     }
 
     private void OnDisable()
     {
-        _keyUpArrowPressed.Dispose();
-        _keyDownArrowPressed.Dispose();
-        _keyLeftArrowPressed.Dispose();
-        _keyRightArrowPressed.Dispose();
         _keyReduceSizePressed.Dispose();
         _keyIncreaseSizePressed.Dispose();
+        
+        _verticalAxis.Dispose();
+        _horizontalAxis.Dispose();
 
         if (_item != null) Destroy(_item);
         
