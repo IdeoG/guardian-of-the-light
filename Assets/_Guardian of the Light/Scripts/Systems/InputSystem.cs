@@ -1,6 +1,7 @@
 ﻿using System;
 using UniRx;
 using UniRx.Triggers;
+using UnityEditor;
 using UnityEngine;
 
 namespace _Guardian_of_the_Light.Scripts.Systems
@@ -45,6 +46,7 @@ namespace _Guardian_of_the_Light.Scripts.Systems
 
         public IObservable<bool> KeyCrouchPressed { get; private set; }
         public IObservable<Unit> KeyJumpPressedDown { get; private set; }
+        public IObservable<float> KeyRunPressedDown { get; private set; }
 
         public IObservable<Unit> KeyYesHintPressedDown { get; private set; }
         public IObservable<Unit> KeyNoHintPressedDown { get; private set; }
@@ -62,30 +64,37 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         #region half private vars
 
         [Header("Hints")] 
-        [SerializeField] private KeyCode _yesHintKey;
-        [SerializeField] private KeyCode _noHintKey;
-        [SerializeField] private KeyCode _skipHintKey;
-        [SerializeField] private KeyCode _confirmHintKey;
-        [SerializeField] private KeyCode _exitHintKey;
-        [SerializeField] private KeyCode _temporaryButtonHintKey;
+        [SerializeField] private MultiPlatformKeyCode _yesHintKey;
+        [SerializeField] private MultiPlatformKeyCode _noHintKey;
+        [SerializeField] private MultiPlatformKeyCode _skipHintKey;
+        [SerializeField] private MultiPlatformKeyCode _confirmHintKey;
+        [SerializeField] private MultiPlatformKeyCode _exitHintKey;
+        [SerializeField] private MultiPlatformKeyCode _temporaryButtonHintKey;
     
         [Header("Inventory")] 
-        [SerializeField] private KeyCode _increaseSizeKey = KeyCode.J;
-        [SerializeField] private KeyCode _reduceSizeKey = KeyCode.K;
-        [SerializeField] private KeyCode _inventoryKey = KeyCode.I;
-        [SerializeField] private KeyCode _inspectViewKey = KeyCode.J;
-        [SerializeField] private KeyCode _backViewKey = KeyCode.L;
-        [SerializeField] private KeyCode _useKey = KeyCode.L;
+        [SerializeField] private MultiPlatformKeyCode _inventoryKey;
+        [SerializeField] private MultiPlatformKeyCode _useKey;
+        [SerializeField] private MultiPlatformKeyCode _backViewKey;
+        [SerializeField] private MultiPlatformKeyCode _inspectViewKey;
+        [SerializeField] private MultiPlatformKeyCode _increaseSizeKey;
+        [SerializeField] private MultiPlatformKeyCode _reduceSizeKey;
+        [SerializeField] private MultiPlatformKeyCode _leftItemKey;
+        [SerializeField] private MultiPlatformKeyCode _rightItemKey;
 
         [Header("Player Controls")] 
-        [SerializeField] private KeyCode _crouchKey = KeyCode.K;
-        [SerializeField] private KeyCode _jumpKey = KeyCode.L;
-        [SerializeField] private KeyCode _actionKey = KeyCode.J;
-        [SerializeField] private KeyCode _extraActionKey = KeyCode.L;
+        [SerializeField] private MultiPlatformKeyCode _crouchKey;
+        [SerializeField] private MultiPlatformKeyCode _jumpKey;
+//        [SerializeField] private MultiPlatformKeyCode _runKey;
+        [SerializeField] private MultiPlatformKeyCode _actionKey;
+        [SerializeField] private MultiPlatformKeyCode _extraActionKey;
 
         #endregion
 
+        #region PrivateVars
+
         private static InputSystem _instance;
+
+        #endregion
 
     
         private void Awake()
@@ -97,46 +106,48 @@ namespace _Guardian_of_the_Light.Scripts.Systems
 
         private void ReferencePlayerInputs()
         {
-            KeyActionPressed = this.UpdateAsObservable().Where(_ => CanMove()).Where(_ => Input.GetKey(_actionKey));
-            KeyExtraActionPressed = this.UpdateAsObservable().Where(_ => CanMove()).Where(_ => Input.GetKey(_extraActionKey));
+            KeyActionPressed = this.UpdateAsObservable().Where(_ => CanMove()).Where(_ => _actionKey.GetKey());
+            KeyExtraActionPressed = this.UpdateAsObservable().Where(_ => CanMove()).Where(_ => _extraActionKey.GetKey());
 
-            KeyActionPressedDown = this.UpdateAsObservable().Where(_ => CanMove()).Where(_ => Input.GetKeyDown(_actionKey));
+            KeyActionPressedDown = this.UpdateAsObservable().Where(_ => CanMove()).Where(_ => _actionKey.GetKeyDown());
 
-            KeyCrouchPressed = this.UpdateAsObservable().Where(_ => CanJumpAndCrouch()).Select(_ => Input.GetKey(_crouchKey));
-            KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => CanJumpAndCrouch()).Where(_ => Input.GetKeyDown(_jumpKey));
+            KeyCrouchPressed = this.UpdateAsObservable().Where(_ => CanJumpAndCrouch()).Select(_ => _crouchKey.GetKey());
+            KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => CanJumpAndCrouch()).Where(_ => _jumpKey.GetKeyDown());
+            
+            KeyRunPressedDown = this.UpdateAsObservable().Where(_ => CanMove()).Select(_ => Input.GetAxis("PlayerRun"));
         }
 
         private void ReferenceInventoryInputs()
         {
-            KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => CanOpenInventory()).Where(_ => Input.GetKeyDown(_inventoryKey));
+            KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => CanOpenInventory()).Where(_ => _inventoryKey.GetKeyDown());
         
-            KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_inspectViewKey));
-            KeyBackViewPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_backViewKey));
+            KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _inspectViewKey.GetKeyDown());
+            KeyBackViewPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _backViewKey.GetKeyDown());
             
-            KeyUsePressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(_useKey));
+            KeyUsePressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _useKey.GetKeyDown());
 
             KeyUpArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.W));
             KeyDownArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.S));
-            KeyLeftArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.A));
-            KeyRightArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(KeyCode.D));
+            KeyLeftArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _leftItemKey.GetKey());
+            KeyRightArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _rightItemKey.GetKey());
 
             KeyUpArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.W));
             KeyDownArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.S));
-            KeyLeftArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.A));
-            KeyRightArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.D));
+            KeyLeftArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _leftItemKey.GetKeyDown());
+            KeyRightArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _rightItemKey.GetKeyDown());
         
-            KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(_reduceSizeKey));
-            KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKey(_increaseSizeKey));
+            KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _reduceSizeKey.GetKey());
+            KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _increaseSizeKey.GetKey());
         }
 
         private void ReferenceHintsInputs()
         {
-            KeyYesHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_yesHintKey));
-            KeyNoHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_noHintKey));
-            KeySkipHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_skipHintKey));
-            KeyConfirmHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_confirmHintKey));
-            KeyExitHintPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_exitHintKey));
-            KeyTemporaryButtonPressedDown = this.UpdateAsObservable().Where(_ => Input.GetKeyDown(_temporaryButtonHintKey));
+            KeyYesHintPressedDown = this.UpdateAsObservable().Where(_ => _yesHintKey.GetKeyDown());
+            KeyNoHintPressedDown = this.UpdateAsObservable().Where(_ => _noHintKey.GetKeyDown());
+            KeySkipHintPressedDown = this.UpdateAsObservable().Where(_ => _skipHintKey.GetKeyDown());
+            KeyConfirmHintPressedDown = this.UpdateAsObservable().Where(_ => _confirmHintKey.GetKeyDown());
+            KeyExitHintPressedDown = this.UpdateAsObservable().Where(_ => _exitHintKey.GetKeyDown());
+            KeyTemporaryButtonPressedDown = this.UpdateAsObservable().Where(_ => _temporaryButtonHintKey.GetKeyDown());
         }
 
         public bool CanMove()
@@ -152,6 +163,49 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         private bool CanOpenInventory()
         {
             return !IsUiActive && !IsAnimationPlaying;
+        }
+    }
+
+    [Serializable]
+    public class MultiPlatformKeyCode
+    {
+        [SerializeField] private KeyCode _pc;
+        [SerializeField] private KeyCode _xbox;
+        [SerializeField] private KeyCode _ps4;
+
+        public bool GetKeyDown()
+        {
+            return Input.GetKeyDown(_pc) || Input.GetKeyDown(_xbox);
+        }
+        
+        public bool GetKey()
+        {
+            return Input.GetKey(_pc) || Input.GetKey(_xbox);
+        }
+    }
+    
+    [CustomPropertyDrawer (typeof (MultiPlatformKeyCode))]
+    public class MultiPlatformKeyCodeDrawer : PropertyDrawer {    
+    
+        public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
+            EditorGUI.BeginProperty (position, label, property);
+            position = EditorGUI.PrefixLabel (position, GUIUtility.GetControlID (FocusType.Passive), label);
+        
+            var indent = EditorGUI.indentLevel;
+            EditorGUI.indentLevel = 0;
+        
+            var buttonWidth = position.width / 3;
+            var pcRect = new Rect (position.x, position.y, buttonWidth - 10, position.height);
+            var xboxRect = new Rect (position.x + buttonWidth, position.y, buttonWidth - 10, position.height);
+            var ps4Rect = new Rect (position.x + buttonWidth * 2, position.y, buttonWidth - 10, position.height);
+        
+            EditorGUI.PropertyField (pcRect, property.FindPropertyRelative ("_pc"), GUIContent.none);
+            EditorGUI.PropertyField (xboxRect, property.FindPropertyRelative ("_xbox"), GUIContent.none);
+            EditorGUI.PropertyField (ps4Rect, property.FindPropertyRelative ("_ps4"), GUIContent.none);
+        
+            EditorGUI.indentLevel = indent;
+        
+            EditorGUI.EndProperty ();
         }
     }
 }
