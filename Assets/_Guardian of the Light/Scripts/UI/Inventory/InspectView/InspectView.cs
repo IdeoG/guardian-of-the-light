@@ -4,44 +4,11 @@ using DG.Tweening;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
+using _Guardian_of_the_Light.Scripts.Extensions;
 using _Guardian_of_the_Light.Scripts.Systems;
 
 public class InspectView : MonoBehaviour
 {
-    private GameObject _item;
-
-    [SerializeField] private Text _itemDescription;
-    [SerializeField] private LayerMask _itemLayerMask = -1;
-    [SerializeField] private float _onDisableItemAnimationDuration = 0.4f;
-
-    [Header("Animation duration")] 
-    [SerializeField] private float _onEnableItemAnimationDuration;
-    [SerializeField] private Transform _pivotTransform;
-
-    [Header("Inspect Item Configuration")] 
-    [SerializeField] private float _sensitivityX = 2f;
-    [SerializeField] private float _sensitivityY = 2f;
-    [SerializeField] private float _sensitivityScale = 0.02f;
-    
-    [Header("Perspective Camera")]
-    [SerializeField] private Transform _perspectiveCameraTransform;
-    [SerializeField] private float _basePositionZ = -3.5f;
-    [SerializeField] private float _minScale = 1f;
-    [SerializeField] private float _maxScale = 2f;
-
-    private Transform _itemTransform;
-    private IDisposable _keyDownArrowPressed;
-    private IDisposable _keyIncreaseSizePressed;
-    private IDisposable _keyLeftArrowPressed;
-    private IDisposable _keyReduceSizePressed;
-    private IDisposable _keyRightArrowPressed;
-    private IDisposable _keyUpArrowPressed;
-    
-    private IDisposable _verticalAxis;
-    private IDisposable _horizontalAxis;
-
-    private Vector3 _itemEulerRotation = Vector3.forward;
-    
     public void PlayOnEnableAnimation()
     {
         _item.transform.DOLocalMove(Vector3.zero, _onEnableItemAnimationDuration);
@@ -62,7 +29,7 @@ public class InspectView : MonoBehaviour
     public void SetItem(InventoryItem inventoryItem)
     {
         _itemDescription.text = inventoryItem.Description;
-        
+
         _item = Instantiate(inventoryItem.Prefab3D);
         _item.layer = Mathf.RoundToInt(Mathf.Log(_itemLayerMask.value, 2));
 
@@ -75,30 +42,31 @@ public class InspectView : MonoBehaviour
         _itemTransform.localScale = Vector3.zero;
     }
 
-    private void OnKeyIncreaseSizePressed()
+    private void OnChangeItemScale(float x) // x > 0, then Increase size, else Reduce
     {
-        if (_perspectiveCameraTransform.localPosition.z < _maxScale * _basePositionZ) return;
+        var canReduce = Math.Abs(_minBasePositionZ) < Math.Abs(_perspectiveCameraTransform.localPosition.z)
+                        && _minBasePositionZ * _perspectiveCameraTransform.localPosition.z > 0;
+        var canIncrease = Math.Abs(_maxBasePositionZ) > Math.Abs(_perspectiveCameraTransform.localPosition.z)
+                          && _maxBasePositionZ * _perspectiveCameraTransform.localPosition.z > 0;
+        
+        if (x > 0 ? !canIncrease : !canReduce) // TODO: Potential place of bug. Because if user will invert axis, this will no longer work
+            return;
 
         var localPosition = _perspectiveCameraTransform.localPosition;
-        localPosition.z -= _sensitivityScale * Time.deltaTime;
+        localPosition.z += -x * _sensitivityScale * Time.deltaTime;
         _perspectiveCameraTransform.localPosition = localPosition;
     }
 
-    private void OnKeyReduceSizePressed()
-    {
-        if (_perspectiveCameraTransform.localPosition.z > _minScale * _basePositionZ) return;
-
-        var localPosition = _perspectiveCameraTransform.localPosition;
-        localPosition.z += _sensitivityScale * Time.deltaTime;
-        _perspectiveCameraTransform.localPosition = localPosition;
-    }
     private void OnEnable()
     {
-        _perspectiveCameraTransform.localPosition = new Vector3(0, 0, _basePositionZ);
-        
-        _keyReduceSizePressed = InputSystem.Instance.KeyReduceSizePressed.Subscribe(_ => OnKeyReduceSizePressed()).AddTo(this);
-        _keyIncreaseSizePressed = InputSystem.Instance.KeyIncreaseSizePressed.Subscribe(_ => OnKeyIncreaseSizePressed()).AddTo(this);
-        
+        _basePositionZ = _perspectiveCameraTransform.localPosition.z;
+
+        _keyReduceSizePressed = InputSystem.Instance.KeyReduceSizePressed.Subscribe(_ => OnChangeItemScale(-1f))
+            .AddTo(this);
+        _keyIncreaseSizePressed = InputSystem.Instance.KeyIncreaseSizePressed.Subscribe(_ => OnChangeItemScale(1f))
+            .AddTo(this);
+        _rightStickX = InputSystem.Instance.RightStickX.Subscribe(OnChangeItemScale);
+
         _verticalAxis = InputSystem.Instance.VerticalAxis.Subscribe(OnVerticalAxisChanged);
         _horizontalAxis = InputSystem.Instance.HorizontalAxis.Subscribe(OnHorizontalAxisChanged);
     }
@@ -115,13 +83,57 @@ public class InspectView : MonoBehaviour
 
     private void OnDisable()
     {
+        _perspectiveCameraTransform.localPosition = _perspectiveCameraTransform.localPosition.With(z: _basePositionZ);
+
         _keyReduceSizePressed.Dispose();
         _keyIncreaseSizePressed.Dispose();
-        
+
         _verticalAxis.Dispose();
         _horizontalAxis.Dispose();
+        _rightStickX.Dispose();
 
         if (_item != null) Destroy(_item);
-        
     }
+
+    #region SerializeFields
+
+    [SerializeField] private Text _itemDescription;
+    [SerializeField] private LayerMask _itemLayerMask = -1;
+    [SerializeField] private float _onDisableItemAnimationDuration = 0.4f;
+
+    [Header("Animation duration")] [SerializeField]
+    private float _onEnableItemAnimationDuration;
+
+    [SerializeField] private Transform _pivotTransform;
+
+    [Header("Inspect Item Configuration")] [SerializeField]
+    private float _sensitivityX = 2f;
+
+    [SerializeField] private float _sensitivityY = 2f;
+    [SerializeField] private float _sensitivityScale = 0.02f;
+
+    [Header("Perspective Camera")] [SerializeField]
+    private Transform _perspectiveCameraTransform;
+
+    [SerializeField] private float _minBasePositionZ = -3.7f;
+    [SerializeField] private float _maxBasePositionZ = -4.4f;
+
+    #endregion
+
+    #region PrivateVars
+
+    private float _basePositionZ;
+    private Vector3 _itemEulerRotation = Vector3.forward;
+
+    private GameObject _item;
+    private Transform _itemTransform;
+
+    private IDisposable _keyIncreaseSizePressed;
+    private IDisposable _keyReduceSizePressed;
+
+    private IDisposable _verticalAxis;
+    private IDisposable _horizontalAxis;
+    private IDisposable _rightStickX;
+
+    #endregion
 }

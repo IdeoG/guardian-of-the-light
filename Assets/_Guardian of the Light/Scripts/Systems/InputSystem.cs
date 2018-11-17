@@ -36,10 +36,6 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         public IObservable<Unit> KeyLeftArrowPressed { get; private set; }
         public IObservable<Unit> KeyRightArrowPressed { get; private set; }
 
-        public IObservable<Unit> KeyUpArrowPressedDown { get; private set; }
-        public IObservable<Unit> KeyDownArrowPressedDown { get; private set; }
-        public IObservable<Unit> KeyLeftArrowPressedDown { get; private set; }
-        public IObservable<Unit> KeyRightArrowPressedDown { get; private set; }
 
         public IObservable<Unit> KeyReduceSizePressed { get; private set; }
         public IObservable<Unit> KeyIncreaseSizePressed { get; private set; }
@@ -50,13 +46,13 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         
         public IObservable<float> HorizontalAxis { get; private set; }
         public IObservable<float> VerticalAxis { get; private set; }
+        public IObservable<float> RightStickX { get; private set; }
 
         public IObservable<Unit> KeyYesHintPressedDown { get; private set; }
         public IObservable<Unit> KeyNoHintPressedDown { get; private set; }
         public IObservable<Unit> KeySkipHintPressedDown { get; private set; }
         public IObservable<Unit> KeyConfirmHintPressedDown { get; private set; }
         public IObservable<Unit> KeyExitHintPressedDown { get; private set; }
-        public IObservable<Unit> KeyTemporaryButtonPressedDown { get; private set; }
     
         public bool IsUiActive;
         public bool IsPlayerInCollider;
@@ -72,7 +68,6 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         [SerializeField] private MultiPlatformKeyCode _skipHintKey;
         [SerializeField] private MultiPlatformKeyCode _confirmHintKey;
         [SerializeField] private MultiPlatformKeyCode _exitHintKey;
-        [SerializeField] private MultiPlatformKeyCode _temporaryButtonHintKey;
     
         [Header("Inventory")] 
         [SerializeField] private MultiPlatformKeyCode _inventoryKey;
@@ -81,13 +76,10 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         [SerializeField] private MultiPlatformKeyCode _inspectViewKey;
         [SerializeField] private MultiPlatformKeyCode _increaseSizeKey;
         [SerializeField] private MultiPlatformKeyCode _reduceSizeKey;
-        [SerializeField] private MultiPlatformKeyCode _leftItemKey;
-        [SerializeField] private MultiPlatformKeyCode _rightItemKey;
 
         [Header("Player Controls")] 
         [SerializeField] private MultiPlatformKeyCode _crouchKey;
         [SerializeField] private MultiPlatformKeyCode _jumpKey;
-//        [SerializeField] private MultiPlatformKeyCode _runKey;
         [SerializeField] private MultiPlatformKeyCode _actionKey;
         [SerializeField] private MultiPlatformKeyCode _extraActionKey;
 
@@ -121,6 +113,8 @@ namespace _Guardian_of_the_Light.Scripts.Systems
             
             HorizontalAxis = this.UpdateAsObservable().Select(_ => Input.GetAxis("Horizontal"));
             VerticalAxis = this.UpdateAsObservable().Select(_ => Input.GetAxis("Vertical"));
+            
+            RightStickX = this.UpdateAsObservable().Select(_ => Input.GetAxis("Right Stick X"));
         }
 
         private void ReferenceInventoryInputs()
@@ -136,11 +130,6 @@ namespace _Guardian_of_the_Light.Scripts.Systems
             KeyDownArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetAxis("Vertical") < -0.2f);
             KeyLeftArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetAxis("Horizontal") < -0.2f);
             KeyRightArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetAxis("Horizontal") > 0.2f);
-
-            KeyUpArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.W));
-            KeyDownArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetKeyDown(KeyCode.S));
-            KeyLeftArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _leftItemKey.GetKeyDown());
-            KeyRightArrowPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _rightItemKey.GetKeyDown());
         
             KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _reduceSizeKey.GetKey());
             KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _increaseSizeKey.GetKey());
@@ -153,7 +142,6 @@ namespace _Guardian_of_the_Light.Scripts.Systems
             KeySkipHintPressedDown = this.UpdateAsObservable().Where(_ => _skipHintKey.GetKeyDown());
             KeyConfirmHintPressedDown = this.UpdateAsObservable().Where(_ => _confirmHintKey.GetKeyDown());
             KeyExitHintPressedDown = this.UpdateAsObservable().Where(_ => _exitHintKey.GetKeyDown());
-            KeyTemporaryButtonPressedDown = this.UpdateAsObservable().Where(_ => _temporaryButtonHintKey.GetKeyDown());
         }
 
         public bool CanMove()
@@ -195,20 +183,18 @@ namespace _Guardian_of_the_Light.Scripts.Systems
     
         public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
             EditorGUI.BeginProperty (position, label, property);
+            
             position = EditorGUI.PrefixLabel (position, GUIUtility.GetControlID (FocusType.Passive), label);
-        
-            var indent = EditorGUI.indentLevel;
-            EditorGUI.indentLevel = 0;
-        
             var buttonWidth = position.width / 3;
             var pcRect = new Rect (position.x, position.y, buttonWidth - 10, position.height);
             var xboxRect = new Rect (position.x + buttonWidth, position.y, buttonWidth - 10, position.height);
             var ps4Rect = new Rect (position.x + buttonWidth * 2, position.y, buttonWidth - 10, position.height);
-        
+            var indent = EditorGUI.indentLevel;
+            
+            EditorGUI.indentLevel = 0;
             EditorGUI.PropertyField (pcRect, property.FindPropertyRelative ("_pc"), GUIContent.none);
             EditorGUI.PropertyField (xboxRect, property.FindPropertyRelative ("_xbox"), GUIContent.none);
             EditorGUI.PropertyField (ps4Rect, property.FindPropertyRelative ("_ps4"), GUIContent.none);
-        
             EditorGUI.indentLevel = indent;
         
             EditorGUI.EndProperty ();
