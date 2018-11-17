@@ -45,7 +45,7 @@ public class ThirdPersonCharacter : MonoBehaviour
     }
 
 
-    public void Move(Vector3 move, bool crouch, bool jump)
+    public void Move(Vector3 move, bool crouch, bool jump, float run)
     {
         if (Math.Abs(move.magnitude - 1f) > 0.01f) 
             move.Normalize();
@@ -53,7 +53,7 @@ public class ThirdPersonCharacter : MonoBehaviour
         move = transform.InverseTransformDirection(move);
         move = Vector3.ProjectOnPlane(move, m_GroundNormal);
         m_TurnAmount = Mathf.Atan2(move.x, move.z);
-        m_ForwardAmount = move.z;
+        m_ForwardAmount = move.z * (0.4f * run + 0.6f);
 
         CheckGroundStatus();
         ApplyExtraTurnRotation();
@@ -109,8 +109,8 @@ public class ThirdPersonCharacter : MonoBehaviour
 
     private void UpdateAnimator(Vector3 move)
     {
-        m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
-        m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
+        m_Animator.SetFloat("Forward", m_ForwardAmount, 0.05f, Time.deltaTime);
+        m_Animator.SetFloat("Turn", m_TurnAmount, 0.05f, Time.deltaTime);
         m_Animator.SetBool("Crouch", m_Crouching);
         m_Animator.SetBool("OnGround", m_IsGrounded);
         if (!m_IsGrounded) m_Animator.SetFloat("Jump", m_Rigidbody.velocity.y);

@@ -135,7 +135,8 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                     _keyDownPressedDown.Dispose();
                 }).AddTo(this);
             
-            _keyUpPressedDown = InputSystem.Instance.KeyUpArrowPressedDown
+            _keyUpPressedDown = InputSystem.Instance.KeyUpArrowPressed
+                .Throttle(TimeSpan.FromMilliseconds(100))
                 .Subscribe(_ =>
                 {
                     if (_currentChoice == 0) return;
@@ -148,7 +149,8 @@ namespace _Guardian_of_the_Light.Scripts.UI.Hint
                     _multipleChoiceText[_currentChoice].color = _multipleChoiceText[_currentChoice].color.With(a: 1f);
                 }).AddTo(this);
             
-            _keyDownPressedDown = InputSystem.Instance.KeyDownArrowPressedDown
+            _keyDownPressedDown = InputSystem.Instance.KeyDownArrowPressed
+                .Throttle(TimeSpan.FromMilliseconds(100))
                 .Subscribe(_ =>
                 {
                     if (_currentChoice == _choicesCount - 1) return;

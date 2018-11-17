@@ -86,9 +86,14 @@ public class BasicViewItemsController : MonoBehaviour, IItemsController
     private void OnKeyUsePressedDown()
     {
         var character = GameManagerSystem.Instance.Player.GetComponent<ThirdPersonCharacter>().CollidedGameObject;
-        if (character != null)
+        if (character == null) 
+            return;
+        var result = character.GetComponent<IInventoryUseAction>().OnInventoryUseAction(_baseItems[_baseItemIndex].Id);
+
+        if (result)
         {
-            character.GetComponent<IInventoryUseAction>().OnInventoryUseAction(_baseItems[_baseItemIndex].Id);
+            _baseItems[_baseItemIndex].IsTook = false;
+            GetComponentInParent<InventoryCanvas>().Hide();
         }
     }
 

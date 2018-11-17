@@ -1,4 +1,5 @@
 ﻿using System;
+using Cinemachine;
 using DG.Tweening;
 using UniRx;
 using UnityEngine;
@@ -13,12 +14,17 @@ public class InventoryCanvas : MonoBehaviour
 
     private IDisposable _keyInspectItemPressedDown;
     private IDisposable _keyBackViewPressedDown;
+
+    private float _freeLookMaxSpeed;
     
     public bool IsInspectViewActive => _inspectView.activeInHierarchy;
 
     public void Show()
     {
         InputSystem.Instance.IsUiActive = true;
+        _freeLookMaxSpeed = FindObjectOfType<CinemachineFreeLook>().m_XAxis.m_MaxSpeed;
+        FindObjectOfType<CinemachineFreeLook>().m_XAxis.m_MaxSpeed = 0f;
+        
         gameObject.SetActive(true);
 
         _basicView.GetComponent<FadeEffect>().FadeIn();
@@ -36,6 +42,7 @@ public class InventoryCanvas : MonoBehaviour
             gameObject.SetActive(false);
             
             InputSystem.Instance.IsUiActive = false;
+            FindObjectOfType<CinemachineFreeLook>().m_XAxis.m_MaxSpeed = _freeLookMaxSpeed;
         });
     }
 
