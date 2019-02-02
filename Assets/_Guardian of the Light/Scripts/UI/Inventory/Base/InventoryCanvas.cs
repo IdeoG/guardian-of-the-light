@@ -15,15 +15,16 @@ public class InventoryCanvas : MonoBehaviour
     private IDisposable _keyInspectItemPressedDown;
     private IDisposable _keyBackViewPressedDown;
 
-    private float _freeLookMaxSpeed;
+    private float? _freeLookMaxSpeed;
     
     public bool IsInspectViewActive => _inspectView.activeInHierarchy;
 
     public void Show()
     {
         InputSystem.Instance.IsUiActive = true;
-        _freeLookMaxSpeed = FindObjectOfType<CinemachineFreeLook>().m_XAxis.m_MaxSpeed;
-        FindObjectOfType<CinemachineFreeLook>().m_XAxis.m_MaxSpeed = 0f;
+        _freeLookMaxSpeed = FindObjectOfType<CinemachineFreeLook>()?.m_XAxis.m_MaxSpeed;
+        if (_freeLookMaxSpeed != null) 
+            FindObjectOfType<CinemachineFreeLook>().m_XAxis.m_MaxSpeed = 0f;
         
         gameObject.SetActive(true);
 
@@ -42,7 +43,8 @@ public class InventoryCanvas : MonoBehaviour
             gameObject.SetActive(false);
             
             InputSystem.Instance.IsUiActive = false;
-            FindObjectOfType<CinemachineFreeLook>().m_XAxis.m_MaxSpeed = _freeLookMaxSpeed;
+            if (_freeLookMaxSpeed != null) 
+                FindObjectOfType<CinemachineFreeLook>().m_XAxis.m_MaxSpeed = (float) _freeLookMaxSpeed;
         });
     }
 

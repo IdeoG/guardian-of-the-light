@@ -27,7 +27,7 @@ namespace _Guardian_of_the_Light.Scripts.Player
         private void Awake()
         {
             m_Character = GetComponent<ThirdPersonCharacter>();
-            m_Cam = Camera.main.transform;
+            m_Cam = UnityEngine.Camera.main.transform;
         }
 
         private void OnEnable()

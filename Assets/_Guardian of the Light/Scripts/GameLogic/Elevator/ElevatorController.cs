@@ -12,7 +12,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         
         public void LiftElevator()
         {
-            GameManagerSystem.Instance.Player.gameObject.transform.parent = gameObject.transform;
+            GGameManager.Instance.Player.gameObject.transform.parent = gameObject.transform;
             
             _isElevatorRunning = true;
             _input.IsAnimationPlaying = true;
@@ -29,7 +29,7 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
         
         public void DropElevator()
         {
-            GameManagerSystem.Instance.Player.gameObject.transform.parent = gameObject.transform;
+            GGameManager.Instance.Player.gameObject.transform.parent = gameObject.transform;
             
             _isElevatorRunning = true;
             _input.IsAnimationPlaying = true;
@@ -96,13 +96,13 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 
         private void OnElevatorLiftAnimationCompleted()
         {
-            GameManagerSystem.Instance.Player.transform.parent = null;
+            GGameManager.Instance.Player.transform.parent = null;
             _animator.SetBool("OpenDoor", true);
         }
 
         private void OnElevatorDropAnimationCompleted()
         {
-            GameManagerSystem.Instance.Player.transform.parent = null;
+            GGameManager.Instance.Player.transform.parent = null;
             _animator.SetBool("OpenDoor", true);
         }
 

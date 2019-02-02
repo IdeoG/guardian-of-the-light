@@ -3,19 +3,17 @@ using UnityEngine;
 using _Guardian_of_the_Light.Scripts.Player;
 using _Guardian_of_the_Light.Scripts.Systems;
 
-public class GameManagerSystem : MonoBehaviour
+public class GGameManager : MonoBehaviour
 {
-    public static GameManagerSystem Instance { get; private set; }
-    
-    [Header("Canvases")] 
-    [SerializeField] private GameObject _canvasInventoryView;
+    public static GGameManager Instance { get; private set; }
 
-    [Header("Player")] 
+    [SerializeField] private GameObject _canvasInventoryView;
     [SerializeField] public GameObject Player;
-    
-    private InventoryCanvas _inventoryCanvas;  
-    private InputSystem _inputSystem;  
-    
+    [SerializeField] public Camera MainCamera;
+
+    private InventoryCanvas _inventoryCanvas;
+    private InputSystem _inputSystem;
+
     private void Awake()
     {
         Instance = this;
@@ -29,7 +27,7 @@ public class GameManagerSystem : MonoBehaviour
         InputSystem.Instance.KeyInventoryPressedDown
             .Subscribe(_ => OnKeyInventoryPressedDown())
             .AddTo(this);
-        
+
         InputSystem.Instance.KeyBackViewPressedDown
             .Subscribe(_ => OnKeyBackViewPressedDown())
             .AddTo(this);
@@ -38,7 +36,7 @@ public class GameManagerSystem : MonoBehaviour
     private void ShowInventoryView()
     {
         if (InventorySystem.Instance.GetTookItems().Count == 0) return;
-        
+
         _inputSystem.IsUiActive = true;
         _inventoryCanvas.Show();
     }
@@ -64,5 +62,4 @@ public class GameManagerSystem : MonoBehaviour
 
         HideInventoryView();
     }
-    
 }
