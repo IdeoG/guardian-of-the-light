@@ -31,3 +31,8 @@ ehthumbs.db
 [Bb]uild
 sysinfo.txt
 *.stackdump
+
+# Custom folders
+# ==============
+
+[Aa]ssets/_Guardian of the Light/No collabe
