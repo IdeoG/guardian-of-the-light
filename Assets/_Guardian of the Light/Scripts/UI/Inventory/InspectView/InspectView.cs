@@ -48,12 +48,12 @@ public class InspectView : MonoBehaviour
                         && _minBasePositionZ * _perspectiveCameraTransform.localPosition.z > 0;
         var canIncrease = Math.Abs(_maxBasePositionZ) > Math.Abs(_perspectiveCameraTransform.localPosition.z)
                           && _maxBasePositionZ * _perspectiveCameraTransform.localPosition.z > 0;
-        
-        if (x > 0 ? !canIncrease : !canReduce) // TODO: Potential place of bug. Because if user will invert axis, this will no longer work
+
+        if (x > 0 ? !canReduce : !canIncrease) // TODO: Potential place of bug. Because if user will invert axis, this will no longer work
             return;
 
         var localPosition = _perspectiveCameraTransform.localPosition;
-        localPosition.z += -x * _sensitivityScale * Time.deltaTime;
+        localPosition.z += x * _sensitivityScale * Time.deltaTime;
         _perspectiveCameraTransform.localPosition = localPosition;
     }
 
@@ -61,11 +61,9 @@ public class InspectView : MonoBehaviour
     {
         _basePositionZ = _perspectiveCameraTransform.localPosition.z;
 
-        _keyReduceSizePressed = InputSystem.Instance.KeyReduceSizePressed.Subscribe(_ => OnChangeItemScale(-1f))
-            .AddTo(this);
-        _keyIncreaseSizePressed = InputSystem.Instance.KeyIncreaseSizePressed.Subscribe(_ => OnChangeItemScale(1f))
-            .AddTo(this);
-        _rightStickX = InputSystem.Instance.RightStickX.Subscribe(OnChangeItemScale);
+        _keyReduceSizePressed = InputSystem.Instance.KeyReduceSizePressed.Subscribe(_ => OnChangeItemScale(1f));
+        _keyIncreaseSizePressed = InputSystem.Instance.KeyIncreaseSizePressed.Subscribe(_ => OnChangeItemScale(-1f));
+        _rightStickY = InputSystem.Instance.RightStickY.Subscribe(OnChangeItemScale);
 
         _verticalAxis = InputSystem.Instance.VerticalAxis.Subscribe(OnVerticalAxisChanged);
         _horizontalAxis = InputSystem.Instance.HorizontalAxis.Subscribe(OnHorizontalAxisChanged);
@@ -90,7 +88,7 @@ public class InspectView : MonoBehaviour
 
         _verticalAxis.Dispose();
         _horizontalAxis.Dispose();
-        _rightStickX.Dispose();
+        _rightStickY.Dispose();
 
         if (_item != null) Destroy(_item);
     }
@@ -133,7 +131,7 @@ public class InspectView : MonoBehaviour
 
     private IDisposable _verticalAxis;
     private IDisposable _horizontalAxis;
-    private IDisposable _rightStickX;
+    private IDisposable _rightStickY;
 
     #endregion
 }

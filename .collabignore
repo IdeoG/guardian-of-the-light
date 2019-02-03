@@ -32,7 +32,5 @@ ehthumbs.db
 sysinfo.txt
 *.stackdump
 
-# Custom folders
-# ==============
-
+/Assets/Plugins
 [Aa]ssets/_Guardian of the Light/No collabe

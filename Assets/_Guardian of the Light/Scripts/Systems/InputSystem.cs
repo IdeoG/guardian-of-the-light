@@ -47,6 +47,7 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         public IObservable<float> HorizontalAxis { get; private set; }
         public IObservable<float> VerticalAxis { get; private set; }
         public IObservable<float> RightStickX { get; private set; }
+        public IObservable<float> RightStickY { get; private set; }
 
         public IObservable<Unit> KeyYesHintPressedDown { get; private set; }
         public IObservable<Unit> KeyNoHintPressedDown { get; private set; }
@@ -115,6 +116,7 @@ namespace _Guardian_of_the_Light.Scripts.Systems
             VerticalAxis = this.UpdateAsObservable().Select(_ => Input.GetAxis("Vertical"));
             
             RightStickX = this.UpdateAsObservable().Select(_ => Input.GetAxis("Right Stick X"));
+            RightStickY = this.UpdateAsObservable().Select(_ => Input.GetAxis("Right Stick Y"));
         }
 
         private void ReferenceInventoryInputs()

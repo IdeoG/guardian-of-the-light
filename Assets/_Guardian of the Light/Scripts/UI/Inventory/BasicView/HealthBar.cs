@@ -15,7 +15,7 @@ public class HealthBar : MonoBehaviour
     
     private void OnEnable()
     {
-        var playerHealth = GameManagerSystem.Instance.Player.GetComponent<Health>();
+        var playerHealth = GGameManager.Instance.Player.GetComponent<Health>();
         _disposablePlayerPercent = playerHealth.ReactivePercent
             .ObserveEveryValueChanged(x => x.Value)
             .Subscribe(x => _filledImage.fillAmount = x );
