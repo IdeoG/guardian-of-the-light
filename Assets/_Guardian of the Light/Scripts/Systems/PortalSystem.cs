@@ -14,7 +14,7 @@ public class PortalSystem : MonoBehaviour
     {
         var portal = _portals[SceneBundleSystem.SpawnPointNumber];
 
-        GameManagerSystem.Instance.Player.transform.position = portal.position;
-        GameManagerSystem.Instance.Player.transform.rotation = portal.rotation;
+        GGameManager.Instance.Player.transform.position = portal.position;
+        GGameManager.Instance.Player.transform.rotation = portal.rotation;
     }
 }

@@ -56,8 +56,8 @@ namespace _Guardian_of_the_Light.Scripts.GameLogic.Elevator
 
         private void PlacePlayerNearCristal()
         {
-            GameManagerSystem.Instance.Player.transform.position = _playerTransform.position;
-            GameManagerSystem.Instance.Player.transform.rotation = _playerTransform.rotation;
+            GGameManager.Instance.Player.transform.position = _playerTransform.position;
+            GGameManager.Instance.Player.transform.rotation = _playerTransform.rotation;
         }
     }
 }

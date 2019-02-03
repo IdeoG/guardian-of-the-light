@@ -31,3 +31,6 @@ ehthumbs.db
 [Bb]uild
 sysinfo.txt
 *.stackdump
+
+/Assets/Plugins
+[Aa]ssets/_Guardian of the Light/No collabe

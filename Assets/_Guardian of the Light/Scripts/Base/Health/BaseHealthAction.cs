@@ -18,7 +18,7 @@ public abstract class BaseHealthAction : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         InputSystem.Instance.IsPlayerInCollider = true;
-        var playerHealth = GameManagerSystem.Instance.Player.GetComponent<Health>();
+        var playerHealth = GGameManager.Instance.Player.GetComponent<Health>();
 
         _keyActionPressed = InputSystem.Instance.KeyActionPressed
             .Subscribe(_ => OnKeyActionPressed(playerHealth))
