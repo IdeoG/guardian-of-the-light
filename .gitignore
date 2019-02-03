@@ -1,2 +1,8 @@
 /.idea
 /**/*.meta
+/[Pp]rojectSettings
+/[Pp]ackages
+/Library/
+/Temp/
+/Logs/
+/obj/
