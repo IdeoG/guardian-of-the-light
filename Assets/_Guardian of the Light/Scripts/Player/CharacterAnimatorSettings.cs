@@ -1,16 +1,14 @@
-using System;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
-using Random = System.Random;
 
 namespace _Guardian_of_the_Light.Scripts.Player
 {
     public class CharacterAnimatorSettings : MonoBehaviour
     {
         [Header("Eyes Settings")] 
-        [SerializeField] private int eyesHaltMinDurationMs;
-        [SerializeField] private int eyesHaltMaxDurationMs;
+        [SerializeField] private float eyesHaltMinDuration;
+        [SerializeField] private float eyesHaltMaxDuration;
         [SerializeField] private int eyesLayerIndex;
         [SerializeField] private string eyesHaltShortName;
         
@@ -34,8 +32,8 @@ namespace _Guardian_of_the_Light.Scripts.Player
 
         private void SetEyesHaltFrequency()
         {
-            var eyesHaltRandomDurationMs = new Random().Next(eyesHaltMinDurationMs, eyesHaltMaxDurationMs);
-            var eyesHaltFrequency = 1000f / eyesHaltRandomDurationMs;
+            var eyesHaltRandomDuration = Random.Range(eyesHaltMinDuration, eyesHaltMaxDuration);
+            var eyesHaltFrequency = 1f / eyesHaltRandomDuration;
             
             _animator.SetFloat(EyesHaltFrequency, eyesHaltFrequency);
         }
