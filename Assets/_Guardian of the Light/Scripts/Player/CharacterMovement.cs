@@ -9,7 +9,8 @@ namespace _Guardian_of_the_Light.Scripts.Player
     [RequireComponent(typeof(Rigidbody))]
     public class CharacterMovement : MonoBehaviour
     {
-        [SerializeField] private float forceMultiplier;
+        [SerializeField] private float forwardForceMultiplier;
+        [SerializeField] private float jumpForceMultiplier;
 
         private Rigidbody _rigidbody;
         private Animator _animator;
@@ -45,6 +46,15 @@ namespace _Guardian_of_the_Light.Scripts.Player
                 ApplyForwardForce(axisValue * (1 + runAmount));
                 ApplyExtraTurnRotation(turnAmount, forwardAmount);
             });
+
+            var jump = InputSystem.Instance.KeyJumpPressedDown;
+            jump.Subscribe(_ => ApplyJumpForce());
+        }
+
+        private void ApplyJumpForce()
+        {
+            Debug.Log($"CharacterMovement : ApplyJumpForce --> jump");
+            _rigidbody.AddRelativeForce(jumpForceMultiplier * 1000 * Time.deltaTime * Vector3.up);
         }
 
         private (float, float) CalculateMoveParams(float vertical, float horizontal)
@@ -75,7 +85,7 @@ namespace _Guardian_of_the_Light.Scripts.Player
 
         private void ApplyForwardForce(float forwardAmount)
         {
-            _rigidbody.AddRelativeForce(forceMultiplier * 1000 * forwardAmount * Time.deltaTime * Vector3.forward);
+            _rigidbody.AddRelativeForce(forwardForceMultiplier * 1000 * forwardAmount * Time.deltaTime * Vector3.forward);
             _animator.SetFloat(ForwardAmount, forwardAmount);
         }
 
