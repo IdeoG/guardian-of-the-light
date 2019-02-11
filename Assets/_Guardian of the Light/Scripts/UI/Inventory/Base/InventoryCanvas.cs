@@ -21,7 +21,7 @@ public class InventoryCanvas : MonoBehaviour
 
     public void Show()
     {
-        InputSystem.Instance.IsUiActive = true;
+        InputSystem.Instance.IsUiActive.Value = true;
         _freeLookMaxSpeed = FindObjectOfType<CinemachineFreeLook>()?.m_XAxis.m_MaxSpeed;
         if (_freeLookMaxSpeed != null) 
             FindObjectOfType<CinemachineFreeLook>().m_XAxis.m_MaxSpeed = 0f;
@@ -42,7 +42,7 @@ public class InventoryCanvas : MonoBehaviour
             canvasGroup.gameObject.SetActive(false);
             gameObject.SetActive(false);
             
-            InputSystem.Instance.IsUiActive = false;
+            InputSystem.Instance.IsUiActive.Value = false;
             if (_freeLookMaxSpeed != null) 
                 FindObjectOfType<CinemachineFreeLook>().m_XAxis.m_MaxSpeed = (float) _freeLookMaxSpeed;
         });

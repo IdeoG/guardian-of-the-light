@@ -55,7 +55,7 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         public IObservable<Unit> KeyConfirmHintPressedDown { get; private set; }
         public IObservable<Unit> KeyExitHintPressedDown { get; private set; }
     
-        public bool IsUiActive;
+        public ReactiveProperty<bool> IsUiActive = new ReactiveProperty<bool>(false);
         public bool IsPlayerInCollider;
         public bool IsAnimationPlaying;
 
@@ -91,8 +91,7 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         private static InputSystem _instance;
 
         #endregion
-
-    
+        
         private void Awake()
         {   
             ReferencePlayerInputs();
@@ -112,29 +111,29 @@ namespace _Guardian_of_the_Light.Scripts.Systems
             
             KeyRunPressedDown = this.UpdateAsObservable().Where(_ => CanMove()).Select(_ => Input.GetAxis("PlayerRun"));
             
-            HorizontalAxis = this.UpdateAsObservable().Select(_ => Input.GetAxis("Horizontal"));
-            VerticalAxis = this.UpdateAsObservable().Select(_ => Input.GetAxis("Vertical"));
+            HorizontalAxis = this.UpdateAsObservable().Where(_ => CanMove()).Select(_ => Input.GetAxis("Horizontal"));
+            VerticalAxis = this.UpdateAsObservable().Where(_ => CanMove()).Select(_ => Input.GetAxis("Vertical"));
             
-            RightStickX = this.UpdateAsObservable().Select(_ => Input.GetAxis("Right Stick X"));
-            RightStickY = this.UpdateAsObservable().Select(_ => Input.GetAxis("Right Stick Y"));
+            RightStickX = this.UpdateAsObservable().Where(_ => CanMove()).Select(_ => Input.GetAxis("Right Stick X"));
+            RightStickY = this.UpdateAsObservable().Where(_ => CanMove()).Select(_ => Input.GetAxis("Right Stick Y"));
         }
 
         private void ReferenceInventoryInputs()
         {
             KeyInventoryPressedDown = this.UpdateAsObservable().Where(_ => CanOpenInventory()).Where(_ => _inventoryKey.GetKeyDown());
         
-            KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _inspectViewKey.GetKeyDown());
-            KeyBackViewPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _backViewKey.GetKeyDown());
+            KeyInspectPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Where(_ => _inspectViewKey.GetKeyDown());
+            KeyBackViewPressedDown = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Where(_ => _backViewKey.GetKeyDown());
             
-            KeyUsePressedDown = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _useKey.GetKeyDown());
+            KeyUsePressedDown = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Where(_ => _useKey.GetKeyDown());
 
-            KeyUpArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetAxis("Vertical") > 0.2f);
-            KeyDownArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetAxis("Vertical") < -0.2f);
-            KeyLeftArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetAxis("Horizontal") < -0.2f);
-            KeyRightArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => Input.GetAxis("Horizontal") > 0.2f);
+            KeyUpArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Where(_ => Input.GetAxis("Vertical") > 0.2f);
+            KeyDownArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Where(_ => Input.GetAxis("Vertical") < -0.2f);
+            KeyLeftArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Where(_ => Input.GetAxis("Horizontal") < -0.2f);
+            KeyRightArrowPressed = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Where(_ => Input.GetAxis("Horizontal") > 0.2f);
         
-            KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _reduceSizeKey.GetKey());
-            KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive).Where(_ => _increaseSizeKey.GetKey());
+            KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Where(_ => _reduceSizeKey.GetKey());
+            KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Where(_ => _increaseSizeKey.GetKey());
         }
 
         private void ReferenceHintsInputs()
@@ -148,17 +147,17 @@ namespace _Guardian_of_the_Light.Scripts.Systems
 
         public bool CanMove()
         {
-            return !IsUiActive && !IsAnimationPlaying;
+            return !IsUiActive.Value && !IsAnimationPlaying;
         }
 
         private bool CanJumpAndCrouch()
         {
-            return !IsUiActive && !IsPlayerInCollider && !IsAnimationPlaying;
+            return !IsUiActive.Value && !IsPlayerInCollider && !IsAnimationPlaying;
         }
 
         private bool CanOpenInventory()
         {
-            return !IsUiActive && !IsAnimationPlaying;
+            return !IsUiActive.Value && !IsAnimationPlaying;
         }
     }
 
