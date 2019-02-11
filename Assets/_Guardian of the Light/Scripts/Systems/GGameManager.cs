@@ -37,14 +37,14 @@ public class GGameManager : MonoBehaviour
     {
         if (InventorySystem.Instance.GetTookItems().Count == 0) return;
 
-        _inputSystem.IsUiActive = true;
+        _inputSystem.IsUiActive.Value = true;
         _inventoryCanvas.Show();
     }
 
     private void HideInventoryView()
     {
         _inventoryCanvas.Hide();
-        _inputSystem.IsUiActive = false;
+        _inputSystem.IsUiActive.Value = false;
     }
 
     private void OnKeyInventoryPressedDown()
