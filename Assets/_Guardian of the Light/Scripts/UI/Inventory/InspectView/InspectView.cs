@@ -65,8 +65,8 @@ public class InspectView : MonoBehaviour
         _keyIncreaseSizePressed = InputSystem.Instance.KeyIncreaseSizePressed.Subscribe(_ => OnChangeItemScale(-1f));
         _rightStickY = InputSystem.Instance.RightStickY.Subscribe(OnChangeItemScale);
 
-        _verticalAxis = InputSystem.Instance.VerticalAxis.Subscribe(OnVerticalAxisChanged);
-        _horizontalAxis = InputSystem.Instance.HorizontalAxis.Subscribe(OnHorizontalAxisChanged);
+        _verticalAxis = InputSystem.Instance.InventoryVerticalAxis.Subscribe(OnVerticalAxisChanged);
+        _horizontalAxis = InputSystem.Instance.InventoryHorizontalAxis.Subscribe(OnHorizontalAxisChanged);
     }
 
     private void OnHorizontalAxisChanged(float x)

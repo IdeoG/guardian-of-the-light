@@ -42,10 +42,12 @@ namespace _Guardian_of_the_Light.Scripts.Systems
 
         public IObservable<bool> KeyCrouchPressed { get; private set; }
         public IObservable<Unit> KeyJumpPressedDown { get; private set; }
-        public IObservable<float> KeyRunPressedDown { get; private set; }
+        public IObservable<float> PlayerRunAxis { get; private set; }
         
         public IObservable<float> HorizontalAxis { get; private set; }
         public IObservable<float> VerticalAxis { get; private set; }
+        public IObservable<float> InventoryHorizontalAxis { get; private set; }
+        public IObservable<float> InventoryVerticalAxis { get; private set; }
         public IObservable<float> RightStickX { get; private set; }
         public IObservable<float> RightStickY { get; private set; }
 
@@ -81,8 +83,8 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         [Header("Player Controls")] 
         [SerializeField] private MultiPlatformKeyCode _crouchKey;
         [SerializeField] private MultiPlatformKeyCode _jumpKey;
-        [SerializeField] private MultiPlatformKeyCode _actionKey;
-        [SerializeField] private MultiPlatformKeyCode _extraActionKey;
+        [SerializeField] public MultiPlatformKeyCode _actionKey;
+        [SerializeField] public MultiPlatformKeyCode _extraActionKey;
 
         #endregion
 
@@ -109,7 +111,7 @@ namespace _Guardian_of_the_Light.Scripts.Systems
             KeyCrouchPressed = this.UpdateAsObservable().Where(_ => CanJumpAndCrouch()).Select(_ => _crouchKey.GetKey());
             KeyJumpPressedDown = this.UpdateAsObservable().Where(_ => CanJumpAndCrouch()).Where(_ => _jumpKey.GetKeyDown());
             
-            KeyRunPressedDown = this.UpdateAsObservable().Where(_ => CanMove()).Select(_ => Input.GetAxis("PlayerRun"));
+            PlayerRunAxis = this.UpdateAsObservable().Where(_ => CanMove()).Select(_ => Input.GetAxis("PlayerRun"));
             
             HorizontalAxis = this.UpdateAsObservable().Where(_ => CanMove()).Select(_ => Input.GetAxis("Horizontal"));
             VerticalAxis = this.UpdateAsObservable().Where(_ => CanMove()).Select(_ => Input.GetAxis("Vertical"));
@@ -134,6 +136,9 @@ namespace _Guardian_of_the_Light.Scripts.Systems
         
             KeyReduceSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Where(_ => _reduceSizeKey.GetKey());
             KeyIncreaseSizePressed = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Where(_ => _increaseSizeKey.GetKey());
+            
+            InventoryHorizontalAxis = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Select(_ => Input.GetAxis("Horizontal"));
+            InventoryVerticalAxis = this.UpdateAsObservable().Where(_ => IsUiActive.Value).Select(_ => Input.GetAxis("Vertical"));
         }
 
         private void ReferenceHintsInputs()
