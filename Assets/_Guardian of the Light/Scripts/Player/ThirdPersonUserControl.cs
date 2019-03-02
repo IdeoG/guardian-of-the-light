@@ -40,7 +40,7 @@ namespace _Guardian_of_the_Light.Scripts.Player
                 .Subscribe(_ => m_Jump = true)
                 .AddTo(this);
             
-            _runDisposable = InputSystem.Instance.KeyRunPressedDown
+            _runDisposable = InputSystem.Instance.PlayerRunAxis
                 .Subscribe(x => m_Run = x)
                 .AddTo(this);
         }
